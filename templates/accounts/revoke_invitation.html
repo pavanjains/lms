@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Revoke invitation</h1>
+<p>Invitation for {{ invitation.email }}</p>
+<p>Revoking this invitation prevents its acceptance. It does not deactivate an existing account.</p>
+{% if error %}<p role="alert">{{ error }}</p>{% else %}
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Revoke invitation</button>
+</form>
+{% endif %}
+<p><a href="{% url 'owner-accounts:instructors' %}">Return to list</a></p>
+{% endblock %}

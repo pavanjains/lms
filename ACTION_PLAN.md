@@ -1,91 +1,67 @@
 # Robotics LMS — Action Plan
 
-Last updated: 2026-11-15, 08:30 EST.
-Repository: pavanjains/lms. Working branch: main.
+Updated: 2026-11-15, 08:39 EST. Repository: pavanjains/lms; branch: main.
 
-## Tracking source of truth
-- This file: roadmap, current milestone, next actions, and release gates.
-- [Ticket ledger](docs/TICKETS.md): development tickets, fixes, status, and evidence.
-- [Implementation summary](docs/IMPLEMENTATION_STATUS.md): concise current state.
-- Feature documents explain implementation details; their historical verification notes do not override this ledger.
-- docs/VALIDATION.json is a historical initial-slice artifact, not a current CI result.
+## Progress tracking
+- [Ticket ledger](docs/TICKETS.md): authoritative ticket and fix statuses.
+- [Current E05 increment](docs/E05_OWNER_MANAGEMENT.md): implementation and manual acceptance steps.
+- docs/IMPLEMENTATION_STATUS.md summarizes earlier baseline work; this plan and the ledger govern later increments.
+- docs/VALIDATION.json remains a historical initial-slice artifact.
+- IDs are Markdown tickets, not GitHub Issues. No background automation updates them.
 
-There are no GitHub Issues as of this update. Ticket IDs below are Markdown tracking identifiers, not GitHub issue numbers. Earlier T001–T052 references are legacy parent scopes; use the E##-## identifiers for development tracking.
+## Current increment
+E05-05/E05-06: owner instructor/invitation listing and confirmed invitation revocation. Code and fifteen tests authored; CI PENDING for this commit. No migration, email, public acceptance, or production activation.
 
-## Current state
-Foundation, owner bootstrap, staff authentication/MFA integration, and instructor invitation backend services are committed. This is not a classroom-ready LMS.
+Latest previously reported passing application commit: d60ab7d (owner confirmation, 08:30 EST). Its run URL/count were not supplied. No CI result is claimed for the new increment or preceding documentation-only commit.
 
-Latest application commit: d60ab7d5cf1c21849549cfb5b3e1af5481cca76d — instructor invitation services.
-Latest CI evidence: owner reported the latest workflow passed on 2026-11-15 at 08:30 EST, following that application commit. The run URL and latest test count were not supplied; the assistant has not independently retrieved the run.
-
-Staff authentication remains disabled by default through LMS_STAFF_AUTH_ENABLED=false. Passing CI is not approval to enable production access. Invitation email delivery, screens, and public acceptance routes are not implemented.
+Staff authentication remains disabled by default. CI success is not production authorization. Owner bootstrap, staff MFA, and invitation backend services are committed; the classroom LMS is not complete.
 
 ## Epic roadmap
-| Epic | Outcome | Status |
-|---|---|---|
-| E01 | Project and developer workflow | Partial: CI configured; dependency lock and independent setup pending |
-| E02 | Configuration and data foundations | Partial: core models and decision register; configuration approvals pending |
-| E03 | Shared UI components | Partial: minimal base layout only |
-| E04 | Owner bootstrap and staff authentication | Partial: bootstrap complete; gated MFA integration committed; recovery/hardening pending |
-| E05 | Instructor account lifecycle | Partial: invitation schema/services/tests; screens/email/deactivation UI pending |
-| E06 | Student identity and credentials | Not started beyond baseline user/profile models |
-| E07 | Shared-device student sessions | Not started |
-| E08 | Classes, enrollment, authorization | Not started |
-| E09 | Private document storage | Not started |
-| E10 | Document validation and delivery | Not started |
-| E11 | Lesson authoring/versioning | Not started |
-| E12 | Assignments | Not started |
-| E13 | Progress state/history | Not started |
-| E14 | Instructor feedback | Not started |
-| E15 | Instructor classroom workspace | Not started |
-| E16 | Student learning experience | Not started |
-| E17 | Reporting and CSV export | Not started |
-| E18 | Audit and retention | Not started |
-| E19 | Deployment and monitoring | Not started; CI alone is not deployment |
-| E20 | Backup and recovery | Not started |
-| E21 | End-to-end/security/capacity verification | Partial: automated authentication tests only; wider verification pending |
-| E22 | Training and launch | Not started |
+| Epic | State |
+|---|---|
+| E01 Project/workflow | Partial: lockfile, formatter gate, independent setup remain |
+| E02 Data/configuration | Partial: core models exist; policies/approvals remain |
+| E03 Shared UI | Partial: basic layout and scoped owner UI only |
+| E04 Staff identity/MFA | Partial: recovery and hardening remain |
+| E05 Instructor lifecycle | In progress: backend plus owner list/revoke; CI pending for UI |
+| E06 Student accounts | TODO beyond initial user/profile models |
+| E07 Student shared-device sessions | TODO |
+| E08 Classes/enrollment/authorization | TODO |
+| E09 Private storage | TODO |
+| E10 Document validation/delivery | TODO |
+| E11 Lessons/versioning | TODO |
+| E12 Assignments | TODO |
+| E13 Progress/history | TODO |
+| E14 Feedback | TODO |
+| E15 Instructor workspace | TODO |
+| E16 Student lesson UI | TODO |
+| E17 Reports/exports | TODO |
+| E18 Audit/retention | TODO |
+| E19 Deployment/monitoring | TODO; CI is not deployment |
+| E20 Backup/recovery | TODO |
+| E21 Full acceptance/security/capacity | Partial authentication inputs only |
+| E22 Training/launch | TODO |
 
-No implementation percentage is maintained without weighted estimates. Planning documents, generated code, passing tests, and production readiness are distinct measures.
+## Next actions
+1. Verify owner list/revoke increment in CI and local/staging browser walkthrough.
+2. Implement E05-02/03/04 invite form, delivery, and instructor activation; E05-05 resend.
+3. Implement E05-07 deactivation and E05-08 PostgreSQL concurrency regressions.
+4. Complete E04 password throttling, approved idle/absolute limits, recovery and timeout tests before operational activation.
+5. Start E08 class schema, shared teaching, enrollment, and class-level policies.
 
-## Next development batch
-1. Complete E05-02/03/04: owner invitation screen, delivery integration, instructor activation form.
-2. Complete E05-05: resend/revoke screens with clear delivery-failure behavior.
-3. Add E05-08: PostgreSQL concurrency regression tests for simultaneous acceptance/reissue/revoke.
-4. Complete E04 hardening before operational activation: password throttling, session limits, complete recovery tests and runbooks.
-5. Begin E08 class schema, multiple-instructor membership, enrollment, and centralized class policies.
+No actual invitation email is sent by this increment. Real delivery requires an approved origin/sender, credentials, and retry/failure policy. Activation must not permit arbitrary role/organization selection or bypass MFA.
 
-Owner invitation screens must require verified owner MFA. Activation must not permit role/organization selection or automatic staff access before MFA enrollment. Development email may use the configured console backend; real email requires an approved sender, origin, credentials, and delivery policy. Do not send real invitations merely to test this documentation update.
-
-## Update protocol
-For every future implementation/fix commit prepared through this workflow:
-1. Reference the affected ticket or BUG ID in the commit message.
-2. Update docs/TICKETS.md in the same commit: implemented scope, remaining work, tests, and status.
-3. Update this file when roadmap, next actions, or release gates change.
-4. Record CI as pending for the new code until evidence is available.
-5. After CI evidence arrives, record the application SHA, conclusion, evidence source, and run URL/count when available.
-6. A fix reopens the parent ticket if its acceptance is invalidated; close the BUG after verification without declaring the entire epic complete.
-7. Record operational/manual tests separately from automated CI.
-
-These are working rules for subsequent development, not an installed background agent. Markdown files do not update themselves. Creating or updating GitHub Issues is a separate external action requiring approval.
+## Update rules
+Every future code/fix commit must reference ticket/BUG IDs and update the ledger in the same change. New CI starts PENDING. Record SHA, source, conclusion, and URL/count when available. Reopen affected acceptance when a defect invalidates it. CI evidence and manual/operational evidence are separate. Do not claim production readiness from unit tests or invent a weighted completion percentage.
 
 ## Release gates
-- [ ] Reviewed resolved dependency lockfile.
-- [ ] Password-attempt throttling and approved idle/absolute session limits.
-- [ ] Complete MFA/password recovery procedures and browser tests.
-- [ ] Instructor onboarding, deactivation, and class-scoped access workflows.
-- [ ] Student login and shared-device isolation.
-- [ ] Lessons, private documents, assignments, progress, feedback.
-- [ ] Audit, retention, privacy/consent, and center-device procedures approved.
-- [ ] Staging deployment, monitoring, and database/document restore drill.
-- [ ] Owner/instructor UAT and security/capacity verification.
+- [ ] Reviewed dependency lockfile and repeatable setup.
+- [ ] Auth throttling, session limits, recovery and browser checks.
+- [ ] Instructor onboarding/deactivation and class-scoped authorization.
+- [ ] Student access and shared-device isolation.
+- [ ] Lessons/documents/assignments/progress/feedback.
+- [ ] Audit, retention, privacy/consent, center procedures.
+- [ ] Deployment, monitoring, database/document restore drill.
+- [ ] Owner/instructor UAT and security/capacity acceptance.
 
-## Commit history
-| Commit | Change | Evidence |
-|---|---|---|
-| 1311cd3 | Restore hidden configuration and PostgreSQL CI | Committed |
-| ce49752 | Owner bootstrap and ten tests | Initial bootstrap defect subsequently fixed |
-| b3aca8d | Staff backend/MFA guard and sixteen tests | Included in later reported passing workflow |
-| 031b843 | Gated MFA integration and fifteen tests | Included in later reported passing workflow |
-| ef6b96c | BUG-001 bootstrap validation-order correction | Owner reported following workflow passed at 08:24 EST |
-| d60ab7d | Invitation model/services/migration and seventeen tests | Owner reported latest workflow passed at 08:30 EST |
+Commit/evidence history is preserved in docs/TICKETS.md. Full operational implementation remains pending.

@@ -19,4 +19,5 @@ urlpatterns = [
     path("staff/entry/", staff_entry, name="staff-entry"),
     path("staff/", staff_home, name="staff-home"),
     path("staff/logout/", LogoutView.as_view(), name="staff-logout"),
+    path("staff/owner/", include("apps.accounts.owner_urls")),
 ]

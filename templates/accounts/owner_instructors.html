@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Instructors and invitations</h1>
+<p><a href="{% url 'staff-home' %}">Back to staff workspace</a></p>
+<p>Invitation creation, email delivery, and activation screens are not available yet.</p>
+{% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+<form method="get">
+  <label for="search">Search names or email</label>
+  <input id="search" name="q" value="{{ search }}" maxlength="100">
+  <button type="submit">Search</button>
+  <a href="{% url 'owner-accounts:instructors' %}">Clear</a>
+</form>
+<h2>Instructor accounts</h2>
+<table>
+  <caption>Instructor accounts matching your search</caption>
+  <thead><tr><th scope="col">Username</th><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Status</th></tr></thead>
+  <tbody>
+  {% for instructor in instructor_page %}
+  <tr><td>{{ instructor.username }}</td><td>{{ instructor.display_name|default:"—" }}</td><td>{{ instructor.email }}</td><td>{{ instructor.is_active|yesno:"Active,Inactive" }}</td></tr>
+  {% empty %}<tr><td colspan="4">No instructor accounts match.</td></tr>{% endfor %}
+  </tbody>
+</table>
+<nav aria-label="Instructor pages">
+{% if instructor_page.has_previous %}<a href="?q={{ search|urlencode }}&amp;instructor_page={{ instructor_page.previous_page_number }}&amp;invitation_page={{ invitation_page.number }}">Previous instructors</a>{% endif %}
+<span>Page {{ instructor_page.number }} of {{ instructor_page.paginator.num_pages }}</span>
+{% if instructor_page.has_next %}<a href="?q={{ search|urlencode }}&amp;instructor_page={{ instructor_page.next_page_number }}&amp;invitation_page={{ invitation_page.number }}">Next instructors</a>{% endif %}
+</nav>
+<h2>Invitations</h2>
+<table>
+  <caption>Invitation records matching your search</caption>
+  <thead><tr><th scope="col">Email</th><th scope="col">Status</th><th scope="col">Expires</th><th scope="col">Action</th></tr></thead>
+  <tbody>
+  {% for invitation in invitation_page %}
+  <tr><td>{{ invitation.email }}</td><td>{{ invitation.display_status }}</td><td>{{ invitation.expires_at }}</td><td>{% if invitation.can_revoke %}<a href="{% url 'owner-accounts:revoke-invitation' invitation.pk %}">Review revocation</a>{% else %}No action{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="4">No invitations match.</td></tr>{% endfor %}
+  </tbody>
+</table>
+<nav aria-label="Invitation pages">
+{% if invitation_page.has_previous %}<a href="?q={{ search|urlencode }}&amp;instructor_page={{ instructor_page.number }}&amp;invitation_page={{ invitation_page.previous_page_number }}">Previous invitations</a>{% endif %}
+<span>Page {{ invitation_page.number }} of {{ invitation_page.paginator.num_pages }}</span>
+{% if invitation_page.has_next %}<a href="?q={{ search|urlencode }}&amp;instructor_page={{ instructor_page.number }}&amp;invitation_page={{ invitation_page.next_page_number }}">Next invitations</a>{% endif %}
+</nav>
+{% endblock %}
