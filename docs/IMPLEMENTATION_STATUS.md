@@ -1,38 +1,29 @@
 # Implementation Status
 
-Updated: 2026-11-15, 15:09 EST.
+Updated: 2026-11-15, 15:19 EST.
 
-[Action plan](../ACTION_PLAN.md) records roadmap/release gates; [ticket ledger](TICKETS.md) records evidence and supersedes historical feature notes.
+ACTION_PLAN.md records roadmap; docs/TICKETS.md is authoritative for ticket/evidence status. [Preserved previous status](https://github.com/pavanjains/lms/blob/24453d623785f1ff560c3444bcb5eedbb564a36c/docs/IMPLEMENTATION_STATUS.md).
 
-## Previously committed
-- Foundation, PostgreSQL configuration and organization/user/profile migrations.
-- Configuration/CI (1311cd3); bootstrap (ce49752), corrected by ef6b96c, BUG-001.
-- Staff email/password backend and MFA guard (b3aca8d).
-- Gated MFA enrollment/login, recovery codes, POST logout and workspace (031b843).
-- Invitation schema/lifecycle services (d60ab7d).
-- Owner lists, search, pagination, statuses and revoke UI (0ce5595).
-- Gated invite/email/resend/activation and fourteen tests (1b4a5dd).
-- Test mail-import correction (e3bcfcb, BUG-002); passing workflow owner-confirmed at 13:28 EST. cd1f580 records that confirmation.
+## Current E08-01 increment
+apps/classrooms contains Classroom, ClassInstructor and ClassEnrollment models; AppConfig registered in base settings; initial migration and model tests authored. Classes belong to organizations; accounts may have multiple class links. Database uniqueness protects normalized class names within an organization and each class/account relationship. Model clean validates creator role/organization, membership/enrollment roles and organization, active link eligibility and student-profile presence.
 
-## Current BUG-003 increment
-Shared onboarding response Referrer-Policy changed from no-referrer to same-origin to fix browser POST rejection with Origin null. Existing header assertion updated; five CSRF-enforced regression methods authored for same-origin invite/resend/activation and null/cross-origin invite/activation rejection. Fourteen original onboarding methods retained. Tests authored, NOT RUN here; new CI PENDING. Django test clients do not generate browser Origin behavior, so full browser acceptance is separate.
+Relationships use PROTECT and is_active to support retaining records. No automatic cascade activation/deactivation is implemented. Deactivated instructors retain memberships; future policies must deny access based on current account, organization, class and link status. No fixed kit/grade/capacity imposed on classes.
 
-Owner confirmed the one-line local fix worked at 15:07 EST. This is user-reported invitation-flow evidence only, not full activation/deactivation acceptance or independent CI verification. Cross-origin referrers remain suppressed by the policy; same-origin token paths can still reach internal logs, so log redaction remains open. No CSRF exemption or null-origin allowlisting.
+Tests authored, NOT RUN here. CI, migration drift check and migration execution PENDING. No database modified here, no data seeded. No routes/UI, scoped permission services, student sign-in or account creation. clean/full_clean is validation, not authorization; save/create/update/bulk writes can bypass it. Cross-record consistency is not guaranteed by ordinary foreign keys. E08-02 services and E08-03 policies are next; do not expose these tables through generic CRUD.
 
-## E05-07 increment at 666eee6
-Owner-only, organization-scoped instructor deactivation with GET review, confirmed CSRF-protected POST, transactional owner revalidation, retained account/password/MFA/related records and targeted removal of unexpired database sessions. No owner/student/foreign-organization target can be deactivated. Repeated requests are safe. Unsupported session engines are rejected; reactivation not implemented. Existing backend/policies reject inactive staff on subsequent requests, including a concurrent sign-in that writes another session.
+## Existing implemented slices
+- Organization/user/student-profile foundation and PostgreSQL/CI configuration (1311cd3).
+- Owner bootstrap ce49752 corrected by ef6b96c, BUG-001.
+- Staff email/password backend and MFA guard b3aca8d; gated MFA enrollment/login, recovery codes, POST logout/workspace 031b843.
+- Invitation services d60ab7d; owner lists/search/pagination/revoke 0ce5595.
+- Invite/email/resend/activation 1b4a5dd; mail-import fix e3bcfcb, BUG-002; verification recorded cd1f580.
+- E05-07 deactivation 666eee6: owner confirmation, retained account/password/MFA, targeted unexpired database-session revocation; unsupported engines rejected. Fourteen tests authored; CI/browser acceptance pending. In-flight requests not retroactively cancelled.
+- BUG-003 24453d6: same-origin onboarding header, updated assertion and five new CSRF regression methods; original fourteen onboarding methods retained. Owner confirmed one-line local invitation fix 15:07 EST; new CI/full browser acceptance pending. Internal token-path log redaction remains open.
 
-Fourteen tests authored for confirmation, retained records, multiple sessions, login/access denial, owner-session preservation, permissions, role/organization boundaries, CSRF, feature gate, stale actor validation, backend rejection and rollback. Runtime tests and browser acceptance NOT RUN here. CI PENDING. New listing control is part of this unverified increment, not retroactively covered by earlier passing CI.
+## Evidence limits
+Latest reported passing application revision remains e3bcfcb (owner 13:28 EST). URL/count/logs unavailable; Actions not independently retrieved. BUG-002 remains FIXED_VERIFIED. Historical 13:21 log: 83 entries in 0.897s, one onboarding module-import error, other 82 passed; no onboarding methods executed. No new passing counts inferred. cd1f580 has no separately supplied workflow result.
 
-## Next implementation scope
-E08-01/02/03 are scoped in the ledger and remain TODO: class/membership/enrollment schema, transactional validated services, organization/class-scoped policies and tests. Class UI and student sign-in are not included in BUG-003. No background implementation is running. Python 3.14 support also remains unverified; local metadata edits are not committed by this fix.
+## Remaining / release boundaries
+E08-02/03 services/policies TODO; E08-04 UI and E08-05 race/browser verification TODO. Student access, content/documents/assignments, progress/feedback/reports and deployment remain incomplete. Staff authentication/onboarding flags remain disabled by default; local owner-enabled flags are not production approval. Python 3.14 support remains unverified and local metadata edits are not included.
 
-## Evidence boundaries
-Latest reported passing application commit remains e3bcfcb, based on owner's 13:28 EST confirmation. BUG-002 stays FIXED_VERIFIED. Passing run URL/count/logs unavailable; Actions not independently retrieved and no new passing count inferred. cd1f580 has no separately supplied workflow result.
-
-Historical 13:21 EST failure: 83 test entries in 0.897s, one onboarding module-import error, other 82 entries passed; onboarding methods did not execute. Preserve this separately from the later passing report.
-
-## Operational limits
-No migration, real account action, email, credential change or feature-flag activation by the source fix. Staff authentication and onboarding remain off by default in repository settings; owner explicitly enabled local flags for testing. No production acceptance claimed. Reactivation, audit, PostgreSQL race testing, throttling, approved session limits, recovery, activation-path log redaction and approved mail/delivery policies remain open. In-flight requests are not retroactively cancelled.
-
-Classes, student access, lessons, documents, assignments, progress, feedback, reports, deployment and broader release gates remain incomplete. Passing CI alone is not production authorization.
+Recovery, throttling, session limits, last-owner protections, reactivation, audit, PostgreSQL races, approved mail transport/origin/sender/delivery, token-path log redaction, shared-device isolation, privacy/retention, backups/restore and operational acceptance remain open. Passing CI alone is not launch authorization.
