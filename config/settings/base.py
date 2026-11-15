@@ -11,6 +11,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_otp",
+    "django_otp.plugins.otp_static",
+    "django_otp.plugins.otp_totp",
+    "two_factor",
     "apps.core",
     "apps.organizations",
     "apps.accounts",
@@ -21,6 +25,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_otp.middleware.OTPMiddleware",
+    "apps.accounts.middleware.StaffAuthMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -45,6 +51,7 @@ DATABASES = {"default": {
     "PORT": os.environ.get("POSTGRES_PORT", "5432"),
 }}
 AUTH_USER_MODEL = "accounts.User"
+AUTHENTICATION_BACKENDS = ["apps.accounts.backends.StaffEmailBackend"]
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -64,3 +71,10 @@ SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 X_FRAME_OPTIONS = "DENY"
 SECURE_CONTENT_TYPE_NOSNIFF = True
+LMS_STAFF_AUTH_ENABLED = os.environ.get("LMS_STAFF_AUTH_ENABLED", "false").lower() == "true"
+LOGIN_URL = "two_factor:login"
+LOGIN_REDIRECT_URL = "staff-entry"
+LOGOUT_REDIRECT_URL = "home"
+TWO_FACTOR_PATCH_ADMIN = False
+TWO_FACTOR_REMEMBER_COOKIE_AGE = None
+TWO_FACTOR_LOGIN_TIMEOUT = 300

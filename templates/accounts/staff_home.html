@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Staff workspace</h1>
+<p>Signed in as {{ request.user.email }}.</p>
+<p>Multifactor verification completed. Class management is not implemented yet.</p>
+<p><a href="{% url 'two_factor:backup_tokens' %}">Manage recovery codes</a></p>
+<form method="post" action="{% url 'staff-logout' %}">
+  {% csrf_token %}<button type="submit">Sign out</button>
+</form>
+{% endblock %}
