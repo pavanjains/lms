@@ -1,28 +1,30 @@
 # Implementation Status
 
-Updated: 2026-11-15, 13:29 EST.
+Updated: 2026-11-15, 13:43 EST.
 
-[Action plan](../ACTION_PLAN.md) records the roadmap and release gates. [Ticket ledger](TICKETS.md) records tickets, fixes, commits and CI evidence, and supersedes older feature-document verification notes.
+[Action plan](../ACTION_PLAN.md) records roadmap/release gates; [ticket ledger](TICKETS.md) records evidence and supersedes historical feature notes.
 
-## Implemented and committed
-- Django foundation, PostgreSQL configuration, initial organization/user/profile migrations.
-- Hidden configuration and CI (1311cd3).
-- Owner bootstrap (ce49752), corrected by ef6b96c (BUG-001).
-- Staff email/password backend and MFA access guard (b3aca8d).
-- Gated authenticator enrollment/login, recovery codes, POST logout and staff page (031b843).
-- Instructor invitation schema and lifecycle services (d60ab7d).
-- Owner instructor/invitation lists, search, pagination, statuses and revoke UI (0ce5595).
-- Gated invitation creation, configured-backend email, confirmed resend and instructor activation (1b4a5dd), with fourteen onboarding tests authored.
-- Onboarding test mail-import correction (e3bcfcb, BUG-002); passing workflow confirmed by owner at 13:28 EST.
+## Previously committed
+- Foundation, PostgreSQL configuration and organization/user/profile migrations.
+- Configuration/CI (1311cd3); bootstrap (ce49752), corrected by ef6b96c, BUG-001.
+- Staff email/password backend and MFA guard (b3aca8d).
+- Gated MFA enrollment/login, recovery codes, POST logout and workspace (031b843).
+- Invitation schema/lifecycle services (d60ab7d).
+- Owner lists, search, pagination, statuses and revoke UI (0ce5595).
+- Gated invite/email/resend/activation and fourteen tests (1b4a5dd).
+- Test mail-import correction (e3bcfcb, BUG-002); passing workflow owner-confirmed at 13:28 EST. cd1f580 records that confirmation.
 
-## Latest verification
-BUG-002 is FIXED_VERIFIED based on the owner's 13:28 EST confirmation that the workflow passed after e3bcfcb. Onboarding has owner-reported passing-CI evidence. Passing run URL, exact count and logs were not supplied; Actions result was not independently retrieved. No passing count is inferred from the authored tests. Browser acceptance remains pending.
+## Current E05-07 increment
+Owner-only, organization-scoped instructor deactivation with GET review, confirmed CSRF-protected POST, transactional owner revalidation, retained account/password/MFA/related records and targeted removal of unexpired database sessions. No owner/student/foreign-organization target can be deactivated. Repeated requests are safe. Unsupported session engines are rejected; reactivation not implemented. Existing backend/policies reject inactive staff on subsequent requests, including a concurrent sign-in that writes another session.
 
-Historical failure retained: owner's 13:21 EST log contained 83 test entries in 0.897s, one import error and 82 passing entries. The failed-module placeholder meant no onboarding test methods executed in that failed run. e3bcfcb corrected from django.contrib import mail to from django.core import mail without removing or disabling tests. The later passing report supersedes the failed run as the latest reported result.
+Fourteen tests authored for confirmation, retained records, multiple sessions, login/access denial, owner-session preservation, permissions, role/organization boundaries, CSRF, feature gate, stale actor validation, backend rejection and rollback. Runtime tests and browser acceptance NOT RUN here. CI PENDING. New listing control is part of this unverified increment, not retroactively covered by earlier passing CI.
 
-This documentation-only update records that confirmation; its own workflow result remains pending. It does not change code, migrations, credentials, mail configuration or feature flags, and does not send invitations.
+## Evidence boundaries
+Latest reported passing application commit remains e3bcfcb, based on owner's 13:28 EST confirmation. BUG-002 stays FIXED_VERIFIED. Passing run URL/count/logs unavailable; Actions not independently retrieved and no new passing count inferred. cd1f580 has no separately supplied workflow result.
 
-## Not operationally complete
-Staff authentication and onboarding default off. Passing CI does not establish operational approval or browser acceptance. Throttling, session limits, recovery, activation-path log redaction, approved mail configuration, delivery reliability, concurrency tests and browser acceptance remain open.
+Historical 13:21 EST failure: 83 test entries in 0.897s, one onboarding module-import error, other 82 entries passed; onboarding methods did not execute. Preserve this separately from the later passing report.
 
-Classes, student access, lessons, documents, assignments, progress, feedback, reports, deployment and broader release gates remain incomplete. Historical feature documents and VALIDATION.json do not override current CI evidence. Passing CI alone is not production authorization.
+## Operational limits
+No migration, real account action, email, credential change or feature-flag activation by the source commit. Staff authentication and onboarding remain off by default. No production or manual-browser acceptance claimed. Reactivation, audit, PostgreSQL race testing, throttling, approved session limits, recovery, activation-path log redaction and approved mail/delivery policies remain open. In-flight requests are not retroactively cancelled.
+
+Classes, student access, lessons, documents, assignments, progress, feedback, reports, deployment and broader release gates remain incomplete. Passing CI alone is not production authorization.

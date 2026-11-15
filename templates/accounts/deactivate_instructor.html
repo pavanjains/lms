@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Deactivate instructor</h1>
+<p>Instructor: {{ instructor.username }} ({{ instructor.email }})</p>
+<p>This blocks sign-in and revokes existing database sessions. The account, credentials, MFA devices and related records are retained. Reactivation is not available in this screen.</p>
+{% if not instructor.is_active %}<p role="status">This instructor is already inactive. Confirming again only repeats session cleanup.</p>{% endif %}
+{% if error %}<p role="alert">{{ error }}</p>{% endif %}
+<form method="post">
+  {% csrf_token %}{{ form.as_p }}
+  <button type="submit">Deactivate instructor</button>
+</form>
+<p><a href="{% url 'owner-accounts:instructors' %}">Cancel and return to instructors</a></p>
+{% endblock %}

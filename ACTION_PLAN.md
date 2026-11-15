@@ -1,38 +1,38 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-15, 13:29 EST. Repository: pavanjains/lms; main.
+Updated: 2026-11-15, 13:43 EST. Repository: pavanjains/lms; main.
 
 ## Sources
-[Ticket ledger](docs/TICKETS.md) is authoritative. [Onboarding notes](docs/E05_ONBOARDING.md) describe implementation; the ledger supersedes their historical CI-pending note. Earlier feature notes and VALIDATION.json are historical. Markdown IDs are not GitHub Issues and no background automation updates them.
+[Ticket ledger](docs/TICKETS.md) is authoritative. [Onboarding notes](docs/E05_ONBOARDING.md) and [deactivation notes](docs/E05_DEACTIVATION.md) describe implementation. The ledger supersedes historical CI notes. Markdown IDs are not GitHub Issues; no background tracking automation is installed.
 
 ## Current increment
-E05-02/03/04/05: owner invite form, configured-backend email, one-time activation, confirmed resend (1b4a5dd). Fourteen onboarding tests authored. BUG-002 corrected the test mail import in e3bcfcb. Status FIXED_VERIFIED based on the owner's 13:28 EST confirmation that the workflow passed after e3bcfcb. Onboarding now has owner-reported passing-CI evidence; browser acceptance and production approval remain open. No passing test count or run URL supplied; Actions result not independently retrieved.
+E05-07: owner-confirmed instructor deactivation, scoped authorization, retained account/credentials/MFA and database-session revocation. Fourteen tests authored. Status REVIEW; new CI and browser acceptance PENDING. No migration, runtime account action, real email or feature-flag activation.
 
-Historical failure retained: owner-supplied 13:21 EST log showed 83 test entries and one onboarding module-import error; onboarding test methods did not execute in that failed run. The later passing report supersedes that failure as the latest reported result, not as a deletion of its history.
+Latest reported passing application commit: e3bcfcb, per owner's 13:28 EST confirmation. BUG-002 is FIXED_VERIFIED on that evidence; run URL/count not supplied and Actions not independently retrieved. Earlier onboarding commit 1b4a5dd failed on its test mail import (owner's 13:21 log: 83 entries, one error, no onboarding methods executed). Keep that history; do not infer new passing counts. cd1f580 records the passing report; no separate workflow result has been supplied for that documentation commit or this increment.
 
-Both staff access and instructor onboarding remain disabled by default. New instructor activation does not log the user in; subsequent sign-in requires MFA enrollment. This documentation-only update changes no application code, migrations, mail settings, credentials or flags. Its own workflow result is pending and is separate from the reported pass for e3bcfcb. The classroom LMS is not complete.
+Staff authentication and onboarding remain disabled by default. Browser acceptance, operational approval and complete classroom LMS functionality remain open.
 
 ## Roadmap
 | Epics | State |
 |---|---|
-| E01–E03 Foundations/data/shared UI | Partial; lockfile, formatter/setup checks and broader UI remain |
-| E04 Staff identity/MFA | Partial; recovery, throttling, session limits remain |
-| E05 Instructor lifecycle | In progress; onboarding CI passed by owner report after e3bcfcb; deactivation/audit/concurrency/UAT remain |
+| E01–E03 Foundations/data/shared UI | Partial; lockfile, formatter/setup and broader UI remain |
+| E04 Staff identity/MFA | Partial; recovery, throttling and session limits remain |
+| E05 Instructor lifecycle | Onboarding CI passed by owner report; E05-07 code pending CI/UAT; audit/delivery/concurrency remain |
 | E06–E08 Student accounts/sessions/classes | TODO beyond baseline student models |
 | E09–E12 Documents/lessons/assignments | TODO |
 | E13–E17 Progress/feedback/workspaces/reports | TODO |
 | E18–E20 Audit/deployment/recovery | TODO |
-| E21 Full verification | Partial auth/onboarding tests only; broader acceptance TODO |
+| E21 Full verification | Partial auth/onboarding inputs; deactivation tests pending; broader acceptance TODO |
 | E22 Training/launch | TODO |
 
 ## Next actions
-1. Complete local/staging onboarding browser acceptance using synthetic mail; record evidence separately from CI. Attach run URL/count if supplied, without inferring counts.
-2. Complete E05 deactivation, PostgreSQL race tests, audit/delivery follow-ups and browser UAT.
+1. Verify E05-07 in CI and synthetic browser sessions; record actual evidence, not assumed counts.
+2. Complete onboarding browser acceptance, PostgreSQL race tests and audit/delivery follow-ups.
 3. Resolve password/activation throttling, session limits, recovery, token-path log redaction, approved mail origin/sender and delivery policy before operational enablement.
 4. Implement E08 classes, shared instructors, enrollment and resource-scoped permissions.
 
 ## Update protocol
-Every implementation/fix commit references ticket/BUG IDs and updates the ledger. New CI starts PENDING. Distinguish owner-reported CI from direct observations; do not infer counts. Preserve bug history, reopen invalidated acceptance, and record manual tests separately. CI is not production authorization.
+Every implementation/fix commit references ticket/BUG IDs and updates all three tracking documents. New CI starts PENDING; owner-reported CI and direct observations stay distinct. Preserve bug history, reopen invalidated acceptance, and record manual tests separately. CI is not production authorization.
 
 ## Release gates
 - [ ] Reproducible dependencies/setup.

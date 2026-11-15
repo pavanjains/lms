@@ -13,11 +13,11 @@
 <h2>Instructor accounts</h2>
 <table>
   <caption>Instructor accounts matching your search</caption>
-  <thead><tr><th scope="col">Username</th><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Status</th></tr></thead>
+  <thead><tr><th scope="col">Username</th><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead>
   <tbody>
   {% for instructor in instructor_page %}
-  <tr><td>{{ instructor.username }}</td><td>{{ instructor.display_name|default:"—" }}</td><td>{{ instructor.email }}</td><td>{{ instructor.is_active|yesno:"Active,Inactive" }}</td></tr>
-  {% empty %}<tr><td colspan="4">No instructor accounts match.</td></tr>{% endfor %}
+  <tr><td>{{ instructor.username }}</td><td>{{ instructor.display_name|default:"—" }}</td><td>{{ instructor.email }}</td><td>{{ instructor.is_active|yesno:"Active,Inactive" }}</td><td>{% if instructor.is_active %}<a href="{% url 'owner-accounts:deactivate-instructor' instructor.pk %}">Review deactivation</a>{% else %}Inactive{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="5">No instructor accounts match.</td></tr>{% endfor %}
   </tbody>
 </table>
 <nav aria-label="Instructor pages">
