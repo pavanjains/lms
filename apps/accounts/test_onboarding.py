@@ -123,7 +123,7 @@ class OnboardingTests(TestCase):
     def test_activation_has_privacy_headers(self):
         _, token = self.issue()
         response = Client().get(reverse("onboarding:activate", args=[token]))
-        self.assertEqual(response["Referrer-Policy"], "no-referrer")
+        self.assertEqual(response["Referrer-Policy"], "same-origin")
         self.assertIn("no-store", response["Cache-Control"])
 
     def test_activation_requires_csrf(self):
@@ -144,3 +144,77 @@ class OnboardingTests(TestCase):
         invitation.save(update_fields=["organization"])
         url = reverse("owner-accounts:resend-invitation", args=[invitation.pk])
         self.assertEqual(self.client.post(url, {"confirm": "on"}).status_code, 404)
+
+    def csrf_client(self, *, owner):
+        client = Client(enforce_csrf_checks=True)
+        if owner:
+            client.force_login(self.owner)
+            device = TOTPDevice.objects.get(user=self.owner, name="default")
+            session = client.session
+            session[DEVICE_ID_SESSION_KEY] = device.persistent_id
+            session.save()
+        return client
+
+    def csrf_post(self, client, url, data, origin):
+        response = client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Referrer-Policy"], "same-origin")
+        self.assertIn("no-store", response["Cache-Control"])
+        data = {**data, "csrfmiddlewaretoken": client.cookies["csrftoken"].value}
+        return client.post(url, data, HTTP_ORIGIN=origin)
+
+    def test_same_origin_invitation_with_csrf_checks(self):
+        response = self.csrf_post(
+            self.csrf_client(owner=True), self.invite_url,
+            {"email": "new@example.test", "confirm": "on"}, "http://testserver",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(InstructorInvitation.objects.count(), 1)
+
+    def test_same_origin_resend_with_csrf_checks(self):
+        old, _ = self.issue()
+        url = reverse("owner-accounts:resend-invitation", args=[old.pk])
+        response = self.csrf_post(
+            self.csrf_client(owner=True), url, {"confirm": "on"}, "http://testserver",
+        )
+        self.assertEqual(response.status_code, 200)
+        old.refresh_from_db()
+        self.assertIsNotNone(old.revoked_at)
+        self.assertEqual(len(mail.outbox), 2)
+
+    def test_same_origin_activation_with_csrf_checks(self):
+        invitation, token = self.issue()
+        client = self.csrf_client(owner=False)
+        response = self.csrf_post(
+            client, reverse("onboarding:activate", args=[token]),
+            self.activation_data(), "http://testserver",
+        )
+        self.assertRedirects(response, reverse("onboarding:complete"), fetch_redirect_response=False)
+        invitation.refresh_from_db()
+        self.assertIsNotNone(invitation.accepted_at)
+        self.assertNotIn("_auth_user_id", client.session)
+
+    def test_null_and_cross_origin_invites_rejected_with_valid_csrf(self):
+        for origin in ("null", "https://attacker.example"):
+            with self.subTest(origin=origin):
+                response = self.csrf_post(
+                    self.csrf_client(owner=True), self.invite_url,
+                    {"email": "new@example.test", "confirm": "on"}, origin,
+                )
+                self.assertEqual(response.status_code, 403)
+        self.assertFalse(InstructorInvitation.objects.exists())
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_null_and_cross_origin_activation_rejected_with_valid_csrf(self):
+        invitation, token = self.issue()
+        url = reverse("onboarding:activate", args=[token])
+        for origin in ("null", "https://attacker.example"):
+            with self.subTest(origin=origin):
+                response = self.csrf_post(
+                    self.csrf_client(owner=False), url, self.activation_data(), origin,
+                )
+                self.assertEqual(response.status_code, 403)
+        invitation.refresh_from_db()
+        self.assertIsNone(invitation.accepted_at)
+        self.assertFalse(get_user_model().objects.filter(username="newteacher").exists())

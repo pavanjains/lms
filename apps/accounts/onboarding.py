@@ -92,7 +92,8 @@ def issue_and_deliver(*, actor, email):
 
 def page(request, context, status=200):
     response = render(request, "accounts/onboarding.html", context, status=status)
-    response["Referrer-Policy"] = "no-referrer"
+    # Preserve same-origin form navigation without leaking token URLs cross-origin.
+    response["Referrer-Policy"] = "same-origin"
     return response
 
 
