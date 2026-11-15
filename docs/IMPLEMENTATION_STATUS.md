@@ -1,23 +1,23 @@
-# First implementation slice
+# Implementation Status
 
-All entries are authored artifacts, not externally merged tickets.
+Updated: 2026-11-15, 08:30 EST.
 
-| Ticket | Status | Notes |
-|---|---|---|
-| E01-01 | Implemented; runtime verification pending | Django project and entrypoints |
-| E01-02 | Partial | Core, accounts, organizations modules; remaining feature modules deferred |
-| E01-03 | Partial | Dependency ranges authored; resolved lockfile not generated |
-| E01-04 | Implemented; runtime verification pending | Development, test, PostgreSQL CI, production settings |
-| E01-05 | Configured; unverified | Local PostgreSQL Compose; not started here |
-| E01-06 | Partial | Ruff lint configured; formatter checks deferred until formatter can run |
-| E01-07 | Configured; unverified | PostgreSQL CI checks, migrations, tests |
-| E01-08 | Draft | Setup guide included; independent setup not demonstrated |
-| E02-01 | Draft | Decision register included |
-| E02-02–04 | Implemented; runtime verification pending | Organization, custom user, student profile, initial migrations |
-| E03-01 | Partial | Minimal semantic layout, no role navigation or full styling |
+The original first-slice-only status has been superseded by:
+- [Action plan](../ACTION_PLAN.md): overall roadmap and release gates.
+- [Ticket ledger](TICKETS.md): detailed status, commits, fixes, CI evidence.
 
-No ticket is marked DONE without its acceptance evidence. No login, MFA, account management UI, class permissions, lessons, assignments, or private uploads are implemented in this slice.
+## Implemented and committed
+- Django foundation, PostgreSQL configuration, initial organization/user/profile migrations.
+- Hidden repository configuration and CI workflow (1311cd3).
+- Owner bootstrap (ce49752), with validation-order fix (ef6b96c).
+- Staff email backend and MFA access guard (b3aca8d).
+- Gated authenticator enrollment/login, recovery codes, POST logout, staff page (031b843).
+- Instructor invitation schema/migration and issue/reissue/revoke/accept services (d60ab7d).
 
-Validation performed here: Python syntax parsing and artifact integrity only. Django runtime tests, migrations, Docker services, PostgreSQL constraints, Ruff, and CI require execution in the target environment.
+## Verification
+The owner reported the latest workflow passed at 08:30 EST after d60ab7d. This is owner-reported evidence, not an independently retrieved Actions result. Latest run URL and test count are unavailable. The prior observed failure was a pasted 50-test log with four bootstrap errors; BUG-001 records its correction and reported passing rerun.
 
-Next: resolve dependencies to a reviewed lockfile; run CI; implement owner bootstrap and staff MFA before protected features; then classes and authorization.
+## Not operationally complete
+Staff authentication defaults off. No invitation screens/email/public activation routes, classes, student access, lessons, uploads, assignments, progress, feedback, reports, or production deployment are complete. Dependency locking, authentication hardening, recovery, authorization, privacy, and operational acceptance remain open.
+
+Historical feature documents and VALIDATION.json describe the verification state when authored. Consult TICKETS.md for later CI evidence. Passing CI does not imply all epics or production release gates are complete.
