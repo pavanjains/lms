@@ -61,3 +61,34 @@ class StudentProfile(models.Model):
         super().clean()
         if self.user_id and self.user.role != User.Role.STUDENT:
             raise ValidationError({"user": "Student profiles require the student role."})
+
+
+class InstructorInvitation(models.Model):
+    organization = models.ForeignKey("organizations.Organization", on_delete=models.PROTECT)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="issued_invitations",
+    )
+    email = models.EmailField()
+    token_digest = models.CharField(max_length=64, unique=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    revoked_at = models.DateTimeField(null=True, blank=True)
+    accepted_at = models.DateTimeField(null=True, blank=True)
+    accepted_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True,
+        related_name="accepted_invitations",
+    )
+
+    class Meta:
+        indexes = [models.Index(fields=["organization", "email"], name="invite_org_email_idx")]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(accepted_at__isnull=True) | Q(revoked_at__isnull=True),
+                name="invite_not_accepted_revoked",
+            ),
+            models.CheckConstraint(
+                condition=(Q(accepted_at__isnull=True, accepted_user__isnull=True)
+                           | Q(accepted_at__isnull=False, accepted_user__isnull=False)),
+                name="invite_acceptance_pair",
+            ),
+        ]
