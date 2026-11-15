@@ -80,9 +80,9 @@ class Command(BaseCommand):
             is_staff=False,
             is_superuser=False,
         )
-        owner.full_clean()
         validate_password(password, user=owner)
         owner.set_password(password)
+        owner.full_clean()
         owner.save()
         self.stdout.write(self.style.SUCCESS(
             "Initial owner created. Staff login and MFA must be implemented before use."
