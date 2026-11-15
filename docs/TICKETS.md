@@ -1,6 +1,6 @@
 # Development Tickets and Fix Ledger
 
-Updated: 2026-11-15, 08:52 EST. Parent: [ACTION_PLAN.md](../ACTION_PLAN.md).
+Updated: 2026-11-15, 13:21 EST. Parent: [ACTION_PLAN.md](../ACTION_PLAN.md).
 
 ## Rules and preserved baseline
 TODO = not implemented; IN_PROGRESS = partial acceptance; REVIEW = code with CI/manual checks pending; CI_PASSED = included in reported/observed passing CI with possible manual work remaining; DONE = scoped acceptance met; FIXED_VERIFIED = corrected with subsequent evidence.
@@ -21,13 +21,16 @@ TODO = not implemented; IN_PROGRESS = partial acceptance; REVIEW = code with CI/
 | E05-09 Activation privacy/throttling | IN_PROGRESS | New no-referrer/no-store and sensitive password filtering; token-path log redaction and throttling pending |
 | E05-10 Delivery reliability | TODO | New follow-up: durable delivery audit/outbox decision; ambiguous SMTP/commit failure handling |
 
-[Current implementation and manual checks](E05_ONBOARDING.md). Fourteen onboarding tests authored, not run in the authoring environment. Previous tests retained. No migration. No emails sent by this source commit. Onboarding/staff flags remain off. E05 is not complete.
+[Current implementation and manual checks](E05_ONBOARDING.md). Fourteen onboarding tests authored. Owner-supplied 13:21 EST CI log shows module import failure: no onboarding test methods executed. BUG-002 corrects the import; fix CI PENDING. Previous tests retained. No migration or real email execution. Onboarding/staff flags remain off. E05 is not complete.
 
 ## Foundation and staff carry-forward
 E01–E03 remain partial per baseline. E01-03 lockfile is open. E04-02 bootstrap is DONE; E04-01/03/04 are CI_PASSED with manual/security gaps. E04-05 password recovery, E04-07 last-owner protection, E04-08 throttling, E04-09 approved session limits and E04-10 timeout tests remain open; E04-06 MFA recovery remains IN_PROGRESS. A verified owner is not exempt from class/resource policies.
 
 ## BUG-001 — Blank bootstrap password validation
 Parent E04-02; FIXED_VERIFIED. Owner's 08:11 EST log: 50 tests, four bootstrap errors, remaining 46 passed. Cause: full_clean before set_password. ef6b96c corrects ordering; tests unchanged, no migration. Owner reported passing rerun at 08:24 EST.
+
+## BUG-002 — Onboarding test module cannot import mail
+Parent E05-03 / E21. Status REVIEW; fix CI PENDING, not FIXED_VERIFIED. Introduced in 1b4a5dd. Owner supplied 13:21 EST log: Ran 83 tests in 0.897s, one import error, remaining 82 entries passed. The failed entry is unittest's module-load placeholder, not one of the fourteen onboarding methods. Root cause: from django.contrib import mail. Correction: from django.core import mail. No test methods removed or disabled; no runtime application change, migration, flag activation, or real email. Run the full CI suite to verify discovery and execution; do not infer a passing count or claim onboarding acceptance from this log. Run URL/SHA not supplied; association with 1b4a5dd is based on the matching committed source.
 
 ## Commit / CI evidence
 | Commit | Change | Evidence |
@@ -40,6 +43,7 @@ Parent E04-02; FIXED_VERIFIED. Owner's 08:11 EST log: 50 tests, four bootstrap e
 | d60ab7d | Invitation services | Owner reported pass 08:30 EST |
 | d4f9625 | Tracking documentation | No separate result supplied |
 | 0ce5595 | Owner list/revoke | Owner reported pass 08:51 EST; URL/count unknown |
-| Current E05 onboarding increment | Invite/delivery/activation/resend + tracking | CI PENDING; SHA assigned at commit |
+| 1b4a5dd | Invite/delivery/activation/resend + tracking | Owner-supplied 13:21 EST log: CI FAILED, onboarding import error; run SHA not supplied |
+| Current BUG-002 fix | Correct test mail import and tracking | CI PENDING; SHA assigned at commit |
 
 No latest count is inferred by adding authored tests. Passing CI reports are owner-provided, not independently retrieved. The new commit, including its documentation, requires its own verification. Historical feature documents do not override this evidence ledger.

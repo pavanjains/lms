@@ -3,7 +3,7 @@ from datetime import timedelta
 from smtplib import SMTPException
 from unittest.mock import patch
 
-from django.contrib import mail
+from django.core import mail
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
