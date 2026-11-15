@@ -2,7 +2,7 @@
 {% block content %}
 <h1>Instructors and invitations</h1>
 <p><a href="{% url 'staff-home' %}">Back to staff workspace</a></p>
-<p>Invitation creation, email delivery, and activation screens are not available yet.</p>
+<p><a href="{% url 'owner-accounts:invite' %}">Invite instructor</a></p>
 {% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
 <form method="get">
   <label for="search">Search names or email</label>
@@ -31,7 +31,7 @@
   <thead><tr><th scope="col">Email</th><th scope="col">Status</th><th scope="col">Expires</th><th scope="col">Action</th></tr></thead>
   <tbody>
   {% for invitation in invitation_page %}
-  <tr><td>{{ invitation.email }}</td><td>{{ invitation.display_status }}</td><td>{{ invitation.expires_at }}</td><td>{% if invitation.can_revoke %}<a href="{% url 'owner-accounts:revoke-invitation' invitation.pk %}">Review revocation</a>{% else %}No action{% endif %}</td></tr>
+  <tr><td>{{ invitation.email }}</td><td>{{ invitation.display_status }}</td><td>{{ invitation.expires_at }}</td><td>{% if not invitation.accepted_at %}<a href="{% url 'owner-accounts:resend-invitation' invitation.pk %}">Review resend</a> {% endif %}{% if invitation.can_revoke %}<a href="{% url 'owner-accounts:revoke-invitation' invitation.pk %}">Review revocation</a>{% else %}No revocation action{% endif %}</td></tr>
   {% empty %}<tr><td colspan="4">No invitations match.</td></tr>{% endfor %}
   </tbody>
 </table>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if recipient %}<p>Recipient: {{ recipient }}</p>{% endif %}
+{% if notice %}<p role="status">{{ notice }}</p>{% endif %}
+{% if error %}<p role="alert">{{ error }}</p>{% endif %}
+{% if form %}
+<form method="post">
+  {% csrf_token %}{{ form.as_p }}
+  <button type="submit">Confirm</button>
+</form>
+{% endif %}
+{% if owner %}<p><a href="{% url 'owner-accounts:instructors' %}">Return to instructor management</a></p>{% endif %}
+{% if complete %}<p><a href="{% url 'two_factor:login' %}">Sign in and set up MFA</a></p>{% endif %}
+{% endblock %}

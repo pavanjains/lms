@@ -1,67 +1,45 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-15, 08:39 EST. Repository: pavanjains/lms; branch: main.
+Updated: 2026-11-15, 08:52 EST. Repository: pavanjains/lms; main.
 
-## Progress tracking
-- [Ticket ledger](docs/TICKETS.md): authoritative ticket and fix statuses.
-- [Current E05 increment](docs/E05_OWNER_MANAGEMENT.md): implementation and manual acceptance steps.
-- docs/IMPLEMENTATION_STATUS.md summarizes earlier baseline work; this plan and the ledger govern later increments.
-- docs/VALIDATION.json remains a historical initial-slice artifact.
-- IDs are Markdown tickets, not GitHub Issues. No background automation updates them.
+## Sources
+[Ticket ledger](docs/TICKETS.md) is authoritative. [Onboarding notes](docs/E05_ONBOARDING.md) cover the current increment. Earlier feature notes and VALIDATION.json are historical. Markdown IDs are not GitHub Issues and no background automation updates them.
 
 ## Current increment
-E05-05/E05-06: owner instructor/invitation listing and confirmed invitation revocation. Code and fifteen tests authored; CI PENDING for this commit. No migration, email, public acceptance, or production activation.
+E05-02/03/04/05: owner invite form, configured-backend email, one-time activation, confirmed resend. Fourteen tests authored. CI PENDING. No migration, real email execution, production credentials, or feature activation in this commit.
 
-Latest previously reported passing application commit: d60ab7d (owner confirmation, 08:30 EST). Its run URL/count were not supplied. No CI result is claimed for the new increment or preceding documentation-only commit.
+Latest previously reported passing application commit: 0ce5595 (owner reported 08:51 EST). Run URL/count not supplied; result not independently retrieved. E05-06 is CI_PASSED with manual UAT pending; E05-05 revocation passed but new resend awaits CI.
 
-Staff authentication remains disabled by default. CI success is not production authorization. Owner bootstrap, staff MFA, and invitation backend services are committed; the classroom LMS is not complete.
+Both staff access and instructor onboarding remain disabled by default. New instructor activation does not log the user in; subsequent sign-in requires MFA enrollment. The classroom LMS is not complete.
 
-## Epic roadmap
-| Epic | State |
+## Roadmap
+| Epics | State |
 |---|---|
-| E01 Project/workflow | Partial: lockfile, formatter gate, independent setup remain |
-| E02 Data/configuration | Partial: core models exist; policies/approvals remain |
-| E03 Shared UI | Partial: basic layout and scoped owner UI only |
-| E04 Staff identity/MFA | Partial: recovery and hardening remain |
-| E05 Instructor lifecycle | In progress: backend plus owner list/revoke; CI pending for UI |
-| E06 Student accounts | TODO beyond initial user/profile models |
-| E07 Student shared-device sessions | TODO |
-| E08 Classes/enrollment/authorization | TODO |
-| E09 Private storage | TODO |
-| E10 Document validation/delivery | TODO |
-| E11 Lessons/versioning | TODO |
-| E12 Assignments | TODO |
-| E13 Progress/history | TODO |
-| E14 Feedback | TODO |
-| E15 Instructor workspace | TODO |
-| E16 Student lesson UI | TODO |
-| E17 Reports/exports | TODO |
-| E18 Audit/retention | TODO |
-| E19 Deployment/monitoring | TODO; CI is not deployment |
-| E20 Backup/recovery | TODO |
-| E21 Full acceptance/security/capacity | Partial authentication inputs only |
+| E01–E03 Foundations/data/shared UI | Partial; lockfile, formatter/setup checks and broader UI remain |
+| E04 Staff identity/MFA | Partial; recovery, throttling, session limits remain |
+| E05 Instructor lifecycle | In progress; onboarding code pending CI; deactivation/audit/concurrency/UAT remain |
+| E06–E08 Student accounts/sessions/classes | TODO beyond baseline student models |
+| E09–E12 Documents/lessons/assignments | TODO |
+| E13–E17 Progress/feedback/workspaces/reports | TODO |
+| E18–E20 Audit/deployment/recovery | TODO |
+| E21 Full verification | Partial auth tests only; broader acceptance TODO |
 | E22 Training/launch | TODO |
 
 ## Next actions
-1. Verify owner list/revoke increment in CI and local/staging browser walkthrough.
-2. Implement E05-02/03/04 invite form, delivery, and instructor activation; E05-05 resend.
-3. Implement E05-07 deactivation and E05-08 PostgreSQL concurrency regressions.
-4. Complete E04 password throttling, approved idle/absolute limits, recovery and timeout tests before operational activation.
-5. Start E08 class schema, shared teaching, enrollment, and class-level policies.
+1. Verify onboarding in CI and local/staging with synthetic mail, then record SHA and evidence.
+2. Complete E05 deactivation, PostgreSQL race tests, audit/delivery follow-ups and browser UAT.
+3. Resolve password/activation throttling, session limits, recovery, token-path log redaction, approved mail origin/sender and delivery policy before operational enablement.
+4. Implement E08 classes, shared instructors, enrollment and resource-scoped permissions.
 
-No actual invitation email is sent by this increment. Real delivery requires an approved origin/sender, credentials, and retry/failure policy. Activation must not permit arbitrary role/organization selection or bypass MFA.
-
-## Update rules
-Every future code/fix commit must reference ticket/BUG IDs and update the ledger in the same change. New CI starts PENDING. Record SHA, source, conclusion, and URL/count when available. Reopen affected acceptance when a defect invalidates it. CI evidence and manual/operational evidence are separate. Do not claim production readiness from unit tests or invent a weighted completion percentage.
+## Update protocol
+Every implementation/fix commit references ticket/BUG IDs and updates the ledger. New CI starts PENDING. Distinguish owner-reported CI from direct observations; do not infer counts. Preserve bug history, reopen invalidated acceptance, and record manual tests separately. CI is not production authorization.
 
 ## Release gates
-- [ ] Reviewed dependency lockfile and repeatable setup.
-- [ ] Auth throttling, session limits, recovery and browser checks.
-- [ ] Instructor onboarding/deactivation and class-scoped authorization.
-- [ ] Student access and shared-device isolation.
-- [ ] Lessons/documents/assignments/progress/feedback.
-- [ ] Audit, retention, privacy/consent, center procedures.
-- [ ] Deployment, monitoring, database/document restore drill.
-- [ ] Owner/instructor UAT and security/capacity acceptance.
-
-Commit/evidence history is preserved in docs/TICKETS.md. Full operational implementation remains pending.
+- [ ] Reproducible dependencies/setup.
+- [ ] Auth/activation throttling, sessions and recovery.
+- [ ] Complete instructor lifecycle and class permissions.
+- [ ] Student access/shared-device isolation.
+- [ ] Lessons/documents/assignments/progress/feedback/reporting.
+- [ ] Audit, privacy/consent, retention and device procedures.
+- [ ] Deployment/monitoring/database-document restore.
+- [ ] Browser UAT, security/capacity acceptance and training.
