@@ -1,8 +1,8 @@
 # Implementation Status
 
-Updated: 2026-11-15, 13:21 EST.
+Updated: 2026-11-15, 13:29 EST.
 
-[Action plan](../ACTION_PLAN.md) records the roadmap and release gates. [Ticket ledger](TICKETS.md) records tickets, fixes, commits, and CI evidence.
+[Action plan](../ACTION_PLAN.md) records the roadmap and release gates. [Ticket ledger](TICKETS.md) records tickets, fixes, commits and CI evidence, and supersedes older feature-document verification notes.
 
 ## Implemented and committed
 - Django foundation, PostgreSQL configuration, initial organization/user/profile migrations.
@@ -12,14 +12,17 @@ Updated: 2026-11-15, 13:21 EST.
 - Gated authenticator enrollment/login, recovery codes, POST logout and staff page (031b843).
 - Instructor invitation schema and lifecycle services (d60ab7d).
 - Owner instructor/invitation lists, search, pagination, statuses and revoke UI (0ce5595).
-- Gated invitation creation, configured-backend email, confirmed resend and instructor activation (1b4a5dd); fourteen onboarding tests authored, but their module failed to import in the supplied CI log.
+- Gated invitation creation, configured-backend email, confirmed resend and instructor activation (1b4a5dd), with fourteen onboarding tests authored.
+- Onboarding test mail-import correction (e3bcfcb, BUG-002); passing workflow confirmed by owner at 13:28 EST.
 
-## Latest failure and correction
-Owner supplied a CI log at 13:21 EST: 83 test entries in 0.897s, one import error and remaining 82 entries passed. apps.accounts.test_onboarding imports mail from django.contrib, which prevents all fourteen onboarding methods from loading. BUG-002 changes that import to django.core. No test methods removed or disabled. Fix CI PENDING; runtime tests not run here. Run URL/SHA not supplied; the source matches 1b4a5dd, but Actions results were not independently retrieved.
+## Latest verification
+BUG-002 is FIXED_VERIFIED based on the owner's 13:28 EST confirmation that the workflow passed after e3bcfcb. Onboarding has owner-reported passing-CI evidence. Passing run URL, exact count and logs were not supplied; Actions result was not independently retrieved. No passing count is inferred from the authored tests. Browser acceptance remains pending.
 
-The 83 entries include unittest's failed-module placeholder; they do not mean the onboarding tests ran or passed. No new passing count is inferred. Latest previously reported passing application commit is 0ce5595, per owner confirmation at 08:51 EST; browser acceptance remains pending.
+Historical failure retained: owner's 13:21 EST log contained 83 test entries in 0.897s, one import error and 82 passing entries. The failed-module placeholder meant no onboarding test methods executed in that failed run. e3bcfcb corrected from django.contrib import mail to from django.core import mail without removing or disabling tests. The later passing report supersedes the failed run as the latest reported result.
+
+This documentation-only update records that confirmation; its own workflow result remains pending. It does not change code, migrations, credentials, mail configuration or feature flags, and does not send invitations.
 
 ## Not operationally complete
-Staff authentication and onboarding default off. Invitation screens/email/public activation are authored, not verified or operationally approved. No real invitation, migration, credential configuration or feature activation is performed by BUG-002. Throttling, session limits, recovery, activation-path log redaction, approved mail configuration, delivery reliability, concurrency tests and browser acceptance remain open.
+Staff authentication and onboarding default off. Passing CI does not establish operational approval or browser acceptance. Throttling, session limits, recovery, activation-path log redaction, approved mail configuration, delivery reliability, concurrency tests and browser acceptance remain open.
 
 Classes, student access, lessons, documents, assignments, progress, feedback, reports, deployment and broader release gates remain incomplete. Historical feature documents and VALIDATION.json do not override current CI evidence. Passing CI alone is not production authorization.

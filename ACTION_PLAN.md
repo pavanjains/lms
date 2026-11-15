@@ -1,32 +1,32 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-15, 13:21 EST. Repository: pavanjains/lms; main.
+Updated: 2026-11-15, 13:29 EST. Repository: pavanjains/lms; main.
 
 ## Sources
-[Ticket ledger](docs/TICKETS.md) is authoritative. [Onboarding notes](docs/E05_ONBOARDING.md) cover the current increment. Earlier feature notes and VALIDATION.json are historical. Markdown IDs are not GitHub Issues and no background automation updates them.
+[Ticket ledger](docs/TICKETS.md) is authoritative. [Onboarding notes](docs/E05_ONBOARDING.md) describe implementation; the ledger supersedes their historical CI-pending note. Earlier feature notes and VALIDATION.json are historical. Markdown IDs are not GitHub Issues and no background automation updates them.
 
 ## Current increment
-E05-02/03/04/05: owner invite form, configured-backend email, one-time activation, confirmed resend (1b4a5dd). Fourteen tests authored. CI FAILED by owner-supplied 13:21 EST log: onboarding module import error; 83 test entries, one error. No onboarding test method executed. BUG-002 corrects django.contrib mail import to django.core; fix CI PENDING. No migration, real email execution, production credentials, or feature activation.
+E05-02/03/04/05: owner invite form, configured-backend email, one-time activation, confirmed resend (1b4a5dd). Fourteen onboarding tests authored. BUG-002 corrected the test mail import in e3bcfcb. Status FIXED_VERIFIED based on the owner's 13:28 EST confirmation that the workflow passed after e3bcfcb. Onboarding now has owner-reported passing-CI evidence; browser acceptance and production approval remain open. No passing test count or run URL supplied; Actions result not independently retrieved.
 
-Latest previously reported passing application commit: 0ce5595 (owner reported 08:51 EST). Run URL/count not supplied; result not independently retrieved. E05-06 is CI_PASSED with manual UAT pending; E05-05 revocation passed but new resend awaits CI.
+Historical failure retained: owner-supplied 13:21 EST log showed 83 test entries and one onboarding module-import error; onboarding test methods did not execute in that failed run. The later passing report supersedes that failure as the latest reported result, not as a deletion of its history.
 
-Both staff access and instructor onboarding remain disabled by default. New instructor activation does not log the user in; subsequent sign-in requires MFA enrollment. The classroom LMS is not complete.
+Both staff access and instructor onboarding remain disabled by default. New instructor activation does not log the user in; subsequent sign-in requires MFA enrollment. This documentation-only update changes no application code, migrations, mail settings, credentials or flags. Its own workflow result is pending and is separate from the reported pass for e3bcfcb. The classroom LMS is not complete.
 
 ## Roadmap
 | Epics | State |
 |---|---|
 | E01–E03 Foundations/data/shared UI | Partial; lockfile, formatter/setup checks and broader UI remain |
 | E04 Staff identity/MFA | Partial; recovery, throttling, session limits remain |
-| E05 Instructor lifecycle | In progress; onboarding CI failed; BUG-002 fix pending CI; deactivation/audit/concurrency/UAT remain |
+| E05 Instructor lifecycle | In progress; onboarding CI passed by owner report after e3bcfcb; deactivation/audit/concurrency/UAT remain |
 | E06–E08 Student accounts/sessions/classes | TODO beyond baseline student models |
 | E09–E12 Documents/lessons/assignments | TODO |
 | E13–E17 Progress/feedback/workspaces/reports | TODO |
 | E18–E20 Audit/deployment/recovery | TODO |
-| E21 Full verification | Partial auth tests only; broader acceptance TODO |
+| E21 Full verification | Partial auth/onboarding tests only; broader acceptance TODO |
 | E22 Training/launch | TODO |
 
 ## Next actions
-1. Run CI after BUG-002, including onboarding discovery and execution; record actual counts and any further failures. Then verify local/staging with synthetic mail.
+1. Complete local/staging onboarding browser acceptance using synthetic mail; record evidence separately from CI. Attach run URL/count if supplied, without inferring counts.
 2. Complete E05 deactivation, PostgreSQL race tests, audit/delivery follow-ups and browser UAT.
 3. Resolve password/activation throttling, session limits, recovery, token-path log redaction, approved mail origin/sender and delivery policy before operational enablement.
 4. Implement E08 classes, shared instructors, enrollment and resource-scoped permissions.
