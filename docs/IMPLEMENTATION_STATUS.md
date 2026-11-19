@@ -1,23 +1,15 @@
 # Implementation Status
 
-Updated: 2026-11-15, 15:50 EST. Ticket evidence: docs/TICKETS.md.
+Updated: 2026-11-18, 19:58 EST. docs/TICKETS.md tracks evidence.
 
-## Current E08-02/E08-03 increment
-Transactional services implement owner class creation/archive, instructor assignment/removal, and owner/assigned-instructor enrollment management. Current actor is reloaded, organization active state checked, staff feature flag and callable MFA verification required. Writes lock organization, actor, class and target; changed models run full_clean. Adds/reactivations preserve unique relationship rows; repeated removals/archives are safe. Instructor enrollment requires existing student visibility.
+## E08-04 authored
+Classroom list/detail and confirmation forms for owner create/archive, instructor assignment/removal and scoped student enrollment/end-enrollment. Staff workspace links to classes. Existing staff middleware/MFA/private-cache controls apply under /staff/classes/. Views recheck current roles, resolve IDs through scoped policies, validate selector choices and use services for every mutation. Read-only GET; CSRF-protected POST; same-origin response policy.
 
-Policies return organization-scoped classes, active eligible students and authorized class rosters. Owners can list archived classes; instructors see only active assigned classes. Shared student visibility never grants another class. Read querysets must be used immediately within a request, not cached/reused as authorization. Full User objects must not be serialized by future views.
+Lists/active rosters paginated at 20; instructor names and roster context project safe fields, no complete User serialization. Class selectors never expose unrelated students. Archived owner detail retains description/status but omits roster and management controls; instructors cannot open archived/unassigned classes. No student creation, reactivation, new migration, runtime account/data change or flag activation.
 
-Tests authored, NOT RUN here; new CI pending. No migration, route/UI, account creation, student login, audit schema, real email or flag activation. Permission services are not a complete student-onboarding solution: initial instructor access for newly created students remains future work. Concurrent raw ORM writes and role/organization mutations are outside the cooperating organization lock protocol; PostgreSQL concurrency acceptance pending.
+UI tests authored, NOT RUN here. New CI/browser acceptance PENDING. Existing E08 service tests unchanged after review of method-level settings decorator. E08-02/03 7e3792c CI result still not supplied. E08-01 6929d69 CI_PASSED by owner November 15 15:50 report with run https://github.com/pavanjains/lms/actions/runs/43758274124 ; fetch failed, not independently verified, no count inferred. Local migration and manual acceptance not implied.
 
-## E08-01 verification
-6929d69 app/schema/migration/model tests: CI_PASSED by owner report at 15:50 EST. Supplied run https://github.com/pavanjains/lms/actions/runs/43758274124 could not be fetched; not independently verified. Count/logs unavailable; no count inferred. Local database migration/browser acceptance not implied.
+## Prior work and boundaries
+[Previous full status](https://github.com/pavanjains/lms/blob/7e3792c115769739fc1a200db1bc366123a700b2/docs/IMPLEMENTATION_STATUS.md) preserves earlier slices/evidence. Foundation, staff/MFA, lifecycle, deactivation, origin fix, class models and services/policies remain implemented. BUG-001/002 verified by prior owner reports; BUG-003 local fix reported working, full browser checks pending. E05-07 manual deactivation/session verification pending.
 
-## Existing / history
-[Previous implementation status](https://github.com/pavanjains/lms/blob/6929d69be5d009831588712694b43a3238006e32/docs/IMPLEMENTATION_STATUS.md) preserves all preceding slices and limitations. Organization/user/profile foundation, owner bootstrap, staff backend/MFA/workspace, invitations/activation, management/revoke, deactivation and origin-header correction remain implemented.
-
-BUG-001 and BUG-002 retain FIXED_VERIFIED based on owner evidence. Historical BUG-002 failure: 83 entries, one import error, 82 passed, no onboarding methods executed; later e3bcfcb pass owner-confirmed 13:28 without count. BUG-003 local fix owner-confirmed 15:07; full browser acceptance pending. E05-07 manual session-deactivation acceptance also pending. New E08 tests not covered by prior reported passes.
-
-## Next / operational limits
-E08-04 class UI and E08-05 races/browser tests next. No current classroom browser routes. Model save/bulk operations can bypass full_clean; no row-level security/triggers. Memberships retained after account/class deactivation; policies must check current statuses. Kit selection stays with future lessons/assignments, not fixed on classes.
-
-Student creation/access/shared-device isolation, lessons/documents/assignments, progress/feedback/reports, deployment/restore/monitoring, recovery/throttling/last-owner/session controls, audit, approved mail/delivery, token-log redaction and privacy/retention/training remain open. Python 3.14 support remains unverified. Staff flags remain off by default; CI is not production approval.
+E08-05 PostgreSQL races and browser acceptance next. Permission querysets are request-scoped, not reusable grants; direct ORM can bypass model validation and cooperating lock protocol. Student creation/initial instructor access, shared-device sessions, lessons/documents/assignments, progress/feedback/reports, deployment/restore/privacy/retention/audit/recovery/throttling/session/last-owner/mail/log-redaction/training and Python 3.14 CI remain incomplete. Flags remain off by default. Passing CI alone is not production approval.

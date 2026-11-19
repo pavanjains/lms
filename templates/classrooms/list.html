@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Classes</h1>
+<p><a href="{% url 'staff-home' %}">Staff workspace</a></p>
+{% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+{% if is_owner %}<p><a href="{% url 'classrooms:create' %}">Create class</a></p>{% endif %}
+<ul>
+{% for room in rooms %}<li><a href="{% url 'classrooms:detail' room.pk %}">{{ room.name }}</a> — {{ room.is_active|yesno:"Active,Archived" }}</li>
+{% empty %}<li>No classes available.</li>{% endfor %}
+</ul>
+<nav aria-label="Class pages">
+{% if rooms.has_previous %}<a href="?page={{ rooms.previous_page_number }}">Previous</a>{% endif %}
+Page {{ rooms.number }} of {{ rooms.paginator.num_pages }}
+{% if rooms.has_next %}<a href="?page={{ rooms.next_page_number }}">Next</a>{% endif %}
+</nav>
+{% endblock %}

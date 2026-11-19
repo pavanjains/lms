@@ -2,7 +2,8 @@
 {% block content %}
 <h1>Staff workspace</h1>
 <p>Signed in as {{ request.user.email }}.</p>
-<p>Multifactor verification completed. Class management is not implemented yet.</p>
+<p>Multifactor verification completed.</p>
+<p><a href="{% url 'classrooms:list' %}">Manage classes</a></p>
 {% if request.user.role == "OWNER" %}
 <p><a href="{% url 'owner-accounts:instructors' %}">Manage instructors and invitations</a></p>
 {% endif %}

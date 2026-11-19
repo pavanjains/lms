@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if room %}<p>Class: {{ room.name }}</p>{% endif %}
+{% if archiving %}<p>Archiving hides the class from instructors and blocks enrollment changes. Accounts and membership records are retained. Reactivation is not available here.</p>{% endif %}
+<p>Only authorized existing accounts are available. Student account creation is not included in this screen.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Confirm and save</button></form>
+{% if room %}<p><a href="{% url 'classrooms:detail' room.pk %}">Cancel</a></p>{% else %}<p><a href="{% url 'classrooms:list' %}">Cancel</a></p>{% endif %}
+{% endblock %}

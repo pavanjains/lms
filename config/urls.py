@@ -21,4 +21,5 @@ urlpatterns = [
     path("staff/logout/", LogoutView.as_view(), name="staff-logout"),
     path("staff/owner/", include("apps.accounts.owner_urls")),
     path("onboarding/", include("apps.accounts.onboarding_urls")),
+    path("staff/classes/", include("apps.classrooms.urls")),
 ]
