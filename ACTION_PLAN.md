@@ -1,20 +1,22 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-18, 19:58 EST. Repository pavanjains/lms; main.
+Updated: 2026-11-18, 20:09 EST. Repository pavanjains/lms; main.
 
-## Current E08-04 increment
-Classroom browser UI authored: list/detail, owner create/archive, owner instructor assignment/removal, scoped enrollment/end-enrollment, confirmation forms, staff navigation and UI tests. Status REVIEW, CI/browser acceptance PENDING. No runtime database change, seed accounts, email, migration or flag activation. Services reauthorize every write; lists/selectors scoped, no full User records in roster context. See docs/CLASSROOMS_UI.md.
+## Current E08-05 concurrency increment
+PostgreSQL TransactionTestCase tests authored with separate worker connections, uncommitted leader transactions, observed pg_blocking_pids waits and bounded release/SQL/future timeouts. Cases cover duplicate class names, assignment/enrollment reuse, removal/archive/deactivation versus enrollment in both orders, and end/re-enroll ordering. Runtime services unchanged. CI now asserts PostgreSQL and has a job timeout; full suite discovers the tests. SQLite skips are not concurrency evidence.
 
-## Evidence
-E08-01 6929d69 CI_PASSED by owner's November 15 15:50 EST report: https://github.com/pavanjains/lms/actions/runs/43758274124 . Fetch failed; not independently verified, no count supplied. Local migration/manual acceptance not implied. E08-02/03 7e3792c committed November 18; no CI result supplied. E08-04 tests authored, not executed here.
+Status E08-05 IN_PROGRESS: concurrency code REVIEW, tests NOT RUN here, CI PENDING; shared-instructor/browser acceptance still open. No migration, runtime account/database action, mail, flag activation or production approval. See docs/CLASSROOMS_CONCURRENCY.md.
 
-BUG-003 24453d6 local invitation fix owner-confirmed November 15 15:07; full browser acceptance open. E05-07 666eee6 manual deactivation/session acceptance remains open. BUG-001/002 and earlier reported pass evidence retained in ledger history. No inferred counts.
+## Evidence retained
+E08-01 6929d69 CI_PASSED by owner's November 15 15:50 report: https://github.com/pavanjains/lms/actions/runs/43758274124 . Fetch failed, not independently verified, no count supplied. Local migration/manual checks not implied. E08-02/03 7e3792c and E08-04 d437edf committed; no CI results supplied. New concurrency tests not covered by prior reports.
 
-## Next
-1. Run E08-04 and full PostgreSQL CI; synthetic owner/instructor browser acceptance.
-2. E08-05 PostgreSQL race tests and end-to-end shared-instructor isolation.
-3. Instructor-managed student creation with initial access, student sessions/shared-device isolation. No student creation form is included here; enrollment uses existing accounts.
-4. Lessons/supporting documents, assignments, instructor progress/feedback, student read-only workspace and reporting.
-5. Recovery/throttling/session/last-owner controls, audit, log redaction, mail approval/delivery, Python 3.14 CI, reproducible dependencies and deployment/restore/privacy/training remain release gates.
+[Previous complete plan](https://github.com/pavanjains/lms/blob/d437edf410412d40e9fdb5d9b0d26b9f56d057ef/ACTION_PLAN.md) preserves roadmap and history. BUG-003 local fix owner-confirmed, full browser acceptance open; E05-07 manual session/deactivation acceptance open. BUG-001/002 historical evidence preserved in ledger links; no inferred passing counts.
 
-[Prior complete plan](https://github.com/pavanjains/lms/blob/7e3792c115769739fc1a200db1bc366123a700b2/ACTION_PLAN.md) preserves prior roadmap/evidence. Update ACTION_PLAN.md, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md in each implementation/fix. Flags remain off by default, no production authorization or unattended tracking.
+## Next / release gates
+1. Run PostgreSQL concurrency and full CI; investigate errors/timeouts rather than silently skip.
+2. Complete E08-04/E08-05 owner/shared-instructor browser acceptance; include access loss after membership/account changes.
+3. Instructor-managed student creation/initial access and shared-device sessions.
+4. Lessons/documents, assignments, instructor progress/feedback and student read-only workspace/reporting.
+5. Recovery/throttling/session/last-owner controls, audit, log redaction, approved mail/delivery, dependency locking/Python 3.14 CI and deployment/restore/privacy/training remain open.
+
+Update this file, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md in each implementation/fix commit. Staff flags remain off by default; no unattended tracking or launch authorization.
