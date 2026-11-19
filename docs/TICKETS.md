@@ -15,7 +15,7 @@ Owner November 18 21:02 message: CI for all have passed. Applies through 460d7fa
 | E08-05 | IN_PROGRESS | 7f97933 concurrency CI passed per report; browser and newer-path race extensions open. |
 | E08-06 | CI_PASSED | 873cbb4 included in report; creation browser/race acceptance open. |
 | E08-07 | CI_PASSED | 460d7fa included in report; credential browser/race/operational limits open. |
-| E08-08 | REVIEW | Student authentication/dashboard/expiry/isolation and tests authored, NOT RUN here; new CI/manual/races pending. |
+| E08-08 | REVIEW | a372751 failed lint per owner; BUG-004 import correction authored, rerun CI/manual/races pending. |
 
 E08-08: separately gated student backend uses student_username credential, no staff fallback or MFA bypass. Active student/profile/org and nonstaff flags required. Session timestamps enforce provisional idle/absolute limits; missing/malformed/expired session flushed. Single browser identity, switching requires logout. Staff attempts at student routes denied/preserved; students denied staff routes without silent logout. POST login/logout require CSRF; successful login flushes anonymous context, fixed destination, stores no password. Dashboard uses request user only and safe own profile/class names; no roster/descriptions/other student records.
 
@@ -26,4 +26,9 @@ Unchanged security/operational tickets retain prior statuses. E05-07 and BUG-003
 
 BUG-001/002 FIXED_VERIFIED by earlier owner evidence. BUG-001 ef6b96c: 50 tests/four errors/46 passed before correction, owner pass 08:24 November 15. BUG-002 1b4a5dd import corrected e3bcfcb: 83 entries/one import error/82 passed, no onboarding methods executed; fourteen retained; owner pass 13:28 without count. BUG-003 24453d6 local null-origin fix confirmed November 15 15:07; full browser acceptance open, token logging work remains. Earlier commit/range evidence retained in linked ledger. No new passing counts inferred; no independently retrieved Actions claims.
 
-New E08-08 CI PENDING, SHA assigned at commit. Browser acceptance, rate limiting, audit, TLS/privacy/log redaction, credential UX and Python 3.14 support not completed by prior CI.
+E08-08 rerun CI PENDING after BUG-004 correction, SHA assigned at commit. Browser acceptance, rate limiting, audit, TLS/privacy/log redaction, credential UX and Python 3.14 support not completed by prior CI.
+
+## BUG-004 — Unused student sign-in test import
+Updated 2026-11-18, 21:14 EST. Parent E08-08/E21. Status REVIEW: correction authored, verification pending. Introduced in a372751. Owner-supplied CI log reports Ruff F401 at apps/accounts/test_students.py:10:53 for imported but unused apps.classrooms.models.ClassInstructor, one lint error. Run URL/full log/test outcome not supplied; not independently retrieved.
+
+Correction changes from apps.classrooms.models import ClassEnrollment, ClassInstructor, Classroom to from apps.classrooms.models import ClassEnrollment, Classroom. No tests/assertions removed or disabled; no runtime, schema, migration or feature-flag changes. Ruff/full PostgreSQL rerun PENDING; do not mark FIXED_VERIFIED until actual evidence. No new passing counts inferred. Earlier failure/pass history retained.

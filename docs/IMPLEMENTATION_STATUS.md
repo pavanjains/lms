@@ -16,3 +16,6 @@ BUG-001/002 prior owner-verified; BUG-003 local browser fix reported working/ful
 
 ## Remaining
 Student throttling/audit/credential UX and production-approved session policy; simultaneous login/reset/session-save and creation/access races; real shared-device/cookie/back-navigation acceptance; lessons/documents/assignments/progress/feedback/read-only workspace/reports; staff recovery/session/last-owner controls; TLS/log redaction/privacy/mail/dependency/Python 3.14/deployment/restore/training. CI is not launch authorization.
+
+## BUG-004 update — 2026-11-18, 21:14 EST
+E08-08 a372751 failed lint per owner-supplied log: Ruff F401 unused ClassInstructor import in apps/accounts/test_students.py, one lint error. Correction removes that imported name only, preserving every test body/assertion. No runtime behavior, migration or flag change. Tests/lint NOT RUN here, correction rerun CI PENDING. No test execution outcome or count inferred from lint failure; prior user-reported passes through 460d7fa unchanged. Full failure/correction record in docs/TICKETS.md.

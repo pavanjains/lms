@@ -20,3 +20,6 @@ Owner stated CI for all have passed November 18 21:02 EST, covering committed wo
 5. Recovery/last-owner/staff session controls, TLS/log redaction/privacy/mail, dependency/Python 3.14 CI, deployment/restore/training remain open.
 
 Update this plan, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md per implementation/fix. Existing staff/onboarding flags unchanged; no unattended tracking or launch approval.
+
+## BUG-004 update — 2026-11-18, 21:14 EST
+Owner reports E08-08 CI lint failure after a372751: Ruff F401 at apps/accounts/test_students.py:10:53, unused ClassInstructor import; one lint error. Correction removes only that imported name. All student test bodies/assertions retained; runtime behavior, migrations and flags unchanged. Fix authored, not executed here; rerun CI PENDING. No test execution outcome/count inferred from the lint log. Earlier owner-reported passes through 460d7fa remain unchanged.

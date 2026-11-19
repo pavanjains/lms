@@ -7,7 +7,7 @@ from django.urls import reverse
 from apps.accounts.models import StudentProfile
 from apps.accounts.students import SEEN, STARTED, STUDENT_BACKEND
 from apps.classrooms.credential_services import reset_student_credentials
-from apps.classrooms.models import ClassEnrollment, ClassInstructor, Classroom
+from apps.classrooms.models import ClassEnrollment, Classroom
 from apps.organizations.models import Organization
 
 
