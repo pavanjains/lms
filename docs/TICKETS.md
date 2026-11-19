@@ -1,25 +1,21 @@
 # Development Tickets and Fix Ledger
 
-Updated: 2026-11-18, 21:21 EST.
+Updated: 2026-11-18, 21:33 EST.
 
-## Evidence/history
-[Previous full ledger](https://github.com/pavanjains/lms/blob/ded6acb393cb80f20bd3394e6f7c3724ccb40ec7/docs/TICKETS.md) preserves E01–E22, E08 details, BUG and commit evidence. REVIEW = authored awaiting verification; CI_PASSED does not close browser/production gates. Markdown IDs are not GitHub Issues. LESSON-01 is a new slice ID under the content roadmap, not completion of E09–E12.
+[Previous complete ledger](https://github.com/pavanjains/lms/blob/aa3d0d9ecf1049c15c411550058687b7b9ce471b/docs/TICKETS.md) preserves E01–E22/E08, LESSON-01, BUG and commit history. Unaffected statuses unchanged. REVIEW is authored, not passing/manual/production acceptance. No fabricated counts or independent Actions claims.
 
-## New lesson library
-LESSON-01 REVIEW: model/initial migration, scoped services, MFA/CSRF staff browser list/detail/create/edit/archive, query/kit/grade/status filters, pagination and tests authored. New CI, migration execution/drift, browser and PostgreSQL concurrent-edit acceptance PENDING. Runtime database untouched here. No upload/assignment/student lesson route, seeds or flag changes. Staff gate off by default. Supporting documents and assignments remain TODO separately.
+## Current
+- BRAND-01 REVIEW: Stembotic shared header/title, inherited MFA pages, production error templates and generic CSRF failure page; tests authored. JSON health/downloads/debug/framework-generated non-template responses excluded.
+- DOC-01 REVIEW: protected database-stored PDF support documents, migration, upload/list/attachment-download/archive UI, permission/size/quota/version/integrity checks and tests authored. Flag false by default. No students/assignments, scanning or public media. CI/migrations/browser/security/backup acceptance pending; NOT RUN here.
+- LESSON-01 REVIEW at aa3d0d9; no CI result supplied.
 
-Same-organization active staff view active library; creator/owner edit/archive. Archived records retained and visible only to creator/owner. Fields: title/summary, HTTPS education.lego.com URL, plain-text instructions, kit, min/max grade, active/version/timestamps and protected organization/creator. Essential grades through 4, Prime 4–8, Grade 4 either kit. Each lesson has one kit; no kit forced on class/student. Server never fetches external URL; no availability/educational suitability assertion. Version token plus lock rejects stale form updates, not a durable audit history.
+Only lesson creator/owner mutates documents under fresh actor/MFA/org/lesson locks and expected parent version; active same-org staff visibility follows library policy. PDF max5 MiB, max20 active/lesson, org100 MiB includes archived bytes. Check extension, bounded actual reads, PDF header/end marker, SHA-256 integrity; not a safe-file guarantee. Store content/metadata in DB transaction, parent version increments; no filesystem orphan transaction. Forced attachment/octet-stream/nosniff/CSP, private/no-store. Archive hides downloads, retains BLOB/quota; no physical deletion/reactivation. Archived-lesson downloads only creator/owner, no document mutation there.
 
-Tests authored, NOT RUN here: grade/kit/model constraints, URL safety, owner/creator/peer/org/student/gate boundaries, stale edits/archive, filters/escaping, confirmation and CSRF/origin. No passing test count inferred.
+Security/production gaps: no antivirus/CDR/full PDF parser; request body may spool before view validation, infrastructure request limits needed; raw ORM bypass/parallel quota tests and durable audit open. No real user/file upload approved. New source commit changes no flags/runtime data/dependencies. Migration creates document table.
 
-## E08 / BUG-004 evidence update
-Owner November 18 21:18: CI passed after ded6acb. E08-08 CI_PASSED, BUG-004 FIXED_VERIFIED on user report, not independently retrieved, no URL/count. Historical a372751 failure: owner 21:14 log Ruff F401 at apps/accounts/test_students.py:10:53 unused ClassInstructor, one lint error; no test outcome inferred. ded6acb removes only import, retains all tests/runtime/flags. This library commit not covered by that pass.
+## Evidence / BUG carry-forward
+Owner 21:18 CI passed after ded6acb, E08-08 CI_PASSED/BUG-004 FIXED_VERIFIED user-reported only, URL/count unknown/not independently retrieved. Preserve a372751 Ruff F401 one unused ClassInstructor import and ded6acb import-only fix retaining tests. E08-02/03/04/06/07 pass per prior owner all-CI report through 460d7fa. E08-05 IN_PROGRESS despite reported automated pass because browser/new races open. E08-01 older reported run43758274124 fetch failed/count unknown. New lesson/document increments not covered.
 
-E08-01 CI_PASSED 6929d69 from prior owner report/run 43758274124 (fetch failed/count unknown). E08-02/03 7e3792c, E08-04 d437edf, E08-06 873cbb4, E08-07 460d7fa CI_PASSED per owner 21:02 all-CI report; E08-05 7f97933 overall IN_PROGRESS despite reported concurrency CI pass because manual/new races remain. E08-08 ded6acb now reported passing, but browser/BFCache/race/security acceptance remains open.
+BUG-001/002 prior FIXED_VERIFIED evidence retained: 50 tests/four bootstrap errors/46 passed then owner pass; onboarding 83 entries/one import error/82 passed/no onboarding methods executed/fourteen retained, later e3bcfcb pass without count. BUG-003 remains REVIEW for full browser acceptance despite local fix and included CI report; token-path logging work open. Earlier E05/recovery/security/operational statuses preserved in linked ledger, not completed by branding/uploads.
 
-## Carry-forward / BUG history
-Unchanged E01–E22 and E05 statuses remain as preserved ledger: staff recovery/last-owner/throttling/session, invitation delivery/audit/races/privacy and operational gates open. Student library/assignment/document work not implicitly completed. Python 3.14 support unverified.
-
-BUG-001 FIXED_VERIFIED ef6b96c bootstrap ordering, owner November 15 08:11 log 50 tests/four errors/46 passed, pass 08:24. BUG-002 FIXED_VERIFIED 1b4a5dd mail import corrected e3bcfcb: owner 13:21 log 83 entries/one import error/82 passed, no onboarding methods executed/fourteen retained; owner pass 13:28 without count, cd1f580 records report. BUG-003 remains REVIEW for full browser acceptance despite local fix report and included CI pass; 24453d6 no-referrer to same-origin, token-path logging work open. Earlier inferred 031b843 association and old run evidence retained in linked ledger.
-
-No independently retrieved Actions verification or fabricated passing counts. New library SHA assigned on commit; CI PENDING.
+Next assignment/student document policy, scanning/storage operations, existing account/shared-device/race/audit/throttling/privacy/deployment gates remain open.

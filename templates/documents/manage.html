@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Supporting documents</h1>
+<p>Lesson: {{ lesson.title }} · <a href="{% url 'lessons:detail' lesson.pk %}">Return to lesson</a></p>
+<p>PDF-only synthetic testing. Signature checks are not malware scanning. Downloads are attachments; do not open untrusted files. No student access or assignments yet.</p>
+{% if form %}
+{% if uploading %}<h2>Upload PDF</h2><p>Maximum 5 MiB per file, 20 active documents per lesson, 100 MiB per organization including archived content. Reload after another lesson/document change.</p>{% else %}<h2>Archive document</h2><p>{{ document.title }} will no longer be downloadable. Database content is retained and still counts toward quota.</p>{% endif %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button type="submit">Confirm and save</button></form>
+{% else %}
+{% if can_manage %}<p><a href="{% url 'lessons:upload-document' lesson.pk %}">Upload supporting PDF</a></p>{% endif %}
+<ul>{% for document in documents %}<li>{{ document.title }} ({{ document.size }} bytes) <a href="{% url 'lessons:download-document' lesson.pk document.pk %}">Download PDF</a>{% if can_manage %} · <a href="{% url 'lessons:archive-document' lesson.pk document.pk %}">Review archive</a>{% endif %}</li>{% empty %}<li>No active supporting documents.</li>{% endfor %}</ul>
+{% endif %}
+{% endblock %}

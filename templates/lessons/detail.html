@@ -8,6 +8,7 @@
 {% if external_url %}<p><a href="{{ external_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Open LEGO Education content (external site)</a></p>{% else %}<p>External link unavailable: requires review.</p>{% endif %}
 <h2>Instructions</h2>
 {{ lesson.instructions|linebreaks }}
+{% if lesson_documents_enabled %}<p><a href="{% url 'lessons:documents' lesson.pk %}">Supporting documents</a></p>{% endif %}
 {% if can_manage and lesson.is_active %}<p><a href="{% url 'lessons:edit' lesson.pk %}">Edit lesson</a> · <a href="{% url 'lessons:archive' lesson.pk %}">Review archive</a></p>{% endif %}
-<p>Supporting documents and assignments are not included yet. Grade 4 may use either kit; choose an appropriate lesson. Do not put student personal data in this shared staff library.</p>
+<p>Assignments and student document access are not included yet. Grade 4 may use either kit; choose an appropriate lesson. Do not put student personal data in this shared staff library.</p>
 {% endblock %}

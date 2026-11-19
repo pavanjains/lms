@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "apps.accounts",
     "apps.classrooms.apps.ClassroomsConfig",
     "apps.lessons.apps.LessonsConfig",
+    "apps.documents.apps.DocumentsConfig",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -42,6 +43,7 @@ TEMPLATES = [{
         "django.template.context_processors.request",
         "django.contrib.auth.context_processors.auth",
         "django.contrib.messages.context_processors.messages",
+        "apps.documents.context_processors.document_features",
     ]},
 }]
 WSGI_APPLICATION = "config.wsgi.application"
@@ -62,7 +64,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "America/New_York"
@@ -75,10 +76,12 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_FAILURE_VIEW = "apps.core.errors.csrf_failure"
 X_FRAME_OPTIONS = "DENY"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 LMS_STAFF_AUTH_ENABLED = os.environ.get("LMS_STAFF_AUTH_ENABLED", "false").lower() == "true"
 LMS_STUDENT_AUTH_ENABLED = os.environ.get("LMS_STUDENT_AUTH_ENABLED", "false").lower() == "true"
+LMS_LESSON_DOCUMENTS_ENABLED = os.environ.get("LMS_LESSON_DOCUMENTS_ENABLED", "false").lower() == "true"
 LMS_STUDENT_IDLE_SECONDS = int(os.environ.get("LMS_STUDENT_IDLE_SECONDS", "900"))
 LMS_STUDENT_ABSOLUTE_SECONDS = int(os.environ.get("LMS_STUDENT_ABSOLUTE_SECONDS", "14400"))
 LOGIN_URL = "two_factor:login"
