@@ -1,54 +1,41 @@
 # Development Tickets and Fix Ledger
 
-Updated: 2026-11-15, 15:19 EST. Parent: ../ACTION_PLAN.md.
+Updated: 2026-11-15, 15:50 EST. Parent: ../ACTION_PLAN.md.
 
-## Rules and preserved history
-TODO = not implemented; IN_PROGRESS = partial; REVIEW = authored code awaiting verification; CI_PASSED = passing evidence with possible manual work remaining; DONE = scoped acceptance met; FIXED_VERIFIED = correction with subsequent evidence. Owner-reported and independently observed results remain distinct.
+## Evidence rules and preserved ledger
+TODO = not implemented; IN_PROGRESS = partial; REVIEW = authored awaiting verification; CI_PASSED = passing evidence with manual gates possibly open; DONE = scoped acceptance met; FIXED_VERIFIED = corrected with evidence. User-reported and independent evidence remain distinct. Markdown tickets are not GitHub Issues.
 
-[Complete preceding ledger at 24453d6](https://github.com/pavanjains/lms/blob/24453d623785f1ff560c3444bcb5eedbb564a36c/docs/TICKETS.md) preserves ticket ranges, commit evidence and full BUG history; [earlier baseline](https://github.com/pavanjains/lms/blob/cd1f5808a5144e47650eeed8392d8930d09a01bf/docs/TICKETS.md) preserves earlier E01–E22 references. No unaffected ticket is completed implicitly. Markdown IDs are not GitHub Issues.
+[Preceding complete ledger](https://github.com/pavanjains/lms/blob/6929d69be5d009831588712694b43a3238006e32/docs/TICKETS.md) preserves E01–E22 ranges, E05 ticket statuses, commit evidence and BUG histories. Earlier baseline: https://github.com/pavanjains/lms/blob/24453d623785f1ff560c3444bcb5eedbb564a36c/docs/TICKETS.md . Unaffected statuses remain unchanged.
 
-## E08 classrooms
-| Ticket | State | Scope / evidence |
+## E08
+| Ticket | State | Evidence / scope |
 |---|---|---|
-| E08-01 | REVIEW | apps/classrooms models, migration, registration and tests authored. CI, migration execution and drift checks PENDING. |
-| E08-02 | TODO | Transactional validated class/membership/enrollment services; fresh actor and MFA checks; repeat-safe changes. |
-| E08-03 | TODO | Organization/class/student visibility policies and isolation tests. Shared student does not expose other class records. |
-| E08-04 | TODO | MFA/CSRF-protected class and membership UI; browser acceptance. |
-| E08-05 | TODO | PostgreSQL concurrency and shared-instructor end-to-end acceptance. |
+| E08-01 | CI_PASSED | Owner reports 6929d69 workflow succeeded at 15:50 EST; run 43758274124 below. No count/logs supplied; local migration/manual checks not implied. |
+| E08-02 | REVIEW | Transactional class/membership/enrollment services authored; fresh actor/MFA/flag checks and repeat-safe mutations. New CI pending. |
+| E08-03 | REVIEW | Scoped class/student/roster policies authored; shared students do not grant other-class access. New CI pending. |
+| E08-04 | TODO | Staff UI, CSRF, scoped selectors and browser acceptance. |
+| E08-05 | TODO | PostgreSQL race and end-to-end shared-instructor acceptance. |
 
-See CLASSROOMS.md for boundaries. E08-01 only creates schema on later migration execution; no accounts/data seeded or existing users rewritten. Model clean validation is not authorization and is bypassed by raw ORM writes. Services/policies must precede routes. No new flags or Python metadata changes. Tests authored, not executed here; no passing count inferred.
+Run: https://github.com/pavanjains/lms/actions/runs/43758274124 . Fetch failed; Actions result not independently retrieved. No passing count inferred. Tests for the current increment authored, NOT RUN here. No migration, runtime data, email or feature-flag change.
 
-## E05 carry-forward
-| Ticket | State | Evidence / remaining work |
-|---|---|---|
-| E05-01 | CI_PASSED | d60ab7d owner-reported pass. |
-| E05-02 | IN_PROGRESS | Earlier e3bcfcb owner-reported pass; BUG-003 local correction confirmed, new CI/browser acceptance pending. |
-| E05-03 | IN_PROGRESS | Backend/rollback in earlier reported pass; approved transport, durable delivery/audit pending. |
-| E05-04 | IN_PROGRESS | Earlier reported pass; BUG-003 shared-header fix committed, activation browser/new CI pending. |
-| E05-05 | IN_PROGRESS | Earlier reported pass; resend header regression fixed, new CI/manual acceptance pending. |
-| E05-06 | CI_PASSED | 0ce5595 owner-reported pass 08:51 EST; manual UAT and new deactivation control CI pending. |
-| E05-07 | REVIEW | 666eee6 deactivation/session revocation, fourteen authored tests; CI/UAT pending. |
-| E05-08 | TODO | PostgreSQL accept/reissue/revoke and login/deactivation races. |
-| E05-09 | IN_PROGRESS | BUG-003 header/tests authored; CI, log redaction and throttling pending. |
-| E05-10 | TODO | Outbox/audit decision and ambiguous delivery handling. |
+## E08-02/03 boundary
+Owner-only class creation/archive and instructor changes. Assigned instructors may end enrollment in active assigned classes; adding requires existing visibility through another/current active assigned class. Owners may enroll any eligible same-organization student. No student creator relation or student creation yet. Removed/inactive membership loses scope on a fresh policy call. Active student profiles only in directory; archived classes visible only to owners, no active roster access.
 
-Database-only session revocation; accounts/passwords/MFA retained, reactivation not included. E05 remains open.
+Current statuses are rechecked, not trusted from stale model instances. Writes serialize cooperating organization services by organization lock, then actor, class and target; full_clean validates changed records. Direct ORM bypass remains privileged; database races and user role/organization mutation protocols still require E08-05. Read querysets are request-scoped, not reusable authorization tokens. Future views must not serialize complete User objects.
 
-## Foundation / staff carry-forward
-E01–E03 partial; E01-03 lockfile open. E04-02 bootstrap DONE. E04-01/03/04 CI_PASSED with manual/security gaps. E04-05 password recovery, E04-07 last-owner protection, E04-08 throttling, E04-09 session limits and E04-10 timeout tests open. E04-06 MFA recovery IN_PROGRESS. E06–E22 otherwise remain at preserved baseline; expand tickets before implementation. Python 3.14 local edits are not repository/CI verification.
+## E05 / foundation carry-forward
+E05-01 CI_PASSED; E05-02/03/04/05 IN_PROGRESS; E05-06 CI_PASSED with new control/manual checks open; E05-07 REVIEW at 666eee6; E05-08 TODO; E05-09 IN_PROGRESS; E05-10 TODO. E08-01 reported pass is not separate manual acceptance of E05, nor independently retrieved evidence for earlier runs. Staff accounts/passwords/MFA retained on deactivation; database-only revocation and no reactivation workflow.
 
-## BUG-001 — Blank bootstrap password validation
-FIXED_VERIFIED; parent E04-02. Owner 08:11 EST log: 50 tests, four errors, 46 passed. Cause full_clean before set_password; ef6b96c corrects ordering without migration. Owner reported passing rerun 08:24 EST.
+E01–E03 partial, lockfile open. E04-02 bootstrap DONE; E04-01/03/04 CI_PASSED with security/manual gaps; E04-06 MFA recovery IN_PROGRESS; E04-05/07/08/09/10 recovery/last-owner/throttling/session work open. E06–E22 otherwise remain at preserved baseline. Python 3.14 support remains unverified.
 
-## BUG-002 — Onboarding test mail import
-FIXED_VERIFIED; parent E05-03/E21. Introduced 1b4a5dd; e3bcfcb changes django.contrib mail to django.core mail. Owner 13:21 EST failure log: 83 entries in 0.897s, one module-import error, 82 passing entries; no onboarding methods executed. Fourteen onboarding methods retained. Owner 13:28 EST message: verified fworklow passed. Passing URL/count/logs unavailable; not independently retrieved. No passing count inferred; no migration, runtime or flag change.
+## BUG-001
+FIXED_VERIFIED. Bootstrap full_clean before set_password: owner 08:11 log had 50 tests, four errors, 46 passed. ef6b96c fixed ordering; owner reported passing rerun 08:24 EST. No migration.
 
-## BUG-003 — Onboarding null-origin browser POST
-REVIEW; parent E05-02/04/05/09/E21. Committed 24453d6. Owner reported POST /staff/owner/invitations/new/ 403 at 14:39:31, Origin checking failed - null does not match any trusted origins. Shared page header no-referrer changed to same-origin; owner confirmed Fix worked at 15:07 EST. Browser/version and full activation/deactivation results not supplied.
+## BUG-002
+FIXED_VERIFIED. 1b4a5dd onboarding mail import corrected in e3bcfcb from django.contrib to django.core. Owner 13:21 log: 83 entries in 0.897s, one module-import error, 82 passed; no onboarding methods executed. Fourteen methods retained. Owner 13:28 message verified fworklow passed; no URL/count/logs, not independently retrieved. cd1f580 recorded report. No runtime/flag change.
 
-Existing privacy assertion updated, five CSRF-enforced methods added; fourteen original methods retained. Same-origin invite/resend/activation success and null/cross-origin invite/activation rejection covered by authored tests, NOT RUN here. Tests do not simulate browser header generation. New CI/browser acceptance pending; no CSRF bypass/null allowlisting. Internal Referer token paths still require log redaction. No migration or flag change.
+## BUG-003
+REVIEW, local fix owner-confirmed. 24453d6 changes no-referrer to same-origin, updates assertion and adds five CSRF methods retaining fourteen original methods. Owner reported invitation POST 403 at 14:39:31 with null origin; confirmed Fix worked 15:07 EST. Browser/version/full activation/deactivation results not supplied. Tests do not emulate browser header generation. Full manual acceptance and separately reported fix CI remain open; no CSRF bypass/null allowlisting. Internal token-path log redaction remains open.
 
-## Commit / CI evidence
-1311cd3 config/CI, b3aca8d backend/MFA guard included in later reported pass. ce49752 bootstrap corrected by ef6b96c. Earlier 031b843 association with 50-test failure inferred. ef6b96c passed per owner 08:24 EST; d60ab7d passed per owner 08:30; 0ce5595 passed per owner 08:51. d4f9625 and cd1f580 documentation commits have no separately supplied results. 1b4a5dd failed per historical 13:21 log (run SHA not supplied); e3bcfcb passed per owner 13:28, URL/count unknown. 666eee6 and 24453d6 CI pending. Current E08-01 CI pending; SHA assigned at commit.
-
-No independently retrieved Actions verification or unattended tracking automation. CI does not close production/manual gates.
+## Historical commit evidence
+1311cd3 config/CI and b3aca8d backend/guard included in later reported pass. ce49752 bootstrap corrected by ef6b96c. 031b843 association with earlier 50-test failure inferred. ef6b96c owner pass 08:24; d60ab7d owner pass 08:30; 0ce5595 owner pass 08:51. d4f9625 and cd1f580 no separately supplied CI results. 1b4a5dd historical failed log has no run SHA. e3bcfcb owner pass 13:28, URL/count unknown. 666eee6 and 24453d6 no separately reported runs; 6929d69 owner-reported pass with URL at 15:50. Current E08-02/03 CI PENDING; SHA assigned on commit. No unattended tracking automation; CI does not authorize launch.
