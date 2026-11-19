@@ -1,6 +1,11 @@
 # Implementation Status
 
-Updated: 2026-11-18, 21:33 EST. Evidence: docs/TICKETS.md.
+Updated: 2026-11-18, 21:44 EST. Evidence: docs/TICKETS.md.
+
+## BUG-005 correction authored
+Restore NumericPasswordValidator in config/settings/base.py, accidentally removed in 5032dc4. Other original validators/order and all feature/branding/storage settings retained. Adds password-policy SimpleTestCase regressions using actual configuration, not a replacement validator list. Requires numeric-specific rejection and original four entries, retains minimum-length/common checks and strong-password acceptance. Tests/lint NOT RUN here, new CI PENDING; BUG-005 REVIEW, not FIXED_VERIFIED.
+
+No existing credentials/hashes/accounts/sessions modified; no migration, dependency, feature activation or runtime credential action. Restoration affects future validation and does not retroactively check existing passwords. No reported weak account creation or independently retrieved CI result.
 
 ## BRAND-01 / DOC-01 authored
 Stembotic company name in shared header/title (brand outside title override block), inherited MFA and app-rendered pages. Branded production error templates and generic CSRF failure view. JSON liveness unchanged; downloaded source documents/debug/framework responses not rewritten.
@@ -11,6 +16,6 @@ Only PDF extension/header/end-marker and SHA-256 checks, not antivirus/CDR/full 
 
 Tests/migration/drift/lint NOT RUN here; new CI/browser/security/backup/concurrency acceptance PENDING. Adds document migration, no dependency/flag activation/runtime data/email actions. LESSON-01 aa3d0d9 CI result not supplied.
 
-[Previous full status](https://github.com/pavanjains/lms/blob/aa3d0d9ecf1049c15c411550058687b7b9ce471b/docs/IMPLEMENTATION_STATUS.md) preserves foundation/auth/class/student/lesson and BUG history. ded6acb CI passed per owner21:18, not independently retrieved/count unknown; BUG-004 FIXED_VERIFIED/E08-08 CI_PASSED. Earlier failures and prior owner reports retained; no new passing counts inferred.
+[Previous full status](https://github.com/pavanjains/lms/blob/aa3d0d9ecf1049c15c411550058687b7b9ce471b/docs/IMPLEMENTATION_STATUS.md) preserves foundation/auth/class/student/lesson and BUG history. ded6acb CI passed per owner21:18, not independently retrieved/count unknown; BUG-004 FIXED_VERIFIED/E08-08 CI_PASSED. Earlier failures and prior owner reports retained; no new passing counts inferred. New document/library revisions and BUG-005 not covered by that pass.
 
 Assignments/progress/feedback/student read-only lessons/reporting next. Scanning/request limits/storage restore/audit, existing shared-device/browser/races/throttling/recovery/session/last-owner/TLS/log-redaction/privacy/mail/dependencies/Python3.14/deployment/training remain release gates. No production authorization.
