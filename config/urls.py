@@ -2,6 +2,7 @@ from django.contrib.auth.views import LogoutView
 from django.urls import include, path
 from two_factor.urls import urlpatterns as two_factor_urls
 
+from apps.accounts import students
 from apps.accounts.staff_views import StaffLoginView, deny_mfa_disable, staff_entry, staff_home
 from apps.core.views import home, liveness
 
@@ -22,4 +23,7 @@ urlpatterns = [
     path("staff/owner/", include("apps.accounts.owner_urls")),
     path("onboarding/", include("apps.accounts.onboarding_urls")),
     path("staff/classes/", include("apps.classrooms.urls")),
+    path("students/login/", students.sign_in, name="student-login"),
+    path("students/logout/", students.sign_out, name="student-logout"),
+    path("students/", students.home, name="student-home"),
 ]

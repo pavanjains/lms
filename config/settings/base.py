@@ -27,6 +27,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django_otp.middleware.OTPMiddleware",
+    "apps.accounts.students.StudentSessionMiddleware",
     "apps.accounts.middleware.StaffAuthMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -52,7 +53,10 @@ DATABASES = {"default": {
     "PORT": os.environ.get("POSTGRES_PORT", "5432"),
 }}
 AUTH_USER_MODEL = "accounts.User"
-AUTHENTICATION_BACKENDS = ["apps.accounts.backends.StaffEmailBackend"]
+AUTHENTICATION_BACKENDS = [
+    "apps.accounts.backends.StaffEmailBackend",
+    "apps.accounts.students.StudentBackend",
+]
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -73,6 +77,9 @@ CSRF_COOKIE_SAMESITE = "Lax"
 X_FRAME_OPTIONS = "DENY"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 LMS_STAFF_AUTH_ENABLED = os.environ.get("LMS_STAFF_AUTH_ENABLED", "false").lower() == "true"
+LMS_STUDENT_AUTH_ENABLED = os.environ.get("LMS_STUDENT_AUTH_ENABLED", "false").lower() == "true"
+LMS_STUDENT_IDLE_SECONDS = int(os.environ.get("LMS_STUDENT_IDLE_SECONDS", "900"))
+LMS_STUDENT_ABSOLUTE_SECONDS = int(os.environ.get("LMS_STUDENT_ABSOLUTE_SECONDS", "14400"))
 LOGIN_URL = "two_factor:login"
 LOGIN_REDIRECT_URL = "staff-entry"
 LOGOUT_REDIRECT_URL = "home"

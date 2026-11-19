@@ -28,7 +28,7 @@ def student_create(request, classroom_id):
         except ValidationError:
             form.add_error(None, "Unable to create student. Check the details/password or choose another username.")
         else:
-            messages.success(request, "Student account created and enrolled. Student sign-in is not available yet.")
+            messages.success(request, "Student account created and enrolled.")
             return redirect("classrooms:detail", classroom_id=room.pk)
     return page(request, "student_form.html", {"room": room, "form": form},
                 400 if request.method == "POST" else 200)

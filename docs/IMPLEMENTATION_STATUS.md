@@ -1,18 +1,18 @@
 # Implementation Status
 
-Updated: 2026-11-18, 20:23 EST. Evidence: docs/TICKETS.md.
+Updated: 2026-11-18, 21:05 EST. docs/TICKETS.md records evidence.
 
-## E08-07 authored
-Class roster links to student credentials review. Authorized owner/assigned instructor confirms POST to replace password and receive generated username/password in that response. Current actor/MFA/flag/class/enrollment/role/profile checked; organization/actor/class/student locked via existing service helpers. Password validators/hash and target unexpired database-session deletion transactional; failure rolls back. Unsupported session engines fail closed. Staff session and other students not reset.
+## E08-08 authored
+apps/accounts/students.py implements gated StudentBackend, session middleware, sign-in, self-only minimal dashboard and POST logout. Database sessions only; new student flag false by default. Backend accepts only student_username, active STUDENT/profile/org and false staff/superuser flags. Staff backend remains first and does not authenticate student credentials; staff MFA remains required.
 
-GET never mutates or retrieves prior password; credentials not persisted in session/messages/URL/email. Receipt dataclass excludes password from repr, sensitive-variable/POST annotations, private/no-store, same-origin, noindex/noarchive, restrictive CSP. This is not a guarantee of erasing browser history/screenshots or a single-use/expiring password. Manual handoff only after operational approval; no automatic delivery or forced-first-change. Student sign-in remains unavailable.
+One identity per browser profile, not separate identities per tab. Authenticated identity cannot be replaced through student login; staff student-route attempts preserve staff session, student staff-route attempts deny without silent student logout. Successful login flushes anonymous context and persists new session with idle/absolute timestamps. Provisional 15-minute idle/4-hour absolute defaults require operational approval. Missing/invalid timestamps, password-hash mismatch or disabled/deactivated identity causes loss of student session. Only student requests renew student idle time.
 
-Tests authored, NOT RUN here; CI/browser/race acceptance PENDING. No migration, runtime credentials/data/email action or feature-flag activation. No production use authorized; audit and reset/login throttling remain open.
+Dashboard ignores external IDs, renders own display name/grade and active enrolled class names only; no other students, staff-only descriptions, lessons/submissions/completion controls. Tests authored, NOT RUN here; new CI, PostgreSQL race extensions, browser/shared-device/BFCache acceptance pending. No migration/runtime account action, email or flag activation. Earlier UI messages updated to reflect separately gated sign-in.
 
-## Existing / evidence
-[Previous full status](https://github.com/pavanjains/lms/blob/873cbb4ebb9c028c0985c6d2135c46572c2241e7/docs/IMPLEMENTATION_STATUS.md) preserves foundation/auth/lifecycle/classroom/creation history. E08-06 873cbb4 committed with no supplied CI result; E08-05 7f97933, E08-04 d437edf, E08-02/03 7e3792c likewise pending evidence. E08-05 existing races do not cover student creation/reset or browser login. E08-01 6929d69 CI_PASSED by owner November 15 15:50 report, run https://github.com/pavanjains/lms/actions/runs/43758274124 ; fetch failed, count unknown/not independently verified. No new passing counts/manual success inferred.
+## Verification update
+Owner November 18 21:02 confirmed CI for all have passed through 460d7fa. Recorded user-reported only, not independently retrieved; no counts/new URLs. E08-02/03/04/06/07 CI_PASSED, E08-05 automated portion passed but manual/new races remain. Does not cover E08-08 or prove production/browser acceptance. [Previous full status](https://github.com/pavanjains/lms/blob/460d7fabe91df823f81766bd5d84756102679f3a/docs/IMPLEMENTATION_STATUS.md) preserves earlier slices/BUG/run history.
 
-BUG-001/002 retain earlier owner-verified status; historical BUG-002 83 entries/one import error/82 passed, no onboarding methods executed; later e3bcfcb pass without count. BUG-003 local fix reported working/full browser pending; E05-07 manual session acceptance open.
+BUG-001/002 prior owner-verified; BUG-003 local browser fix reported working/full acceptance still open. E05-07 manual session acceptance open. Historical BUG-002 83 entries/one import error/82 passed, no onboarding methods executed; later e3bcfcb pass without count remains preserved.
 
 ## Remaining
-Creation/reset races and browser acceptance, student sign-in/shared-device isolation/credential-delivery UX, lessons/documents/assignments, instructor progress/feedback, student read-only workspace/reports, audit/throttling/recovery/session/last-owner/log-redaction/TLS/privacy/mail/deployment/restore/training and Python 3.14 CI remain incomplete. Staff flags remain off by default. CI is not launch authorization.
+Student throttling/audit/credential UX and production-approved session policy; simultaneous login/reset/session-save and creation/access races; real shared-device/cookie/back-navigation acceptance; lessons/documents/assignments/progress/feedback/read-only workspace/reports; staff recovery/session/last-owner controls; TLS/log redaction/privacy/mail/dependency/Python 3.14/deployment/restore/training. CI is not launch authorization.

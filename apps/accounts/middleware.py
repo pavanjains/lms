@@ -30,7 +30,8 @@ class StaffAuthMiddleware(MiddlewareMixin):
                 return None
             return redirect("two_factor:login")
         if not is_active_staff(request.user):
-            logout(request)
+            if getattr(request.user, "role", None) != "STUDENT":
+                logout(request)
             raise PermissionDenied
         if name in {"staff-entry", "staff-logout"} and not factor_route:
             return None

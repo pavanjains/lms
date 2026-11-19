@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Student sign-in</h1>
+{% if conflict %}<p role="alert">An account is already signed in. Sign out of that account before switching, or use a separate browser profile.</p>
+{% else %}<p>Use the username and password provided by your instructor. Do not save passwords on shared devices.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Sign in</button></form>{% endif %}
+{% endblock %}

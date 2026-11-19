@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>My workspace</h1>
+<p>Signed in as {{ display_name }}. Grade: {{ grade }}.</p>
+<h2>My classes</h2>
+<ul>{% for name in class_names %}<li>{{ name }}</li>{% empty %}<li>No active classes assigned.</li>{% endfor %}</ul>
+<p>Assigned lessons, instructions and instructor feedback will appear in a later increment. There are no submission or completion controls.</p>
+<form method="post" action="{% url 'student-logout' %}">{% csrf_token %}<button type="submit">Sign out before the next student</button></form>
+{% endblock %}
