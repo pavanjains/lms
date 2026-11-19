@@ -1,36 +1,32 @@
 # Development Tickets and Fix Ledger
 
-Updated: 2026-11-18, 20:09 EST.
+Updated: 2026-11-18, 20:17 EST.
 
-## Rules / preserved evidence
-REVIEW = authored awaiting verification; IN_PROGRESS = partial acceptance; CI_PASSED is evidence-specific, not manual/production approval. [Previous complete ledger](https://github.com/pavanjains/lms/blob/d437edf410412d40e9fdb5d9b0d26b9f56d057ef/docs/TICKETS.md) preserves E01–E22, E05, BUG histories and commit evidence. Unaffected statuses unchanged. Markdown IDs are not GitHub Issues. No independently retrieved Actions results or inferred passing counts.
+## Rules and preserved history
+REVIEW = authored awaiting verification; IN_PROGRESS = partial acceptance; CI_PASSED does not imply browser/production approval. [Complete previous ledger](https://github.com/pavanjains/lms/blob/7f97933d1666b443f5d12aba01f98ac9427939c4/docs/TICKETS.md) preserves E01–E22, E05, BUG histories and all commit evidence. Unaffected statuses unchanged; Markdown IDs are not GitHub Issues.
 
 ## E08
-| Ticket | Status | Evidence / remaining work |
+| Ticket | State | Evidence / remaining work |
 |---|---|---|
-| E08-01 | CI_PASSED | 6929d69, owner November 15 15:50 report, run 43758274124. Fetch failed/count unknown. Local migration/manual acceptance not implied. |
-| E08-02 | REVIEW | 7e3792c services; no CI result supplied. |
-| E08-03 | REVIEW | 7e3792c policies; no CI result supplied. |
-| E08-04 | REVIEW | d437edf UI/tests; CI and browser acceptance pending. |
-| E08-05 | IN_PROGRESS | PostgreSQL concurrency test portion authored/REVIEW, NOT RUN here; new CI and shared-instructor browser acceptance pending. |
+| E08-01 | CI_PASSED | 6929d69 owner November 15 15:50 report; run 43758274124, fetch failed/count unknown. |
+| E08-02 | REVIEW | 7e3792c services; no supplied CI result. |
+| E08-03 | REVIEW | 7e3792c policies; no supplied CI result. |
+| E08-04 | REVIEW | d437edf browser UI; CI/browser pending. |
+| E08-05 | IN_PROGRESS | 7f97933 eleven concurrency methods authored; no CI execution evidence, browser acceptance open. New student-creation service not covered by those races. |
+| E08-06 | REVIEW | New authorized-class student creation service/form/UI/tests authored; CI/browser/race-extension pending. |
 
-E08-01 run https://github.com/pavanjains/lms/actions/runs/43758274124 is owner-reported, not independent evidence. New E08-05 SHA assigned at commit.
+E08-06 acceptance scope: owner or active assigned instructor with current MFA creates fixed STUDENT account, grade profile and initial enrollment in one transaction. Initial shared access follows authorized class enrollment, not permanent creator access. Password validated/hashed, blank email, staff/superuser false; no arbitrary role/organization fields, username availability endpoint, plaintext credential echo, auto-login, email, reset or student-sign-in route. Global username uniqueness follows existing User schema; conflicts return generic errors and roll back.
 
-## E08-05 scope
-Eleven methods authored using TransactionTestCase, separate worker-local connections and real services. Leader holds an outer transaction after service write; main connection observes follower blocked by leader PID before releasing commit. Assertions cover normalized class-name conflict, duplicate assignment/enrollment row reuse, membership removal/archive/deactivation versus enrollment in both orders, and enrollment/end ordering preserving relationships. Only expected PermissionDenied/ValidationError become asserted outcomes; unexpected SQL/worker errors fail.
+Tests authored, NOT RUN here: account/profile/enrollment consistency; password hashing/no staff login; shared/revoked access; owner/unassigned/cross-org/archive/MFA/gate boundaries; validation/duplicate/rollback; UI confirmation/injection/CSRF/origin checks. No migration or runtime data/flag changes by source commit. New SHA assigned at commit; CI PENDING.
 
-PostgreSQL only; SQLite explicitly skips, not a pass for locking semantics. CI adds PostgreSQL backend assertion and 15-minute job timeout; existing full test step discovers concurrency tests. Worker SQL/lock/event/future timeouts bound waits and thread connections close in finally. No service change, migration, runtime data, email or feature-flag activation.
-
-Not covered: all schedules, arbitrary raw ORM writes, organization/role transfer races, password/session/browser behavior, E05 invitation races, sustained load or unrelated-organization throughput. MFA proof stubbed for service-level tests. Actual browser acceptance remains open; do not mark whole E08-05 DONE on CI alone.
+Only supplied recent passing run: https://github.com/pavanjains/lms/actions/runs/43758274124 , owner-reported for E08-01, not independently retrieved; no test count or local migration/browser success inferred. New methods are not covered by prior reports.
 
 ## Carry-forward
-E05-01 CI_PASSED; E05-02/03/04/05 IN_PROGRESS; E05-06 CI_PASSED with manual/new control checks open; E05-07 REVIEW 666eee6; E05-08 TODO; E05-09 IN_PROGRESS; E05-10 TODO. E01–E03 partial/lockfile open. E04-02 DONE; E04-01/03/04 CI_PASSED with gaps; E04-06 IN_PROGRESS; E04-05/07/08/09/10 recovery/last-owner/throttling/session open. E06–E22 otherwise preserved baseline. Python 3.14 support unverified.
+E05-01 CI_PASSED; E05-02/03/04/05 IN_PROGRESS; E05-06 CI_PASSED with manual/new control checks open; E05-07 REVIEW 666eee6; E05-08 TODO; E05-09 IN_PROGRESS; E05-10 TODO. E01–E03 partial/lockfile open. E04-02 DONE; E04-01/03/04 CI_PASSED with gaps; E04-06 IN_PROGRESS; E04-05/07/08/09/10 recovery/last-owner/throttling/session open. E06–E22 otherwise preserved baseline; E08-06 is a new classroom-scoped creation slice, not completion of broader student-access epics. Python 3.14 support unverified.
 
 ## BUG history
-BUG-001 FIXED_VERIFIED: bootstrap ordering ef6b96c; owner November 15 08:11 log 50 tests/four errors/46 passed; owner pass 08:24.
+BUG-001 FIXED_VERIFIED: ef6b96c bootstrap full_clean ordering; owner November 15 08:11 log 50 tests/four errors/46 passed; pass reported 08:24.
 
-BUG-002 FIXED_VERIFIED: 1b4a5dd mail import corrected e3bcfcb django.contrib to django.core. Owner 13:21 log 83 entries in 0.897s, one module-import error/82 passed; no onboarding methods executed. Fourteen retained. Owner pass 13:28, URL/count unknown; cd1f580 recorded report.
+BUG-002 FIXED_VERIFIED: 1b4a5dd django.contrib mail import fixed to django.core in e3bcfcb. Owner 13:21 log 83 entries in 0.897s/one import error/82 passed; no onboarding methods executed, fourteen retained. Owner pass 13:28 without URL/count; cd1f580 records report.
 
-BUG-003 REVIEW: 24453d6 same-origin header/five added CSRF methods/fourteen originals retained. Owner null-origin POST 403 November 15 14:39:31; local fix confirmed 15:07. Full activation/deactivation/browser checks and separately supplied fix CI remain open; no CSRF bypass and log redaction still open.
-
-Older evidence retained in linked ledger: ef6b96c/d60ab7d/0ce5595 owner passes 08:24/08:30/08:51, earlier 031b843 failure association inferred; documentation commits have no separately supplied runs. No E08 CI report implies retrospective E05 manual acceptance. CI is not launch authorization.
+BUG-003 REVIEW: 24453d6 same-origin header/five added CSRF methods/fourteen originals retained. Owner null-origin POST 403 November 15 14:39:31; local fix confirmed 15:07. Full browser/activation/deactivation verification and separate fix CI unavailable. No CSRF bypass; token-path log redaction open. Older ef6b96c/d60ab7d/0ce5595 owner-pass reports and inferred 031b843 failure association remain in linked ledger. No new passing counts or independent Actions claims.

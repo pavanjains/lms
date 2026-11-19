@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Create student</h1>
+<p>Class: {{ room.name }}</p>
+<p>The account and grade profile will be created and enrolled in this class together. Assigned instructors share access through the class. Removing enrollment or instructor membership removes that access unless another authorized class still grants it.</p>
+<p>Use a minimal display name. No student email is required. Passwords are stored as hashes and will not be displayed after saving. Student sign-in, password reset and credential handout are not available in this increment; use synthetic accounts for testing.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Create student and enroll</button></form>
+<p><a href="{% url 'classrooms:detail' room.pk %}">Cancel</a></p>
+{% endblock %}

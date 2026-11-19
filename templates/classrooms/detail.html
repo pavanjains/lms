@@ -12,7 +12,7 @@
 <p><a href="{% url 'classrooms:action' room.pk 'assign-instructor' %}">Assign instructor</a> · <a href="{% url 'classrooms:action' room.pk 'remove-instructor' %}">Remove instructor</a> · <a href="{% url 'classrooms:action' room.pk 'archive' %}">Review archive</a></p>
 {% endif %}
 <h2>Students</h2>
-<p><a href="{% url 'classrooms:action' room.pk 'enroll-student' %}">Enroll student</a> · <a href="{% url 'classrooms:action' room.pk 'end-enrollment' %}">End enrollment</a></p>
+<p><a href="{% url 'classrooms:create-student' room.pk %}">Create student</a> · <a href="{% url 'classrooms:action' room.pk 'enroll-student' %}">Enroll existing student</a> · <a href="{% url 'classrooms:action' room.pk 'end-enrollment' %}">End enrollment</a></p>
 <table><caption>Active students</caption><thead><tr><th scope="col">Student</th><th scope="col">Grade</th></tr></thead><tbody>
 {% for student in students %}<tr><td>{{ student.display_name|default:student.username }}</td><td>{{ student.grade }}</td></tr>{% empty %}<tr><td colspan="2">No active students enrolled.</td></tr>{% endfor %}
 </tbody></table>
