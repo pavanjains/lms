@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ lesson.title }}</h1>
+<p><a href="{% url 'lessons:list' %}">Lesson library</a></p>
+{% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+<p>{{ lesson.get_kit_display }} · {{ lesson.get_min_grade_display }} to {{ lesson.get_max_grade_display }} · {{ lesson.is_active|yesno:"Active,Archived" }}</p>
+{{ lesson.summary|linebreaks }}
+{% if external_url %}<p><a href="{{ external_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Open LEGO Education content (external site)</a></p>{% else %}<p>External link unavailable: requires review.</p>{% endif %}
+<h2>Instructions</h2>
+{{ lesson.instructions|linebreaks }}
+{% if can_manage and lesson.is_active %}<p><a href="{% url 'lessons:edit' lesson.pk %}">Edit lesson</a> · <a href="{% url 'lessons:archive' lesson.pk %}">Review archive</a></p>{% endif %}
+<p>Supporting documents and assignments are not included yet. Grade 4 may use either kit; choose an appropriate lesson. Do not put student personal data in this shared staff library.</p>
+{% endblock %}

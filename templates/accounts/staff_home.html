@@ -4,6 +4,7 @@
 <p>Signed in as {{ request.user.email }}.</p>
 <p>Multifactor verification completed.</p>
 <p><a href="{% url 'classrooms:list' %}">Manage classes</a></p>
+<p><a href="{% url 'lessons:list' %}">Lesson library</a></p>
 {% if request.user.role == "OWNER" %}
 <p><a href="{% url 'owner-accounts:instructors' %}">Manage instructors and invitations</a></p>
 {% endif %}

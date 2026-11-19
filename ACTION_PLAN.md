@@ -1,25 +1,22 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-18, 21:05 EST. Repository pavanjains/lms; main.
+Updated: 2026-11-18, 21:21 EST. Repository pavanjains/lms; main.
 
-## E08-08 authored
-Separate gated student backend and /students/login/, /students/, POST logout. Self-only profile/class-name dashboard; no requested student IDs, lessons/submissions/completion controls. One identity per browser profile; explicit logout before switching, staff sessions not replaced, student staff-route attempts denied without silently logging them out. Anonymous context flushed, session key/CSRF rotated by Django login. Current active student/profile/org and nonstaff flags rechecked; database sessions only.
+## LESSON-01 authored
+New apps/lessons staff-only organization library with model/migration, create/edit/archive services and browser pages, title/summary search, kit/grade/status filters and pagination. All active same-organization staff share active lessons; only creator/owner modifies. Archived content retained, visible to creator/owner; no reactivation. Optimistic version check rejects stale writes under organization/lesson locks. LEGO links restricted to HTTPS education.lego.com; no server fetch, copied LEGO content, seed data or suitability/reachability claims.
 
-Provisional idle 900s/absolute 14400s; malformed/missing timestamps fail closed. Student backend locks organization/user; login saves session inside outer transaction to share reset lock ordering. Password-hash/session revocation, expiry, role/account/org changes covered by authored unit/client tests, NOT RUN here. PostgreSQL simultaneous reset/login and browser/BFCache checks still required. LMS_STUDENT_AUTH_ENABLED remains false by default; no production enablement. See docs/STUDENT_SIGN_IN.md.
+Essential through Grade 4, Prime Grades 4–8; Grade 4 permits either kit as distinct lesson records, no automatic kit selection. Plain-text instructions rendered escaped. Supporting documents, assignments and student lesson access remain separate increments. Status REVIEW; tests, migration/drift checks NOT RUN here, new CI/browser acceptance PENDING. No runtime database change or feature-flag activation; staff auth gate remains off by default. See docs/LESSON_LIBRARY.md.
 
 ## Evidence update
-Owner stated CI for all have passed November 18 21:02 EST, covering committed work through 460d7fa. Record as user-reported, not independently retrieved; no counts/new run URLs supplied. E08-02/03/04/06/07 CI_PASSED on that report; E08-05 concurrency portion CI passed but overall IN_PROGRESS for manual/race-extension work. Prior E08-01 report/run and BUG history preserved in linked ledger. This report does not cover E08-08 or close browser/production gates.
+Owner reported CI passed November 18 21:18 after ded6acb. BUG-004 FIXED_VERIFIED and E08-08 CI_PASSED on user report only; run URL/count unavailable, not independently retrieved. Preserve a372751 Ruff F401 one unused ClassInstructor import and ded6acb import-only correction; all tests retained. Prior 21:02 all-CI report through 460d7fa and older evidence retained in linked ledger. New library not covered by prior passes.
 
-[Previous full plan](https://github.com/pavanjains/lms/blob/460d7fabe91df823f81766bd5d84756102679f3a/ACTION_PLAN.md) retains history. No migration/runtime account/password action or flag activation in this source increment.
+[Previous full plan](https://github.com/pavanjains/lms/blob/ded6acb393cb80f20bd3394e6f7c3724ccb40ec7/ACTION_PLAN.md) preserves roadmap/history.
 
 ## Next
-1. Run new/full CI and synthetic student A/B, staff MFA and shared-device/browser acceptance.
-2. Extend PostgreSQL tests for creation/reset/login/access-removal races and session-save interleavings; include cookie replay and back navigation.
-3. Approve practical child credential/session UX; implement throttling/audit before real-user access.
-4. Lessons/documents/assignments, instructor progress/feedback and read-only student learning workspace.
-5. Recovery/last-owner/staff session controls, TLS/log redaction/privacy/mail, dependency/Python 3.14 CI, deployment/restore/training remain open.
+1. Run library/full CI, migrate locally and verify owner/creator/peer/student boundaries and Grade 4 filters.
+2. Supporting-document upload/storage/authorized download controls.
+3. Lesson assignments to students/classes with explicit kit/grade checks and version/history decisions.
+4. Instructor progress/feedback and student assigned-lesson read-only workspace, reporting.
+5. Existing shared-device/browser and creation/reset/login race acceptance; throttling/audit, recovery/session/last-owner, TLS/log redaction/privacy/mail, dependencies/Python 3.14, deployment/restore/training remain release gates.
 
-Update this plan, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md per implementation/fix. Existing staff/onboarding flags unchanged; no unattended tracking or launch approval.
-
-## BUG-004 update — 2026-11-18, 21:14 EST
-Owner reports E08-08 CI lint failure after a372751: Ruff F401 at apps/accounts/test_students.py:10:53, unused ClassInstructor import; one lint error. Correction removes only that imported name. All student test bodies/assertions retained; runtime behavior, migrations and flags unchanged. Fix authored, not executed here; rerun CI PENDING. No test execution outcome/count inferred from the lint log. Earlier owner-reported passes through 460d7fa remain unchanged.
+All implementation/fix commits update this plan, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md. No unattended tracking or production authorization.

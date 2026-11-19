@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if lesson %}<p>Lesson: {{ lesson.title }}</p>{% endif %}
+<p>Essential: through Grade 4. Prime: Grades 4–8. Grade 4 supports either kit. Archived lessons are retained, not deleted; reactivation is not available here.</p>
+<p>Use plain-text instructions and a LEGO Education HTTPS link. Link availability and educational suitability must be reviewed by the instructor. Do not enter student personal data.</p>
+<form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Confirm and save</button></form>
+<p><a href="{% url 'lessons:list' %}">Cancel</a></p>
+{% endblock %}

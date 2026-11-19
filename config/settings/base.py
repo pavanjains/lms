@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "apps.organizations",
     "apps.accounts",
     "apps.classrooms.apps.ClassroomsConfig",
+    "apps.lessons.apps.LessonsConfig",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -23,6 +23,7 @@ urlpatterns = [
     path("staff/owner/", include("apps.accounts.owner_urls")),
     path("onboarding/", include("apps.accounts.onboarding_urls")),
     path("staff/classes/", include("apps.classrooms.urls")),
+    path("staff/lessons/", include("apps.lessons.urls")),
     path("students/login/", students.sign_in, name="student-login"),
     path("students/logout/", students.sign_out, name="student-logout"),
     path("students/", students.home, name="student-home"),

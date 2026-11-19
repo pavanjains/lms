@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Lesson library</h1>
+<p><a href="{% url 'staff-home' %}">Staff workspace</a> · <a href="{% url 'lessons:create' %}">Create lesson</a></p>
+{% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+<form method="get">{{ form.as_p }}<button type="submit">Filter lessons</button> <a href="{% url 'lessons:list' %}">Clear</a></form>
+<ul>{% for lesson in lessons %}<li><a href="{% url 'lessons:detail' lesson.pk %}">{{ lesson.title }}</a> — {{ lesson.get_kit_display }}, {{ lesson.get_min_grade_display }} to {{ lesson.get_max_grade_display }}{% if not lesson.is_active %} (archived){% endif %}</li>{% empty %}<li>No visible lessons match.</li>{% endfor %}</ul>
+<nav aria-label="Lesson pages">{% if lessons.has_previous %}<a href="?{{ query }}&amp;page={{ lessons.previous_page_number }}">Previous</a>{% endif %} Page {{ lessons.number }} of {{ lessons.paginator.num_pages }} {% if lessons.has_next %}<a href="?{{ query }}&amp;page={{ lessons.next_page_number }}">Next</a>{% endif %}</nav>
+{% endblock %}
