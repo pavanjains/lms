@@ -1,21 +1,22 @@
 # Implementation Status
 
-Updated: 2026-11-18, 21:44 EST. Evidence: docs/TICKETS.md.
+Updated: 2026-11-19. Evidence: docs/TICKETS.md.
 
-## BUG-005 correction authored
-Restore NumericPasswordValidator in config/settings/base.py, accidentally removed in 5032dc4. Other original validators/order and all feature/branding/storage settings retained. Adds password-policy SimpleTestCase regressions using actual configuration, not a replacement validator list. Requires numeric-specific rejection and original four entries, retains minimum-length/common checks and strong-password acceptance. Tests/lint NOT RUN here, new CI PENDING; BUG-005 REVIEW, not FIXED_VERIFIED.
+## ASSIGN-01 foundation authored; feature IN_PROGRESS
+LessonAssignment model/migration, transactional create/cancel services, scoped read queries and latest 34-method regression module added on feature/assign-01-foundation. Original Lesson implementation, password validators, middleware, settings, routes and feature flags unchanged.
 
-No existing credentials/hashes/accounts/sessions modified; no migration, dependency, feature activation or runtime credential action. Restoration affects future validation and does not retroactively check existing passwords. No reported weak account creation or independently retrieved CI result.
+Explicit students receive individual lesson-field/version snapshots. Fresh verified staff/current class authority, active org/class/account/enrollment/profile and grade/kit checks; Grade4 either kit and Pre-K/K mapping supported. Reviewed version guards stale lesson selection. Whole batch succeeds or rolls back, including simulated second-insert failure test. No silent roster expansion. One active class/student/lesson; cancellation keeps actor/time/version history and permits reassignment.
 
-## BRAND-01 / DOC-01 authored
-Stembotic company name in shared header/title (brand outside title override block), inherited MFA and app-rendered pages. Branded production error templates and generic CSRF failure view. JSON liveness unchanged; downloaded source documents/debug/framework responses not rewritten.
+Student query results require current active account/org/class/enrollment and enabled student auth, exclude cancelled work and isolate identity. Staff queries follow current classroom authority. Lesson edits/archive leave valid assigned snapshots intact. Direct ORM authorization/snapshot immutability not DB-enforced; supported writes go through services.
 
-New apps/documents stores PDF content privately in database with lesson/uploader/title/original-name/size/checksum/active/archive timestamps. Upload/archive creator or owner only; download through authorized staff route and library visibility, forced attachment/octets/nosniff/CSP/private caching. No public file URLs or student document access. Lesson version increments guard stale forms and serialize quota mutations under organization/lesson locks. Limits5 MiB/file,20 active/lesson,100 MiB/org including archives. BLOB transaction avoids external-storage orphan writes; larger database/restore cost requires review.
+No HTTP/UI, downloads, submissions, student completion, progress or feedback in foundation. Instructor review/confirm/list/detail/cancel and student read-only pages next, with session/CSRF/origin/escaping/cache/browser and PostgreSQL concurrency checks.
 
-Only PDF extension/header/end-marker and SHA-256 checks, not antivirus/CDR/full PDF parsing. LMS_LESSON_DOCUMENTS_ENABLED defaults false; synthetic local testing only. Upload body can spool before application checks, so infrastructure body/rate limits and scanning needed before real files. Archived bytes retained/quota counted; retention/deletion and object-storage migration not implemented.
+## Verification
+Draft Python syntax and migration/model field-name comparison performed during authoring only; no Django runtime/drift verification. Django unavailable: 34 authored test methods NOT EXECUTED, Ruff NOT RUN, migration/drift/full PostgreSQL CI/concurrency/browser acceptance PENDING. No migration or runtime credential/data changes executed; foundation REVIEW, not production-ready or end-to-end complete.
 
-Tests/migration/drift/lint NOT RUN here; new CI/browser/security/backup/concurrency acceptance PENDING. Adds document migration, no dependency/flag activation/runtime data/email actions. LESSON-01 aa3d0d9 CI result not supplied.
+BUG-005 FIXED_VERIFIED per owner's 2026-11-18 CI-passed report after 8e80939, not independently retrieved/run URL/count unknown. Does not cover ASSIGN-01. No new passing counts inferred.
 
-[Previous full status](https://github.com/pavanjains/lms/blob/aa3d0d9ecf1049c15c411550058687b7b9ce471b/docs/IMPLEMENTATION_STATUS.md) preserves foundation/auth/class/student/lesson and BUG history. ded6acb CI passed per owner21:18, not independently retrieved/count unknown; BUG-004 FIXED_VERIFIED/E08-08 CI_PASSED. Earlier failures and prior owner reports retained; no new passing counts inferred. New document/library revisions and BUG-005 not covered by that pass.
+## Carry-forward
+Stembotic branding/private lesson PDFs remain present; BRAND-01/DOC-01/LESSON-01 retain outstanding acceptance. Uploads remain disabled except controlled synthetic testing; signature/integrity checks are not malware scanning/full PDF validation. Student document authorization, parser/scanning/request limits/storage restore/audit/throttling/recovery/session/races/browser/privacy/retention/mail/deployment/training remain release gates. Python3.14 support unverified. No production authorization.
 
-Assignments/progress/feedback/student read-only lessons/reporting next. Scanning/request limits/storage restore/audit, existing shared-device/browser/races/throttling/recovery/session/last-owner/TLS/log-redaction/privacy/mail/dependencies/Python3.14/deployment/training remain release gates. No production authorization.
+[Full pre-assignment status](https://github.com/pavanjains/lms/blob/8e80939a606f5e967451c811cf178ca85bc422db/docs/IMPLEMENTATION_STATUS.md) preserves prior implementation/BUG history and earlier evidence links. No earlier failure or user-reported attribution is converted into independent verification.

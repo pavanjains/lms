@@ -1,24 +1,23 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-18, 21:44 EST. Repository pavanjains/lms; main.
+Updated: 2026-11-19. Repository pavanjains/lms; feature/assign-01-foundation.
 
-## Current BUG-005 correction
-Restore NumericPasswordValidator accidentally omitted from base AUTH_PASSWORD_VALIDATORS in 5032dc4. Preserve original similarity, minimum-length and common-password validators and order. New SimpleTestCase regressions inspect actual configured list without overriding it, require numeric-specific rejection of a long digit-only password, retain short/common checks and accept a strong synthetic nonnumeric password. Correction/tests authored, NOT RUN here; CI PENDING, status REVIEW. No existing password/account/session modification, migration, dependency or flag changes. Restoration is prospective validation, not retroactive credential review.
+## ASSIGN-01 foundation: REVIEW; feature IN_PROGRESS
+Adds LessonAssignment model, migration 0002, transactional creation/cancellation, scoped query services and 34 authored regression test methods. Individual explicit recipients receive lesson-field/version snapshots. Fresh staff/MFA, current class authority, active enrollment/account/org and grade/kit checks required; Grade 4 either kit, Pre-K/K mapping. Batch all-or-nothing; one active class/student/lesson; cancellation retains history and permits reassignment. Later enrollment never silently expands assignments.
 
-## BRAND-01 / DOC-01 authored
-Stembotic header/title in shared base including MFA; production 400/403/404/500 and generic CSRF pages branded. Health JSON/download payloads/framework debug pages are not HTML branding surfaces.
+No routes/templates/settings/flags changed, no submissions/student completion/progress/feedback/document access added. Main unchanged by this feature-branch commit. No runtime database/credential actions or migration execution. Direct ORM authorization/snapshot immutability is not database-enforced; services are the supported write path.
 
-Protected PDF lesson documents: database BLOB storage, 5 MiB/file, 20 active/lesson, 100 MiB/org including archives. Creator/owner upload/archive, authorized library staff download as attachment; no public media URL, student document route, automatic scanning or assignment. Signature/end-marker checks are not malware scanning or full PDF validation. New documents flag remains false by default; local synthetic tests only. Content/quota/parent version changes atomic. See docs/LESSON_DOCUMENTS.md.
+Draft syntax and migration/model field-name checks were performed during authoring, not Django runtime verification. Django unavailable: tests, Ruff, migration/drift, full PostgreSQL CI and concurrency/browser acceptance NOT RUN. The 34 figure counts authored methods, not passing tests.
 
-Status REVIEW; tests, migration/drift, CI/browser/storage/restore acceptance PENDING. No runtime files/database modified here, no feature activation. Migration adds LessonDocument table; no dependency changes. LESSON-01 aa3d0d9 CI still unreported.
-
-[Previous plan](https://github.com/pavanjains/lms/blob/aa3d0d9ecf1049c15c411550058687b7b9ce471b/ACTION_PLAN.md) preserves roadmap/history. Owner 21:18 pass after ded6acb remains user-reported only/count unknown/not independently retrieved; E08-08 CI_PASSED, BUG-004 FIXED_VERIFIED, earlier failure retained. New library/doc changes not covered.
+## Evidence
+Owner reported CI passed after 8e80939 on 2026-11-18; user-reported only, run URL/count unknown, not independently retrieved. BUG-005 FIXED_VERIFIED on that evidence. Does not cover ASSIGN-01 or establish migration/browser/security/restore acceptance.
 
 ## Next
-1. Run password-policy regression/full PostgreSQL CI after BUG-005; do not mark verified before actual evidence.
-2. Full PostgreSQL CI, migrate locally, verify Stembotic pages and synthetic upload/download/archive/org/student boundaries.
-3. Real-file scanning/CDR decision, parser validation and server request-size/rate limits before real uploads; database growth/backup/restore review.
-4. Assignments with grade/kit/version/document authorization, then progress/feedback/student read-only lessons/reporting.
-5. Existing shared-device/browser/races, audit/throttling/recovery/session/last-owner, TLS/log-redaction/privacy/mail/dependency/Python 3.14/deployment/training gates remain.
+1. Run targeted tests, full PostgreSQL CI, migration/drift and concurrency checks on foundation.
+2. Instructor selection/review/confirm/list/detail and POST-only cancellation; explicit reviewed recipients and expected lesson version.
+3. Student read-only list/detail using existing student session/route/cache guards; A/B isolation, CSRF/origin/method/escaping/cache and revoked-access acceptance.
+4. Instructor-controlled progress/feedback, then reporting. Document access requires separate assignment-aware authorization and safety work.
 
-Update this plan, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md per implementation/fix. No launch authorization or unattended work.
+BRAND-01/DOC-01/LESSON-01 retain outstanding acceptance. Upload flag remains false; synthetic testing only. PDF limits 5 MiB/file,20 active/lesson,100 MiB/org including archives; private DB storage, no public URLs. Signature/integrity checks are not malware scanning/full parsing. Audit/throttling/recovery/session/races/privacy/retention/mail/backups/deployment/training gates remain; Python3.14 unverified. No production authorization.
+
+[Complete pre-assignment plan](https://github.com/pavanjains/lms/blob/8e80939a606f5e967451c811cf178ca85bc422db/ACTION_PLAN.md) preserves prior roadmap/history/evidence links. Update this plan, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md with implementation/fix commits.
