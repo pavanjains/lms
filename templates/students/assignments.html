@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}My assigned lessons{% endblock %}
+{% block content %}
+<h1>My assigned lessons</h1>
+<p><a href="{% url 'student-home' %}">My workspace</a></p>
+<ul>
+{% for assignment in assignments %}
+<li><a href="{% url 'student-assignment-detail' assignment.pk %}">{{ assignment.title }}</a> &mdash; {{ assignment.classroom.name }}, {{ assignment.get_kit_display }}. Status: Assigned.</li>
+{% empty %}<li>No assigned lessons available.</li>{% endfor %}
+</ul>
+<nav aria-label="Assigned lesson pages">{% if assignments.has_previous %}<a href="?page={{ assignments.previous_page_number }}">Previous</a>{% endif %} Page {{ assignments.number }} of {{ assignments.paginator.num_pages }} {% if assignments.has_next %}<a href="?page={{ assignments.next_page_number }}">Next</a>{% endif %}</nav>
+<p>Your instructor manages your learning progress. This page does not mark lessons complete.</p>
+<form method="post" action="{% url 'student-logout' %}">{% csrf_token %}<button type="submit">Sign out before the next student</button></form>
+{% endblock %}
