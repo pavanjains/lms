@@ -1,28 +1,20 @@
 # Development Tickets and Fix Ledger
 
-Updated: 2026-11-18, 21:44 EST.
+Updated: 2026-11-19.
 
-[Previous complete ledger](https://github.com/pavanjains/lms/blob/aa3d0d9ecf1049c15c411550058687b7b9ce471b/docs/TICKETS.md) preserves E01–E22/E08, LESSON-01, BUG and commit history. Unaffected statuses unchanged. REVIEW is authored, not passing/manual/production acceptance. No fabricated counts or independent Actions claims.
+## ASSIGN-01 — IN_PROGRESS; foundation REVIEW
+Model/migration/services and latest 34-method regression module authored. Explicit students get original lesson FK/version plus title, summary, URL, instructions, kit and grade-range snapshots. Organization-first mutations reuse existing fresh staff/MFA and class authorization. Active same-org recipients/enrollment/profiles, kit/grade range and reviewed lesson version checked before atomic writes. Empty/duplicate/malformed recipients, stale/archived lesson or incompatible/unauthorized batch rejected. Conditional DB uniqueness prevents duplicate active class/student/lesson; cancellation actor/time pair and positive-version constraints included.
 
-## BUG-005 — Numeric password validator omitted
-Parent BRAND-01/DOC-01 settings integration and authentication verification. Status REVIEW: restoration/regression tests authored, verification PENDING. Introduced in 5032dc4 when base settings rewrite omitted django.contrib.auth.password_validation.NumericPasswordValidator. Identified during source review and confirmed in repository; no CI failure or weak-account creation is claimed.
+Scoped staff/student queries recheck current authority/account/org/class/enrollment. Library edits/archive do not rewrite assigned content. Cancellation retains actor/time/version, permits reassignment; archived-class cancellation owner-only. No snapshot editing/student mutation service; raw ORM bypass is not an approved write path and DB does not enforce cross-table authorization/immutability.
 
-Correction restores only that runtime settings entry, preserving original four validators/order, staff/student/document feature flags, middleware/branding/storage settings and dependencies. Adds tests against actual AUTH_PASSWORD_VALIDATORS without override_settings replacement: exact original list; long numeric input must include password_entirely_numeric error (not merely fail for commonness/length); short/common checks retained; strong synthetic password accepted. Existing tests unchanged. NOT RUN here; lint/full PostgreSQL CI PENDING. No passing count or FIXED_VERIFIED claim.
+Regression methods cover all copied fields, explicit roster behavior, Grade4 either kit, Pre-K/K mapping, stale reviews, authorization, account/MFA/membership revocation, second-insert rollback, database constraints, cancellation/retries/reassignment, shared students and read isolation. 34 authored methods, NOT a passing count. Prior draft syntax/field-name checks only; Django tests/Ruff/migration/drift/PostgreSQL concurrency/browser checks NOT RUN; CI PENDING.
 
-No password/account/session reset, migration or retrospective password enforcement. Existing hashes untouched. If this revision was used for runtime credential creation/change, review that activity without logging secrets; no evidence of affected real accounts supplied. New fix SHA assigned at commit.
+Remaining: instructor/student HTTP/UI, session backend integration and CSRF/origin/method/escaping/cache/browser A/B acceptance. No new routes/settings/flags, submissions, completion controls, progress/feedback or document authorization in foundation. Feature branch only; no runtime migration/data/credential changes.
 
-## Current
-- BRAND-01 REVIEW: Stembotic shared header/title, inherited MFA pages, production error templates and generic CSRF failure page; tests authored. JSON health/downloads/debug/framework-generated non-template responses excluded.
-- DOC-01 REVIEW: protected database-stored PDF support documents, migration, upload/list/attachment-download/archive UI, permission/size/quota/version/integrity checks and tests authored. Flag false by default. No students/assignments, scanning or public media. CI/migrations/browser/security/backup acceptance pending; NOT RUN here.
-- LESSON-01 REVIEW at aa3d0d9; no CI result supplied.
+## BUG-005 — FIXED_VERIFIED, user-reported CI
+Owner reported CI passed after 8e80939 on 2026-11-18; not independently retrieved, URL/count unknown. NumericPasswordValidator restored after accidental omission in 5032dc4; other validators retained. No existing passwords/accounts/sessions changed or weak-account creation reported. Earlier pending notes describe authoring time; latest report does not cover ASSIGN-01.
 
-Only lesson creator/owner mutates documents under fresh actor/MFA/org/lesson locks and expected parent version; active same-org staff visibility follows library policy. PDF max5 MiB, max20 active/lesson, org100 MiB includes archived bytes. Check extension, bounded actual reads, PDF header/end marker, SHA-256 integrity; not a safe-file guarantee. Store content/metadata in DB transaction, parent version increments; no filesystem orphan transaction. Forced attachment/octet-stream/nosniff/CSP, private/no-store. Archive hides downloads, retains BLOB/quota; no physical deletion/reactivation. Archived-lesson downloads only creator/owner, no document mutation there.
+## Carry-forward
+BRAND-01/DOC-01/LESSON-01 retain migration/browser/security/operations acceptance. PDFs disabled by default; 5 MiB/file,20 active/lesson,100 MiB/org including archives, private DB storage/staff attachment downloads. No antivirus/CDR/full parser/student file authorization. Existing shared-device/races/audit/throttling/recovery/session/privacy/retention/backups/deployment gates open.
 
-Security/production gaps: no antivirus/CDR/full PDF parser; request body may spool before view validation, infrastructure request limits needed; raw ORM bypass/parallel quota tests and durable audit open. No real user/file upload approved. Document source commit changed no flags/runtime data/dependencies; BUG-005 records its unintended validator omission and restoration separately. Migration creates document table.
-
-## Evidence / BUG carry-forward
-Owner 21:18 CI passed after ded6acb, E08-08 CI_PASSED/BUG-004 FIXED_VERIFIED user-reported only, URL/count unknown/not independently retrieved. Preserve a372751 Ruff F401 one unused ClassInstructor import and ded6acb import-only fix retaining tests. E08-02/03/04/06/07 pass per prior owner all-CI report through 460d7fa. E08-05 IN_PROGRESS despite reported automated pass because browser/new races open. E08-01 older reported run43758274124 fetch failed/count unknown. New lesson/document increments and BUG-005 not covered.
-
-BUG-001/002 prior FIXED_VERIFIED evidence retained: 50 tests/four bootstrap errors/46 passed then owner pass; onboarding 83 entries/one import error/82 passed/no onboarding methods executed/fourteen retained, later e3bcfcb pass without count. BUG-003 remains REVIEW for full browser acceptance despite local fix and included CI report; token-path logging work open. Earlier E05/recovery/security/operational statuses preserved in linked ledger, not completed by branding/uploads.
-
-Next assignment/student document policy, scanning/storage operations, existing account/shared-device/race/audit/throttling/privacy/deployment gates remain open.
+[Complete pre-assignment ledger](https://github.com/pavanjains/lms/blob/8e80939a606f5e967451c811cf178ca85bc422db/docs/TICKETS.md) preserves E01-E22/E08 and BUG history, earlier failures/counts and user-reported evidence. Unaffected statuses unchanged, including E08-08 CI_PASSED/BUG-004 FIXED_VERIFIED user-reported, E08-05 IN_PROGRESS and BUG-003 REVIEW. No fabricated counts or independent Actions claims.
