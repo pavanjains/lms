@@ -1,6 +1,6 @@
 # Local testing guide
 
-Updated: 2026-11-20. Written against main 0d445e20a4d70a11df33612e81c3e94e4b82803a plus the authored feature/assign-01-student-ui branch; the student assignment pages are REVIEW, not merged or runtime-verified. These are procedures and expected results, NOT a report that they were executed. Use synthetic people, credentials, lessons and files only. Do not use production/staging databases or real student data.
+Updated: 2026-11-20. Written against main 4695e7d510aa6811b27738725feeb95c4c787104 (PR #3 merge), which includes the student assignment pages; their browser and concurrency acceptance is pending. These are procedures and expected results, NOT a report that they were executed. Use synthetic people, credentials, lessons and files only. Do not use production/staging databases or real student data.
 
 ## 1. Prerequisites and checkout
 Python 3.12, Docker Compose and a POSIX-compatible shell. PostgreSQL 16 matches compose.yaml and CI. Windows users may use WSL or translate activation/environment syntax; these shell examples are not PowerShell commands. Do not reuse an unverified Python 3.14 virtual environment. Preserve local changes before switching branches.
@@ -9,7 +9,6 @@ Python 3.12, Docker Compose and a POSIX-compatible shell. PostgreSQL 16 matches 
 git status --short
 # Continue only after preserving any local changes.
 git fetch origin
-# Test main, or switch to feature/assign-01-student-ui to try the student pages.
 git switch main
 git pull --ff-only
 git rev-parse HEAD
@@ -58,7 +57,7 @@ python manage.py test apps.classrooms.test_concurrency --settings=config.setting
 python manage.py test --settings=config.settings.ci --verbosity=2
 ```
 
-The student-page module exists only on the student-UI branch (and on main once merged). The workflow additionally runs migrate --noinput against its disposable PostgreSQL service and asserts connection.vendor == 'postgresql' before the full suite. Locally, review migrate --plan first and apply only to the intended local DB. Exit status 0 is expected; preserve the actual final summary, failures, errors and skips verbatim. Do not infer a full-suite total from authored method counts (for example, the 18 student-page methods). Running the existing classroom concurrency suite is not proof of assignment/review-token or all account/session races.
+The workflow additionally runs migrate --noinput against its disposable PostgreSQL service and asserts connection.vendor == 'postgresql' before the full suite. Locally, review migrate --plan first and apply only to the intended local DB. Exit status 0 is expected; preserve the actual final summary, failures, errors and skips verbatim. Do not infer a full-suite total from authored method counts (for example, the 18 student-page methods). Running the existing classroom concurrency suite is not proof of assignment/review-token or all account/session races.
 
 Optional fast smoke only:
 
@@ -119,7 +118,7 @@ Start at /staff/lessons/assignments/ or Lesson library > Assignments.
 Review-token expiry is separate from login expiry. Normal successful confirmation consumes its session token; durable exactly-once consumption across concurrent requests is not implemented. Concurrent confirm/cancel/session interleavings remain acceptance work. Use the automated tests for signed-token/CSRF/origin cases; never disable CSRF or add null to allowed origins to make a test pass.
 
 ## 6. Shared students and student sign-in
-Use /students/login/ with an instructor-created synthetic account in a student-only profile. Expected student home: own display name/grade, active class names and a My assigned lessons link. On the student-UI branch, /students/assignments/ (list) and /students/assignments/<id>/ (detail) show only the signed-in student's own uncancelled, currently eligible snapshots; on main before that branch merges these pages do not exist. "Assigned" is an availability label, not progress. No roster, documents, student submissions or completion controls.
+Use /students/login/ with an instructor-created synthetic account in a student-only profile. Expected student home: own display name/grade, active class names and a My assigned lessons link. /students/assignments/ (list) and /students/assignments/<id>/ (detail) show only the signed-in student's own uncancelled, currently eligible snapshots. "Assigned" is an availability label, not progress. No roster, documents, student submissions or completion controls.
 
 Check A sign-out followed by B sign-in, browser Back/reload and no disclosure of A's identity, classes or assigned lessons. As Student B, open A's assignment detail URL and add student_id or organization_id query parameters: expect 404 with no other student's data. As staff in another profile, cancel an assignment, end an enrollment, or archive the class: the item should disappear from A's list and detail on the next request. Editing or archiving the source lesson should leave A's snapshot unchanged. Instructions containing markup should display as text, and responses should be private/no-store with a same-origin referrer policy.
 

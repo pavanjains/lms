@@ -1,6 +1,6 @@
 # Documentation index and current-scope guide
 
-Updated: 2026-11-20; branch feature/assign-01-student-ui on main 0d445e2. Student assignment pages are authored for review; see STUDENT_ASSIGNMENTS.md.
+Updated: 2026-11-20; baseline main 4695e7d (PR #3 merge). Student assignment pages are merged, with browser and concurrency acceptance pending; see STUDENT_ASSIGNMENTS.md.
 
 ## Current sources of truth
 1. LOCAL_TESTING.md: operator-reviewed local setup, automated checks and synthetic browser procedures; not execution evidence.
@@ -26,11 +26,11 @@ Earlier feature guides below record their original increments. Their authored-me
 | CLASSROOMS_CONCURRENCY.md | Existing deterministic PostgreSQL classroom scenarios; not assignment/token or all auth races. |
 | STUDENT_CREATION.md | Creation/enrollment security; password reset and sign-in implemented later. |
 | STUDENT_CREDENTIALS.md | Staff reset/receipt policy; gated student backend now exists. |
-| STUDENT_SIGN_IN.md | Session isolation and browser acceptance; student home also links to the authored assignment pages. E08-08 prior CI pass is user-reported; browser gates remain. |
-| STUDENT_ASSIGNMENTS.md | Authored read-only assigned-lesson list/detail (18 test methods); REVIEW, not merged or runtime-verified. |
+| STUDENT_SIGN_IN.md | Session isolation and browser acceptance; student home also links to the merged assignment pages. E08-08 prior CI pass is user-reported; browser gates remain. |
+| STUDENT_ASSIGNMENTS.md | Merged by PR #3 (4695e7d): read-only assigned-lesson list/detail (18 test methods); browser and concurrency acceptance pending. |
 | LESSON_LIBRARY.md | Library validation/access; supporting PDFs and instructor assignments added later. Grade mapping and snapshot decisions now implemented in assignment services. |
 | LESSON_DOCUMENTS.md | Private staff PDF behavior/risks; uploads default off and student delivery absent. CI history updated in current ledger, not proof of real-file safety. |
-| ASSIGNMENTS.md | Merged foundation/instructor UI, branch-authored student pages, and remaining progress/feedback/concurrency work. |
+| ASSIGNMENTS.md | Merged foundation, instructor UI and student pages; remaining progress/feedback/concurrency work. |
 
 ## Maintenance contract
 Implementation/fix commits update all three tracking docs plus affected current guides, setup commands, decisions and validation evidence. Do not silently turn an old plan/proposal or authored test count into verified behavior. Preserve historical failures and source revision links. When working on an older feature guide, reconcile its temporal wording against this matrix and the actual code. A guide is not production authorization.

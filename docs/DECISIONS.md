@@ -1,6 +1,6 @@
 # Decision register
 
-Updated: 2026-11-20; reconciled against main 0d445e2 plus branch feature/assign-01-student-ui. Implemented does not mean production-approved or independently browser-accepted. The student assignment pages are authored (REVIEW), not merged.
+Updated: 2026-11-20; reconciled against main 4695e7d (PR #3 merge). Implemented does not mean production-approved or independently browser-accepted. The student assignment pages are merged; their browser and concurrency acceptance is pending.
 
 ## Product requirements retained
 - Django/PostgreSQL; one STEM owner, five instructors and 25 students initially.
@@ -18,7 +18,7 @@ Updated: 2026-11-20; reconciled against main 0d445e2 plus branch feature/assign-
 | Authorization | Fresh staff/MFA/org and current class policies, transactional validated services | Raw ORM bypass/cross-table consistency not DB authorization; audit/throttling remain |
 | Student sessions | DB backend; provisional idle900s/absolute14400s, server checks on request | Production policy/browser/race approval; not original 8-hour proposal |
 | Staff sessions | Mandatory MFA on business routes; remembered bypass/self-disable blocked | Approved idle/absolute policy, recovery/throttling/audit |
-| Assignments | Explicit recipient snapshots; source version checks; retained versioned cancellation; org UUID normalized in JSON token. Student read-only list/detail authored on the student-UI branch with an availability-only Assigned label | Student pages merge/browser acceptance, instructor progress/feedback, concurrent durable token consumption |
+| Assignments | Explicit recipient snapshots; source version checks; retained versioned cancellation; org UUID normalized in JSON token. Student read-only list/detail merged by PR #3 with an availability-only Assigned label | Student-page browser acceptance, instructor progress/feedback, concurrent durable token consumption |
 | Documents | Gated PDF-only private database BLOBs;5MiB/file,20 active/lesson,100MiB/org incl.archives | Original private S3-compatible target is not current storage; DB choice is a documented implementation deviation, not a newly approved production architecture. Scanning/parser/CDR/request limits/restore/retention review required |
 | Delivery | Gated onboarding with development console email | Production mail/outbox/redaction/retention/security acceptance |
 

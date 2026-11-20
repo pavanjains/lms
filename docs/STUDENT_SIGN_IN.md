@@ -1,6 +1,6 @@
 # E08-08 student sign-in and session isolation
 
-Status REVIEW. Authored tests not run here; new CI, race and browser acceptance pending. No migration. Student authentication is separately gated, default off; staff MFA unchanged. The sign-in implementation is unchanged on feature/assign-01-student-ui; see STUDENT_ASSIGNMENTS.md for the read-only assignment pages authored there (REVIEW, not merged or runtime-verified).
+Status REVIEW. Authored tests not run here; new CI, race and browser acceptance pending. No migration. Student authentication is separately gated, default off; staff MFA unchanged. The sign-in implementation is unchanged by PR #3; see STUDENT_ASSIGNMENTS.md for the read-only assignment pages merged there (browser and concurrency acceptance pending).
 
 ## Local synthetic trial
 After committing, with PostgreSQL and local environment configured:
@@ -12,7 +12,7 @@ python manage.py test --settings=config.settings.ci
 ruff check .
 ```
 
-For browser trial only, add LMS_STUDENT_AUTH_ENABLED=true to local .env, export it and restart development server. Keep repository defaults off. Visit http://localhost:8000/students/login/ in a separate browser profile from owner/instructor. Use an instructor-created synthetic account/password. No student MFA/email required. /students/ shows own display name/grade and active class names, plus (on the student-UI branch) a link to My assigned lessons. Students with no active classes get an empty list. Student pages show assigned lesson snapshots only: no feedback, progress, submission or completion controls.
+For browser trial only, add LMS_STUDENT_AUTH_ENABLED=true to local .env, export it and restart development server. Keep repository defaults off. Visit http://localhost:8000/students/login/ in a separate browser profile from owner/instructor. Use an instructor-created synthetic account/password. No student MFA/email required. /students/ shows own display name/grade and active class names, plus a link to My assigned lessons. Students with no active classes get an empty list. Student pages show assigned lesson snapshots only: no feedback, progress, submission or completion controls.
 
 ## Boundaries
 One identity per browser profile/cookie jar, not per-tab isolation. Logout required before switching. Staff cannot log in via student credentials and cannot have their session silently replaced; student attempts at staff pages return denial without clearing a valid student session. Separate browser profiles needed for simultaneous staff/student testing. Login accepts no next URL; no public student-ID endpoint. User/profile/org active status and nonstaff flags checked by backend on requests.
