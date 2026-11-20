@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Lesson assignments{% endblock %}
+{% block content %}
+<h1>Lesson assignments</h1>
+<nav><a href="{% url 'staff-home' %}">Staff workspace</a> | <a href="{% url 'lessons:list' %}">Lesson library</a> | <a href="{% url 'lessons:assignment-list' %}">Assignments</a></nav>
+{% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+{% if mode == "list" %}
+<h2>Choose a class to assign a lesson</h2>
+<ul>{% for room in rooms %}<li><a href="{% url 'lessons:assignment-create' room.pk %}">{{ room.name }}</a></li>{% empty %}<li>No active authorized classes.</li>{% endfor %}</ul>
+<h2>Assignment history</h2>
+<ul>{% for row in assignments %}<li><a href="{% url 'lessons:assignment-detail' row.pk %}">{{ row.title }}</a> — {{ row.student }}, {{ row.classroom.name }}{% if row.cancelled_at %} (cancelled){% else %} (assigned){% endif %}</li>{% empty %}<li>No visible assignments.</li>{% endfor %}</ul>
+<nav aria-label="Assignment pages">{% if assignments.has_previous %}<a href="?page={{ assignments.previous_page_number }}">Previous</a>{% endif %} Page {{ assignments.number }} of {{ assignments.paginator.num_pages }} {% if assignments.has_next %}<a href="?page={{ assignments.next_page_number }}">Next</a>{% endif %}</nav>
+{% elif mode == "select" %}
+<h2>Select for {{ room.name }}</h2>
+<p>Select all intended recipients explicitly. New enrollments will not receive this work automatically.</p>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="review">{{ form.as_p }}<button type="submit">Review assignment</button></form>
+{% elif mode == "review" %}
+<h2>Review for {{ room.name }}</h2>
+{% include "lessons/assignment_content.html" %}
+<h2>Selected students</h2>
+<ul>{% for student in recipients %}<li>{{ student }} — {{ student.student_profile.get_grade_display }}</li>{% endfor %}</ul>
+<p>Confirm within 15 minutes. Starting another review in this session replaces this review.</p>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="confirm">{{ form.as_p }}<button type="submit">Confirm assignment</button></form>
+<p><a href="{% url 'lessons:assignment-create' room.pk %}">Change selection</a></p>
+{% elif mode == "review-error" %}
+<h2>Review required</h2><p>{{ error }}</p>{{ form.errors }}
+<p><a href="{% url 'lessons:assignment-create' room.pk %}">Select and review again</a></p>
+{% elif mode == "detail" %}
+<p>Student: {{ row.student }}. Class: {{ row.classroom.name }}.</p>
+{% include "lessons/assignment_content.html" %}
+{% if row.cancelled_at %}<p>Cancelled {{ row.cancelled_at }}. History retained.</p>{% endif %}
+{% if can_cancel %}<h2>Cancel assignment</h2><form method="post" action="{% url 'lessons:assignment-cancel' row.pk %}">{% csrf_token %}{{ form.as_p }}<button type="submit">Cancel assignment</button></form>{% endif %}
+{% endif %}
+{% endblock %}

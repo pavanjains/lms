@@ -1,23 +1,22 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-19. Repository pavanjains/lms; feature/assign-01-foundation.
+Updated: 2026-11-19. Branch: feature/assign-01-instructor-ui.
 
-## ASSIGN-01 foundation: REVIEW; feature IN_PROGRESS
-Adds LessonAssignment model, migration 0002, transactional creation/cancellation, scoped query services and 34 authored regression test methods. Individual explicit recipients receive lesson-field/version snapshots. Fresh staff/MFA, current class authority, active enrollment/account/org and grade/kit checks required; Grade 4 either kit, Pre-K/K mapping. Batch all-or-nothing; one active class/student/lesson; cancellation retains history and permits reassignment. Later enrollment never silently expands assignments.
+## ASSIGN-01 instructor UI authored — REVIEW
+Class selection from scoped assignment list; lesson/explicit-recipient form; signed, actor/org/class/session-bound 15-minute review; explicit confirmation; scoped snapshot detail/history and POST-only versioned cancellation. Most recent review replaces earlier session review; normal successful confirmation consumes it. All mutations use foundation services and recheck current authority/enrollment/grade/version. No claim of durable exactly-once review-token consumption under concurrent sessions; PostgreSQL/session races remain acceptance work.
 
-No routes/templates/settings/flags changed, no submissions/student completion/progress/feedback/document access added. Main unchanged by this feature-branch commit. No runtime database/credential actions or migration execution. Direct ORM authorization/snapshot immutability is not database-enforced; services are the supported write path.
+Adds HTTP regression tests and library navigation. Student-denial HTTP test uses the student backend with valid session timestamps. No model/migration/settings/password/flag changes, student pages, progress/feedback, document access or student completion controls. Upload flag remains disabled; no real-file activation.
 
-Draft syntax and migration/model field-name checks were performed during authoring, not Django runtime verification. Django unavailable: tests, Ruff, migration/drift, full PostgreSQL CI and concurrency/browser acceptance NOT RUN. The 34 figure counts authored methods, not passing tests.
+Verification: draft Python syntax/compile checks only during authoring; Django unavailable, tests/Ruff/CI/template rendering/browser/concurrency NOT RUN. UI REVIEW; ASSIGN-01 IN_PROGRESS. No runtime database or credential actions.
 
-## Evidence
-Owner reported CI passed after 8e80939 on 2026-11-18; user-reported only, run URL/count unknown, not independently retrieved. BUG-005 FIXED_VERIFIED on that evidence. Does not cover ASSIGN-01 or establish migration/browser/security/restore acceptance.
+## Foundation evidence (supersedes earlier foundation-pending notes)
+PR #1 merged at 9012dd194364791dcf5afb569e043936c42b1f04. Both returned checks jobs independently confirmed successful for PR head dddb545, including run 44665321805. Post-merge main run 44665898145 passed per owner, not independently retrieved; no test count inferred. These do not verify this new UI increment or individually establish runtime migration/drift/concurrency/browser coverage. BUG-005 pass after 8e80939 remains user-reported.
 
 ## Next
-1. Run targeted tests, full PostgreSQL CI, migration/drift and concurrency checks on foundation.
-2. Instructor selection/review/confirm/list/detail and POST-only cancellation; explicit reviewed recipients and expected lesson version.
-3. Student read-only list/detail using existing student session/route/cache guards; A/B isolation, CSRF/origin/method/escaping/cache and revoked-access acceptance.
-4. Instructor-controlled progress/feedback, then reporting. Document access requires separate assignment-aware authorization and safety work.
+1. Review/commit UI; run targeted HTTP and foundation tests, Ruff and full PostgreSQL CI.
+2. Browser acceptance: selection/review/confirm/cancel, stale/revoked access, MFA, CSRF/origins, escaping/cache, and concurrent review/confirmation.
+3. Student read-only assignment list/detail with existing session isolation, then instructor-controlled progress/feedback and reporting.
 
-BRAND-01/DOC-01/LESSON-01 retain outstanding acceptance. Upload flag remains false; synthetic testing only. PDF limits 5 MiB/file,20 active/lesson,100 MiB/org including archives; private DB storage, no public URLs. Signature/integrity checks are not malware scanning/full parsing. Audit/throttling/recovery/session/races/privacy/retention/mail/backups/deployment/training gates remain; Python3.14 unverified. No production authorization.
+All prior security/operations gates remain: file scanning/parser/request limits, audit/throttling/recovery/session/races/privacy/retention/mail/backups/deployment/training; Python3.14 unverified. No production authorization.
 
-[Complete pre-assignment plan](https://github.com/pavanjains/lms/blob/8e80939a606f5e967451c811cf178ca85bc422db/ACTION_PLAN.md) preserves prior roadmap/history/evidence links. Update this plan, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md with implementation/fix commits.
+[Complete pre-UI plan/history](https://github.com/pavanjains/lms/blob/9012dd194364791dcf5afb569e043936c42b1f04/ACTION_PLAN.md). Update all three tracking docs with implementation/fix commits.

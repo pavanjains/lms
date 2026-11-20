@@ -1,0 +1,5 @@
+<h2>{{ content.title }}</h2>
+<p>{{ content.summary }}</p>
+<p>{{ content.get_kit_display }}: {{ content.get_min_grade_display }} to {{ content.get_max_grade_display }}. Source version {{ source_version }}.</p>
+<pre>{{ content.instructions }}</pre>
+{% if external_url %}<p><a href="{{ external_url }}" target="_blank" rel="noopener noreferrer">Open LEGO instructions</a></p>{% endif %}
