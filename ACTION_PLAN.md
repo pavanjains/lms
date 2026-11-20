@@ -1,23 +1,24 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-19. Repository pavanjains/lms; feature/assign-01-foundation.
+Updated: 2026-11-19. Branch: feature/assign-01-instructor-ui.
 
-## ASSIGN-01 foundation: REVIEW; feature IN_PROGRESS
-Adds LessonAssignment model, migration 0002, transactional creation/cancellation, scoped query services and 34 authored regression test methods. Individual explicit recipients receive lesson-field/version snapshots. Fresh staff/MFA, current class authority, active enrollment/account/org and grade/kit checks required; Grade 4 either kit, Pre-K/K mapping. Batch all-or-nothing; one active class/student/lesson; cancellation retains history and permits reassignment. Later enrollment never silently expands assignments.
+## Immediate: BUG-006 UUID review-token correction — REVIEW
+Uploaded paste.txt for reported run 44667767312 shows Ran 296 tests, FAILED (errors=9), and repeated TypeError: Object of type UUID is not JSON serializable at assignment_create signing.dumps. Evidence read from owner-supplied log, not independently fetched Actions logs. Organization.id is UUIDField. UI f52a592 passed the raw organization UUID to JSON signing.
 
-No routes/templates/settings/flags changed, no submissions/student completion/progress/feedback/document access added. Main unchanged by this feature-branch commit. No runtime database/credential actions or migration execution. Direct ORM authorization/snapshot immutability is not database-enforced; services are the supported write path.
+Focused correction stringifies organization ID in the signed payload and compares it against str(user.organization_id) on confirmation. Other IDs, signature/session/actor/class/expiry/permission checks unchanged. Adds two explicit UUID regressions: successful review-to-confirm round trip and denial of a validly signed different organization. Existing 14 UI methods and 34 foundation methods retained unchanged. No weakening or test removals.
 
-Draft syntax and migration/model field-name checks were performed during authoring, not Django runtime verification. Django unavailable: tests, Ruff, migration/drift, full PostgreSQL CI and concurrency/browser acceptance NOT RUN. The 34 figure counts authored methods, not passing tests.
+Local standard-library check reproduced original JSON failure and passed normalized JSON round-trip/same-org/different-org comparisons. This is NOT Django test verification. New Django tests/full CI/Ruff/template/browser/concurrency rerun PENDING; no fix-pass or passing test count claimed. No schema/migration/settings/password/flag changes or runtime credential/data actions.
 
-## Evidence
-Owner reported CI passed after 8e80939 on 2026-11-18; user-reported only, run URL/count unknown, not independently retrieved. BUG-005 FIXED_VERIFIED on that evidence. Does not cover ASSIGN-01 or establish migration/browser/security/restore acceptance.
+## ASSIGN-01 scope
+Instructor UI REVIEW; overall IN_PROGRESS. Scoped list/class selection, explicit lesson/recipients, signed session-bound 15-minute review, confirmation/detail/history and POST-only versioned cancellation authored. Normal success consumes session review; no durable exactly-once concurrency guarantee. Student pages/progress/feedback/documents/completion controls remain outside this increment. Uploads disabled.
+
+## Foundation evidence
+PR #1 merged at 9012dd1. Two checks jobs independently confirmed successful for dddb545, including run 44665321805. Post-merge run 44665898145 passed per owner only; no count inferred. BUG-005 CI after 8e80939 remains user-reported. These do not establish a new UI pass.
 
 ## Next
-1. Run targeted tests, full PostgreSQL CI, migration/drift and concurrency checks on foundation.
-2. Instructor selection/review/confirm/list/detail and POST-only cancellation; explicit reviewed recipients and expected lesson version.
-3. Student read-only list/detail using existing student session/route/cache guards; A/B isolation, CSRF/origin/method/escaping/cache and revoked-access acceptance.
-4. Instructor-controlled progress/feedback, then reporting. Document access requires separate assignment-aware authorization and safety work.
+1. Commit BUG-006 after review; run UUID/UI/foundation tests, full PostgreSQL CI and Ruff.
+2. Browser and concurrent review/confirmation acceptance; then student read-only workspace, instructor progress/feedback/reporting.
 
-BRAND-01/DOC-01/LESSON-01 retain outstanding acceptance. Upload flag remains false; synthetic testing only. PDF limits 5 MiB/file,20 active/lesson,100 MiB/org including archives; private DB storage, no public URLs. Signature/integrity checks are not malware scanning/full parsing. Audit/throttling/recovery/session/races/privacy/retention/mail/backups/deployment/training gates remain; Python3.14 unverified. No production authorization.
+All security/operations gates retained: file safety, audit/throttling/recovery/session/races/privacy/retention/mail/backups/deployment/training; Python3.14 unverified. No production authorization.
 
-[Complete pre-assignment plan](https://github.com/pavanjains/lms/blob/8e80939a606f5e967451c811cf178ca85bc422db/ACTION_PLAN.md) preserves prior roadmap/history/evidence links. Update this plan, docs/TICKETS.md and docs/IMPLEMENTATION_STATUS.md with implementation/fix commits.
+[Complete pre-fix plan/history](https://github.com/pavanjains/lms/blob/f52a5928f697f6f13b283e1fa74a157710bd2e64/ACTION_PLAN.md). Update all three tracking docs per implementation/fix.

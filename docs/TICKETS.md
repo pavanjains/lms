@@ -2,19 +2,19 @@
 
 Updated: 2026-11-19.
 
-## ASSIGN-01 — IN_PROGRESS; foundation REVIEW
-Model/migration/services and latest 34-method regression module authored. Explicit students get original lesson FK/version plus title, summary, URL, instructions, kit and grade-range snapshots. Organization-first mutations reuse existing fresh staff/MFA and class authorization. Active same-org recipients/enrollment/profiles, kit/grade range and reviewed lesson version checked before atomic writes. Empty/duplicate/malformed recipients, stale/archived lesson or incompatible/unauthorized batch rejected. Conditional DB uniqueness prevents duplicate active class/student/lesson; cancellation actor/time pair and positive-version constraints included.
+## BUG-006 — UUID organization cannot serialize in assignment review
+Status REVIEW; correction/tests authored, rerun PENDING. Introduced in UI f52a592. Owner-reported failed run 44667767312; supplied paste.txt read directly: Ran 296 tests in 12.766s, FAILED (errors=9), system checks no issues. Nine reported errors share UUID JSON serialization failure at assignment_create signing.dumps. No inferred passing count, independent Actions-log retrieval or new pass claim.
 
-Scoped staff/student queries recheck current authority/account/org/class/enrollment. Library edits/archive do not rewrite assigned content. Cancellation retains actor/time/version, permits reassignment; archived-class cancellation owner-only. No snapshot editing/student mutation service; raw ORM bypass is not an approved write path and DB does not enforce cross-table authorization/immutability.
+Organization.id is UUIDField. Fix only two runtime expressions: payload org uses str(user.organization_id), and confirmation compares against str(user.organization_id). Avoid UUID-to-string mismatch after deserialization; keep default JSON signing, all other IDs, HMAC/expiry/session/actor/class/authority checks and service contracts. No schema/settings/password/feature-flag change.
 
-Regression methods cover all copied fields, explicit roster behavior, Grade4 either kit, Pre-K/K mapping, stale reviews, authorization, account/MFA/membership revocation, second-insert rollback, database constraints, cancellation/retries/reassignment, shared students and read isolation. 34 authored methods, NOT a passing count. Prior draft syntax/field-name checks only; Django tests/Ruff/migration/drift/PostgreSQL concurrency/browser checks NOT RUN; CI PENDING.
+Two dedicated regressions authored using a real UUID organization: review token JSON round-trip and successful confirmation; correctly signed wrong-org token denied even when session token matches. Existing 14 UI and 34 foundation methods retained, not removed or weakened. Standard-library reproduction confirmed original TypeError and normalized JSON comparisons only. Django tests/Ruff/full PostgreSQL CI/browser/concurrency NOT RUN for correction; not FIXED_VERIFIED.
 
-Remaining: instructor/student HTTP/UI, session backend integration and CSRF/origin/method/escaping/cache/browser A/B acceptance. No new routes/settings/flags, submissions, completion controls, progress/feedback or document authorization in foundation. Feature branch only; no runtime migration/data/credential changes.
+## ASSIGN-01 — IN_PROGRESS; instructor UI REVIEW
+Scoped selection/review/confirmation/history/detail/POST-only cancellation authored. Exact reviewed recipients/version bound to actor/org/class/session with 15-minute expiry and current service authorization checks. No durable exactly-once nonce store; session/replay races unverified. Student screens/progress/feedback/document access/completion controls not delivered. No runtime data/migration/credential actions; uploads disabled.
 
-## BUG-005 — FIXED_VERIFIED, user-reported CI
-Owner reported CI passed after 8e80939 on 2026-11-18; not independently retrieved, URL/count unknown. NumericPasswordValidator restored after accidental omission in 5032dc4; other validators retained. No existing passwords/accounts/sessions changed or weak-account creation reported. Earlier pending notes describe authoring time; latest report does not cover ASSIGN-01.
+Foundation merged PR #1 at 9012dd1 preserving dddb545. Both returned checks jobs independently confirmed successful, including run 44665321805. Post-merge run 44665898145 passed per owner, not independently retrieved/count unknown. Earlier foundation evidence does not establish UI fix verification.
 
 ## Carry-forward
-BRAND-01/DOC-01/LESSON-01 retain migration/browser/security/operations acceptance. PDFs disabled by default; 5 MiB/file,20 active/lesson,100 MiB/org including archives, private DB storage/staff attachment downloads. No antivirus/CDR/full parser/student file authorization. Existing shared-device/races/audit/throttling/recovery/session/privacy/retention/backups/deployment gates open.
+BUG-005 FIXED_VERIFIED per owner CI after 8e80939; E08-08/BUG-004 attribution retained. E08-05 IN_PROGRESS, BUG-003 REVIEW, BRAND-01/DOC-01/LESSON-01 acceptance and file safety/shared-device/browser/races/audit/throttling/recovery/session/privacy/retention/backups/deployment gates remain open.
 
-[Complete pre-assignment ledger](https://github.com/pavanjains/lms/blob/8e80939a606f5e967451c811cf178ca85bc422db/docs/TICKETS.md) preserves E01-E22/E08 and BUG history, earlier failures/counts and user-reported evidence. Unaffected statuses unchanged, including E08-08 CI_PASSED/BUG-004 FIXED_VERIFIED user-reported, E08-05 IN_PROGRESS and BUG-003 REVIEW. No fabricated counts or independent Actions claims.
+[Complete pre-fix ledger](https://github.com/pavanjains/lms/blob/f52a5928f697f6f13b283e1fa74a157710bd2e64/docs/TICKETS.md) preserves prior statuses, evidence/failures/counts and history links.
