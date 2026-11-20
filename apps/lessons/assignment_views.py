@@ -108,7 +108,7 @@ def assignment_create(request, classroom_id):
                 if not constant_time_compare(token, request.session.get(REVIEW_KEY, "")):
                     raise signing.BadSignature
                 data = signing.loads(token, salt=REVIEW_SALT, max_age=REVIEW_SECONDS)
-                if (data["actor"] != user.pk or data["org"] != user.organization_id
+                if (data["actor"] != user.pk or data["org"] != str(user.organization_id)
                         or data["room"] != room.pk):
                     raise PermissionDenied
                 rows = create_assignments(
@@ -134,7 +134,7 @@ def assignment_create(request, classroom_id):
             lesson = form.cleaned_data["lesson"]
             recipients = list(form.cleaned_data["students"])
             token = signing.dumps({
-                "actor": user.pk, "org": user.organization_id, "room": room.pk,
+                "actor": user.pk, "org": str(user.organization_id), "room": room.pk,
                 "lesson": lesson.pk, "version": lesson.version,
                 "students": [student.pk for student in recipients], "nonce": secrets.token_hex(16),
             }, salt=REVIEW_SALT)

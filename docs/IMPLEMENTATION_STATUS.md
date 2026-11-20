@@ -2,16 +2,18 @@
 
 Updated: 2026-11-19. Evidence: docs/TICKETS.md.
 
-## ASSIGN-01 instructor UI authored — REVIEW
-Adds class selection, scoped assignment history/list/detail, explicit lesson/student selection, signed session-bound review/confirmation and POST-only versioned cancellation. Exact reviewed IDs/version are signed with actor/org/class, expire after 15 minutes, and are rechecked through existing transactional services. Normal success consumes session review; starting another review replaces it. Durable exactly-once consumption under concurrency is not implemented or claimed.
+## BUG-006 correction authored — REVIEW
+Owner-supplied paste.txt for reported CI run 44667767312 confirms assignment review crashes in JSON signing with UUID serialization TypeError. Log: Ran 296 tests, FAILED (errors=9); no passing count inferred. This is inspected supplied evidence, not independently fetched CI logs. Root cause: Organization.id is UUIDField and UI f52a592 signed raw user.organization_id.
 
-Adds 14 authored HTTP regression methods, escaped snapshot rendering, validated external LEGO link, same-origin referrer and inherited private/no-store/MFA/CSRF guards. Student access-denial fixture uses correct student backend and session timestamps. No models/migrations/settings/password/feature flags changed. No student pages, submissions, completion controls, progress/feedback or document access. No runtime data/schema/credential actions; uploads remain disabled.
+Normalize org UUID to string at token creation and compare with the same string representation at confirmation. All other IDs, expiry/signature/session/actor/class checks and foundation service authorization preserved. Two UUID regressions added for success and signed wrong-org denial; existing tests unchanged. No schema/migration/settings/password/flag change; no runtime credential/data actions.
 
-Draft Python syntax/compile validation during authoring only. Django unavailable; test execution/Ruff/template rendering/full CI/browser/PostgreSQL/session concurrency NOT RUN. 14 is an authored-method count, not passing tests. UI REVIEW; whole feature IN_PROGRESS. Student read-only workspace and instructor-controlled progress/feedback/reporting follow separately.
+Standard-library reproduction of the original JSON TypeError and corrected JSON round-trip/organization comparisons performed. Django tests/Ruff/full CI/template/browser/concurrency rerun PENDING; not a verified fix or passing run. Earlier syntax checks did not catch runtime UUID serialization.
 
-## Foundation CI/merge evidence
-Foundation merged through PR #1 at 9012dd194364791dcf5afb569e043936c42b1f04. Both returned checks jobs independently verified successful for dddb545 before merge, including run 44665321805. Owner reported post-merge run 44665898145 passed; not independently retrieved/count unknown. Earlier foundation-pending text is historical. No new UI pass or individual migration/drift/concurrency/browser coverage inferred. BUG-005 remains verified on owner-reported CI after 8e80939.
+## ASSIGN-01
+Instructor UI REVIEW, overall IN_PROGRESS: scoped class/lesson/recipient selection, session-bound signed review/confirmation, history/detail and POST-only versioned cancellation authored. Normal success consumes session review, not durable exactly-once under concurrency. Student read-only pages, progress/feedback/reporting and documents remain separate. Uploads disabled; no production authorization.
 
-Prior branding/library/doc/browser/security/storage-restore/audit/throttling/recovery/session/privacy/retention/mail/deployment/training acceptance remains open. Python3.14 unverified. No production authorization.
+Foundation PR #1 merged at 9012dd1. Pre-merge checks for dddb545 independently confirmed successful including run 44665321805. Post-merge run 44665898145 passed per owner only/count unknown. BUG-005 remains verified on owner CI after 8e80939. No foundation evidence is treated as a pass for BUG-006.
 
-[Full pre-UI status/history](https://github.com/pavanjains/lms/blob/9012dd194364791dcf5afb569e043936c42b1f04/docs/IMPLEMENTATION_STATUS.md) preserves earlier implementation/evidence/failures and linked history.
+Existing branding/library/document/browser/security/restore/audit/throttling/recovery/session/privacy/retention/mail/deployment/training acceptance remains open; Python3.14 unverified.
+
+[Full pre-fix status/history](https://github.com/pavanjains/lms/blob/f52a5928f697f6f13b283e1fa74a157710bd2e64/docs/IMPLEMENTATION_STATUS.md) preserves earlier implementation/evidence/failures and history links.

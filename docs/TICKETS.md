@@ -2,17 +2,19 @@
 
 Updated: 2026-11-19.
 
+## BUG-006 — UUID organization cannot serialize in assignment review
+Status REVIEW; correction/tests authored, rerun PENDING. Introduced in UI f52a592. Owner-reported failed run 44667767312; supplied paste.txt read directly: Ran 296 tests in 12.766s, FAILED (errors=9), system checks no issues. Nine reported errors share UUID JSON serialization failure at assignment_create signing.dumps. No inferred passing count, independent Actions-log retrieval or new pass claim.
+
+Organization.id is UUIDField. Fix only two runtime expressions: payload org uses str(user.organization_id), and confirmation compares against str(user.organization_id). Avoid UUID-to-string mismatch after deserialization; keep default JSON signing, all other IDs, HMAC/expiry/session/actor/class/authority checks and service contracts. No schema/settings/password/feature-flag change.
+
+Two dedicated regressions authored using a real UUID organization: review token JSON round-trip and successful confirmation; correctly signed wrong-org token denied even when session token matches. Existing 14 UI and 34 foundation methods retained, not removed or weakened. Standard-library reproduction confirmed original TypeError and normalized JSON comparisons only. Django tests/Ruff/full PostgreSQL CI/browser/concurrency NOT RUN for correction; not FIXED_VERIFIED.
+
 ## ASSIGN-01 — IN_PROGRESS; instructor UI REVIEW
-Authored scoped list/class selection, lesson/recipient selection, read-only review, explicit confirmation, assignment snapshot detail/history and POST-only cancellation. Signed review binds actor/org/class, lesson version and exact student IDs; session token equality and 15-minute expiry required. Normal success consumes review; newer review replaces it. Confirmation ignores unreviewed posted recipient/lesson fields and calls transactional foundation services for fresh authorization/compatibility/version checks. No durable exactly-once nonce store; concurrent session/replay races remain unverified.
+Scoped selection/review/confirmation/history/detail/POST-only cancellation authored. Exact reviewed recipients/version bound to actor/org/class/session with 15-minute expiry and current service authorization checks. No durable exactly-once nonce store; session/replay races unverified. Student screens/progress/feedback/document access/completion controls not delivered. No runtime data/migration/credential actions; uploads disabled.
 
-14 HTTP regression methods authored for no writes before confirmation, checkbox/token/session/actor/expiry/replacement controls, stale lessons and enrollment/membership revocation, forged recipients/org access, cache/referrer/escaping, cancellation/method/version requirements, MFA/student/anonymous/flag denial and CSRF/origin checks. Student-denial test uses student backend and valid session timestamps, not anonymous fallback. Draft syntax/compile only; Django tests/Ruff/templates/CI/browser/PostgreSQL concurrency NOT RUN. Not marked complete or FIXED_VERIFIED; 14 is authored methods, not passing tests.
-
-No changes to models/migrations/settings/password validators/flags, student routes, documents, submissions, progress/feedback or student completion. No runtime migration/data/credential changes. Uploads remain disabled.
-
-## ASSIGN-01 foundation evidence
-PR #1 merged at 9012dd1, preserving dddb545 and 34 authored foundation test methods. Two returned checks jobs independently confirmed successful before merge, including run 44665321805. Owner reported post-merge main run 44665898145 passed; not independently retrieved, count unknown. Supersedes historical foundation branch-only/CI-pending notes, not UI verification or individually proven migration/drift/concurrency/browser acceptance.
+Foundation merged PR #1 at 9012dd1 preserving dddb545. Both returned checks jobs independently confirmed successful, including run 44665321805. Post-merge run 44665898145 passed per owner, not independently retrieved/count unknown. Earlier foundation evidence does not establish UI fix verification.
 
 ## Carry-forward
-BUG-005 FIXED_VERIFIED per owner CI after 8e80939, not independently retrieved. Existing E08-08 CI_PASSED/BUG-004 FIXED_VERIFIED attribution retained; E08-05 IN_PROGRESS/BUG-003 REVIEW and BRAND-01/DOC-01/LESSON-01 acceptance remain open. File safety/student document authorization, shared-device/browser/races/audit/throttling/recovery/session/privacy/retention/backups/deployment gates remain.
+BUG-005 FIXED_VERIFIED per owner CI after 8e80939; E08-08/BUG-004 attribution retained. E08-05 IN_PROGRESS, BUG-003 REVIEW, BRAND-01/DOC-01/LESSON-01 acceptance and file safety/shared-device/browser/races/audit/throttling/recovery/session/privacy/retention/backups/deployment gates remain open.
 
-[Complete pre-UI ledger](https://github.com/pavanjains/lms/blob/9012dd194364791dcf5afb569e043936c42b1f04/docs/TICKETS.md) preserves earlier evidence/failures/counts/statuses and history links. No test counts inferred from successful jobs.
+[Complete pre-fix ledger](https://github.com/pavanjains/lms/blob/f52a5928f697f6f13b283e1fa74a157710bd2e64/docs/TICKETS.md) preserves prior statuses, evidence/failures/counts and history links.

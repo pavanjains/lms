@@ -2,21 +2,23 @@
 
 Updated: 2026-11-19. Branch: feature/assign-01-instructor-ui.
 
-## ASSIGN-01 instructor UI authored — REVIEW
-Class selection from scoped assignment list; lesson/explicit-recipient form; signed, actor/org/class/session-bound 15-minute review; explicit confirmation; scoped snapshot detail/history and POST-only versioned cancellation. Most recent review replaces earlier session review; normal successful confirmation consumes it. All mutations use foundation services and recheck current authority/enrollment/grade/version. No claim of durable exactly-once review-token consumption under concurrent sessions; PostgreSQL/session races remain acceptance work.
+## Immediate: BUG-006 UUID review-token correction — REVIEW
+Uploaded paste.txt for reported run 44667767312 shows Ran 296 tests, FAILED (errors=9), and repeated TypeError: Object of type UUID is not JSON serializable at assignment_create signing.dumps. Evidence read from owner-supplied log, not independently fetched Actions logs. Organization.id is UUIDField. UI f52a592 passed the raw organization UUID to JSON signing.
 
-Adds HTTP regression tests and library navigation. Student-denial HTTP test uses the student backend with valid session timestamps. No model/migration/settings/password/flag changes, student pages, progress/feedback, document access or student completion controls. Upload flag remains disabled; no real-file activation.
+Focused correction stringifies organization ID in the signed payload and compares it against str(user.organization_id) on confirmation. Other IDs, signature/session/actor/class/expiry/permission checks unchanged. Adds two explicit UUID regressions: successful review-to-confirm round trip and denial of a validly signed different organization. Existing 14 UI methods and 34 foundation methods retained unchanged. No weakening or test removals.
 
-Verification: draft Python syntax/compile checks only during authoring; Django unavailable, tests/Ruff/CI/template rendering/browser/concurrency NOT RUN. UI REVIEW; ASSIGN-01 IN_PROGRESS. No runtime database or credential actions.
+Local standard-library check reproduced original JSON failure and passed normalized JSON round-trip/same-org/different-org comparisons. This is NOT Django test verification. New Django tests/full CI/Ruff/template/browser/concurrency rerun PENDING; no fix-pass or passing test count claimed. No schema/migration/settings/password/flag changes or runtime credential/data actions.
 
-## Foundation evidence (supersedes earlier foundation-pending notes)
-PR #1 merged at 9012dd194364791dcf5afb569e043936c42b1f04. Both returned checks jobs independently confirmed successful for PR head dddb545, including run 44665321805. Post-merge main run 44665898145 passed per owner, not independently retrieved; no test count inferred. These do not verify this new UI increment or individually establish runtime migration/drift/concurrency/browser coverage. BUG-005 pass after 8e80939 remains user-reported.
+## ASSIGN-01 scope
+Instructor UI REVIEW; overall IN_PROGRESS. Scoped list/class selection, explicit lesson/recipients, signed session-bound 15-minute review, confirmation/detail/history and POST-only versioned cancellation authored. Normal success consumes session review; no durable exactly-once concurrency guarantee. Student pages/progress/feedback/documents/completion controls remain outside this increment. Uploads disabled.
+
+## Foundation evidence
+PR #1 merged at 9012dd1. Two checks jobs independently confirmed successful for dddb545, including run 44665321805. Post-merge run 44665898145 passed per owner only; no count inferred. BUG-005 CI after 8e80939 remains user-reported. These do not establish a new UI pass.
 
 ## Next
-1. Review/commit UI; run targeted HTTP and foundation tests, Ruff and full PostgreSQL CI.
-2. Browser acceptance: selection/review/confirm/cancel, stale/revoked access, MFA, CSRF/origins, escaping/cache, and concurrent review/confirmation.
-3. Student read-only assignment list/detail with existing session isolation, then instructor-controlled progress/feedback and reporting.
+1. Commit BUG-006 after review; run UUID/UI/foundation tests, full PostgreSQL CI and Ruff.
+2. Browser and concurrent review/confirmation acceptance; then student read-only workspace, instructor progress/feedback/reporting.
 
-All prior security/operations gates remain: file scanning/parser/request limits, audit/throttling/recovery/session/races/privacy/retention/mail/backups/deployment/training; Python3.14 unverified. No production authorization.
+All security/operations gates retained: file safety, audit/throttling/recovery/session/races/privacy/retention/mail/backups/deployment/training; Python3.14 unverified. No production authorization.
 
-[Complete pre-UI plan/history](https://github.com/pavanjains/lms/blob/9012dd194364791dcf5afb569e043936c42b1f04/ACTION_PLAN.md). Update all three tracking docs with implementation/fix commits.
+[Complete pre-fix plan/history](https://github.com/pavanjains/lms/blob/f52a5928f697f6f13b283e1fa74a157710bd2e64/ACTION_PLAN.md). Update all three tracking docs per implementation/fix.
