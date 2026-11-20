@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Assigned lesson{% endblock %}
+{% block content %}
+<h1>{{ assignment.title }}</h1>
+<p><a href="{% url 'student-assignment-list' %}">My assigned lessons</a> | <a href="{% url 'student-home' %}">My workspace</a></p>
+<p>Class: {{ assignment.classroom.name }}. Status: Assigned.</p>
+<p>{{ assignment.get_kit_display }}, {{ assignment.get_min_grade_display }} to {{ assignment.get_max_grade_display }}. Assigned lesson version {{ assignment.lesson_version }}.</p>
+<p>{{ assignment.summary }}</p>
+<h2>Instructions</h2>
+<pre>{{ assignment.instructions }}</pre>
+{% if external_url %}<p><a href="{{ external_url }}" target="_blank" rel="noopener noreferrer">Open LEGO instructions</a></p>{% endif %}
+<p>This is your assigned lesson snapshot. Your instructor manages progress; no submission or completion controls are provided.</p>
+<form method="post" action="{% url 'student-logout' %}">{% csrf_token %}<button type="submit">Sign out before the next student</button></form>
+{% endblock %}

@@ -1,27 +1,24 @@
 # Implementation Status
 
-Updated: 2026-11-19. Baseline main92ed0ab; current evidence: TICKETS.md and VALIDATION.json.
+Updated: 2026-11-20. Branch feature/assign-01-student-ui, baseline main 0d445e2 (code 5ee2a7b, tests 248127c). Evidence is in TICKETS.md and VALIDATION.json.
 
 ## Implemented in source
-Stembotic branding; owner bootstrap; gated staff email/MFA, invitations/onboarding/management/deactivation; scoped classroom/membership services/UI; shared student creation/password reset; separately gated student sign-in/session isolation; lesson library and protected staff PDF support; assignment snapshots/services and instructor screens. Foundation PR #1 merged9012dd1; instructor UI/UUID fix PR #2 merged92ed0ab. No production acceptance implied.
+Stembotic branding; owner bootstrap; gated staff email and MFA, invitations, onboarding, management and deactivation; scoped classroom services and UI; shared student creation and password reset; separately gated student sign-in and session isolation; lesson library and protected staff PDF support; assignment snapshots, services and instructor screens (PRs #1 and #2, merged at 9012dd1 and 92ed0ab). No production acceptance is implied.
 
-Instructor assignment routes are under /staff/lessons/assignments/. Explicit reviewed recipients/version are signed/session-bound with 900s expiry and freshly authorized on confirmation. No automatic roster expansion; snapshots survive lesson changes; retained versioned cancellation permits reassignment. Org UUID string normalization fixed BUG-006. No durable exactly-once session/token consumption under concurrency.
+## Student assignment pages (branch, REVIEW)
+Authored own-snapshot list and detail pages with a student-home link, GET and HEAD only. They reuse the student session backend, flag, expiry middleware and student_assignments filters, so account, profile, organization, class, enrollment and an uncancelled own assignment are required per request. Detail shows snapshot fields, source version and a validated LEGO link; "Assigned" is an availability label only. Text is escaped. No roster, peer data, documents, progress editing, submissions or completion controls; the existing logout form remains.
 
-Student home still identity/grade/active class names only. Assigned lesson pages, instructor-controlled progress/status/feedback, reporting and student document authorization remain to build. Student submissions/student-controlled completion excluded.
+Other-student, foreign, unknown and revoked IDs are not found, and query IDs do not select an identity. An ended enrollment is not bypassed by another class. Editing or archiving the source lesson leaves an eligible snapshot intact and cancelling removes student access. Existing middleware supplies private, no-store and same-origin referrer headers. Rendered pages, history and BFCache are not erased retroactively, so browser acceptance is still required.
+
+No model, migration, settings, middleware, password or flag change; no runtime credential, data or schema action; uploads stay disabled. Instructor review-token concurrency, progress, feedback, reporting and student document delivery remain separate. ASSIGN-01 stays IN_PROGRESS and nothing here is production-ready.
 
 ## Verification
-- Foundation pre-merge checks for dddb545 independently retrieved successful, including44665321805.
-- Initial UI run44667767312 failed per owner and supplied log:296tests,9errors, UUID JSON serialization; retained as failure history with no inferred passing count.
-- BUG-006 ddc000b checks independently retrieved successful in push44668593439 and PR44668981076. BUG-006 FIXED_VERIFIED for reported defect.
-- Post-PR1 main run44665898145 passed per owner only; BUG-005 CI after8e80939 user-reported.
-- Post-PR2 main92ed0ab CI NOT VERIFIED here. Current full-suite passing count unknown.
-- Local JSON reproduction/comparisons were standard-library checks only, not Django runtime execution.
-- Real browser/accessibility/shared-device and new assignment/auth/session concurrency acceptance remain PENDING. Source merges did not deploy or execute runtime database migrations.
+18 HTTP test methods are authored. The author checked only Python syntax and compilation; Django tests, Ruff, template rendering, browser and PostgreSQL race checks were NOT RUN by the author. The owner reports CI passed on the push of 248127c and on main 0d445e2; neither run was independently retrieved and no test count is known. dddb545 pre-merge checks and the ddc000b runs 44668593439 and 44668981076 were independently retrieved as successful. Run 44667767312 failed for f52a592 (296 tests, 9 errors, owner-supplied log) and is retained. BUG-005 and run 44665898145 are owner-reported. A merge-specific post-PR #2 run is unverified.
 
 ## Documentation
-LOCAL_TESTING.md supplies safe local procedures, not execution evidence; docs/README.md maps all original increment guides to current scope. README/ASSIGNMENTS/DECISIONS/VALIDATION and tracking docs reconciled in doc-only refresh. Procedures were not executed in authoring environment. Future implementation/fix commits must update relevant current docs and retain attributed evidence/failures.
+This commit updates the student guide and the three tracking docs. README, the documentation index, ASSIGNMENTS, STUDENT_SIGN_IN, DECISIONS, LOCAL_TESTING and VALIDATION are updated in the following commit and may still describe the earlier state until then. Local testing remains procedure-only.
 
 ## Release gates
-Uploads disabled except controlled synthetic testing: private DB PDF-only,5MiB/file,20active/lesson,100MiB/org incl.archives. Scanning/full parser/CDR/request limits/retention/restore and approved storage architecture remain open. Audit/throttling/recovery/session-policy/TLS/log-redaction/privacy/mail/deployment/backups/training gates, E08-05/BUG-003 and branding/library/document acceptance remain. Python3.14 unverified. No production authorization.
+Uploads stay disabled except controlled synthetic testing (private database PDF-only, 5 MiB per file, 20 active per lesson, 100 MiB per organization including archives). Scanning, parsing, request limits, retention, restore and approved storage remain open, as do audit, throttling, recovery, session policy, TLS, log redaction, privacy, mail, deployment, backups, training, E08-05, BUG-003 and branding, library and document acceptance. Python 3.14 is unverified. No production authorization.
 
-[Full pre-refresh status/history](https://github.com/pavanjains/lms/blob/92ed0ab127149081483c8044ab41cf4e4ee9f82e/docs/IMPLEMENTATION_STATUS.md) preserves previous implementation/failure/evidence links.
+[Previous status](https://github.com/pavanjains/lms/blob/0d445e20a4d70a11df33612e81c3e94e4b82803a/docs/IMPLEMENTATION_STATUS.md)

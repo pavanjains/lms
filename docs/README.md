@@ -1,12 +1,12 @@
 # Documentation index and current-scope guide
 
-Updated: 2026-11-19; baseline main 92ed0ab.
+Updated: 2026-11-20; branch feature/assign-01-student-ui on main 0d445e2. Student assignment pages are authored for review; see STUDENT_ASSIGNMENTS.md.
 
 ## Current sources of truth
 1. LOCAL_TESTING.md: operator-reviewed local setup, automated checks and synthetic browser procedures; not execution evidence.
 2. IMPLEMENTATION_STATUS.md and ../ACTION_PLAN.md: current scope, next work and acceptance gates.
 3. TICKETS.md and VALIDATION.json: attributed CI/failure/verification evidence.
-4. ASSIGNMENTS.md and DECISIONS.md: current assignment behavior and decisions versus proposals.
+4. ASSIGNMENTS.md, STUDENT_ASSIGNMENTS.md and DECISIONS.md: current assignment behavior and decisions versus proposals.
 
 Earlier feature guides below record their original increments. Their authored-method counts and authoring-time NOT RUN/pending statements are historical, not current CI totals. Statements such as no login/reset/assignments or future UI mean not included in that increment. The current scope and evidence above supersede those temporal limitations; they do not waive unchanged safety/authorization requirements. Do not execute an older guide's verification command against an unreviewed/shared/production database. Use LOCAL_TESTING.md first.
 
@@ -26,10 +26,11 @@ Earlier feature guides below record their original increments. Their authored-me
 | CLASSROOMS_CONCURRENCY.md | Existing deterministic PostgreSQL classroom scenarios; not assignment/token or all auth races. |
 | STUDENT_CREATION.md | Creation/enrollment security; password reset and sign-in implemented later. |
 | STUDENT_CREDENTIALS.md | Staff reset/receipt policy; gated student backend now exists. |
-| STUDENT_SIGN_IN.md | Session isolation and browser acceptance; current student home still identity/grade/classes only. E08-08 prior CI pass is user-reported; browser gates remain. |
+| STUDENT_SIGN_IN.md | Session isolation and browser acceptance; student home also links to the authored assignment pages. E08-08 prior CI pass is user-reported; browser gates remain. |
+| STUDENT_ASSIGNMENTS.md | Authored read-only assigned-lesson list/detail (18 test methods); REVIEW, not merged or runtime-verified. |
 | LESSON_LIBRARY.md | Library validation/access; supporting PDFs and instructor assignments added later. Grade mapping and snapshot decisions now implemented in assignment services. |
 | LESSON_DOCUMENTS.md | Private staff PDF behavior/risks; uploads default off and student delivery absent. CI history updated in current ledger, not proof of real-file safety. |
-| ASSIGNMENTS.md | Current merged foundation/instructor UI and remaining student/concurrency work. |
+| ASSIGNMENTS.md | Merged foundation/instructor UI, branch-authored student pages, and remaining progress/feedback/concurrency work. |
 
 ## Maintenance contract
 Implementation/fix commits update all three tracking docs plus affected current guides, setup commands, decisions and validation evidence. Do not silently turn an old plan/proposal or authored test count into verified behavior. Preserve historical failures and source revision links. When working on an older feature guide, reconcile its temporal wording against this matrix and the actual code. A guide is not production authorization.

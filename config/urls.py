@@ -5,6 +5,7 @@ from two_factor.urls import urlpatterns as two_factor_urls
 from apps.accounts import students
 from apps.accounts.staff_views import StaffLoginView, deny_mfa_disable, staff_entry, staff_home
 from apps.core.views import home, liveness
+from apps.lessons import student_views
 
 # Override only login and disable; retain upstream namespace and enrollment routes.
 tf_patterns, tf_namespace = two_factor_urls
@@ -26,5 +27,7 @@ urlpatterns = [
     path("staff/lessons/", include("apps.lessons.urls")),
     path("students/login/", students.sign_in, name="student-login"),
     path("students/logout/", students.sign_out, name="student-logout"),
+    path("students/assignments/", student_views.assignment_list, name="student-assignment-list"),
+    path("students/assignments/<int:assignment_id>/", student_views.assignment_detail, name="student-assignment-detail"),
     path("students/", students.home, name="student-home"),
 ]
