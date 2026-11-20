@@ -1,25 +1,22 @@
 # Robotics LMS — Action Plan
 
-Updated: 2026-11-19. Baseline: main92ed0ab after PR #2.
+Updated: 2026-11-20. Branch feature/assign-01-student-ui, baseline main 0d445e2 (code 5ee2a7b, tests 248127c).
 
-## Current
-Foundation PR #1 merged9012dd1; instructor UI/BUG-006 PR #2 merged92ed0ab. ASSIGN-01 IN_PROGRESS: model/services/snapshots and instructor selection/review/confirmation/history/detail/cancellation delivered to source main; student assignment pages/progress/feedback/reporting not built. No student submissions/completion controls.
+## Current increment — REVIEW
+Student read-only assigned-lesson list and detail pages with a link from student home. They reuse the existing student backend, session middleware and student_assignments query, show only the signed-in student's own eligible snapshots (20 per page, "Assigned" availability label, escaped text, validated LEGO link), and accept GET and HEAD only. No roster, peer data, documents, progress editing, submissions or completion controls. No model, migration, settings, middleware, password or flag changes; uploads stay off; no runtime database or credential actions.
 
-BUG-006 FIXED_VERIFIED for UUID JSON defect on successful independently retrieved pre-merge checks44668593439 and44668981076 for ddc000b. Earlier f52a592 failed run44667767312 retained: owner-supplied log296tests/9errors; no passing count inferred. BUG-005 remains verified on owner-reported CI after8e80939. Foundation pre-merge checks independently retrieved; post-PR1 run44665898145 owner-reported. Post-PR2 main CI NOT VERIFIED.
+18 HTTP test methods are authored, mostly using real student sign-in. The author checked only Python syntax and compilation; Django tests, Ruff, template rendering, browser and PostgreSQL race checks were NOT RUN by the author. The owner reports CI passed on the push of 248127c; that was not independently retrieved, and no test count is known. The branch is not merged and ASSIGN-01 remains IN_PROGRESS. See STUDENT_ASSIGNMENTS.md and LOCAL_TESTING.md.
 
-## Documentation refresh
-README corrected; LOCAL_TESTING.md adds safe local setup, automated checks, synthetic account/MFA/class/lesson/assignment/student/PDF walkthroughs and evidence recording. docs/README.md indexes every feature guide and reconciles historical increment wording. ASSIGNMENTS.md captures merged workflow/limitations. DECISIONS.md distinguishes proposals from actual DB PDF storage/session choices; VALIDATION.json replaces initial-only current-status claims with attributed evidence and a retained historical source. Guide commands/browser steps were NOT executed while preparing docs. No application/settings/flags/credentials/schema changed.
+## CI and history evidence
+Owner-reported (not independently retrieved): CI passed for main 0d445e2 (documentation) and for the push of 248127c on this branch. PR #1 merged at 9012dd1 and PR #2 at 92ed0ab. Pre-merge checks for dddb545 (including 44665321805) and for ddc000b (44668593439 and 44668981076) were independently retrieved as successful. The original UI revision f52a592 failed run 44667767312 (owner-reported; supplied log showed 296 tests, 9 errors from UUID JSON serialization), retained as history. BUG-005 and run 44665898145 remain owner-reported. A merge-specific post-PR #2 run is unverified.
 
 ## Next
-1. Verify post-PR2 main CI and record actual source/jobs/counts only if retrieved.
-2. Execute LOCAL_TESTING.md against isolated local PostgreSQL with synthetic data; record browser results, not just CI.
-3. Review assignment review/confirm/cancel/session concurrent interleavings and durable nonce/idempotency design; no exactly-once guarantee today.
-4. Build student read-only assigned lesson list/detail with existing student-session isolation.
-5. Add instructor-controlled progress/status/feedback, then reporting; assignment-aware document delivery needs separate authorization/safety.
+1. Independently retrieve the CI run for this branch and record jobs and counts only if retrieved.
+2. Run the browser A/B, back/reload, reset, expiry, revocation, escaping and header checks from LOCAL_TESTING.md.
+3. Review assignment, review-session, reset and sign-in concurrency and a durable review-token design; no exactly-once guarantee exists today.
+4. Add instructor-controlled progress, status and feedback, then reporting. Assignment-aware document delivery needs separate authorization and file-safety work. Submissions and student-controlled completion stay excluded.
 
 ## Release gates retained
-BRAND-01/DOC-01/LESSON-01 browser/security/operations acceptance, E08-05 concurrency/browser extensions, BUG-003 remaining acceptance; shared-device/back/reset/sign-in races, audit/throttling/recovery/approved session policy/TLS/log-redaction/privacy/retention/email/deployment/backup-restore/training remain open. PDFs default off, controlled synthetic trial only; no malware scanning/full parser. Python3.14 unverified. No production authorization or runtime deployment/migration performed.
+Branding, document and lesson-library browser, security and operations acceptance; E08-05 and BUG-003; shared-device, back-navigation, reset and sign-in races; audit, throttling, recovery, approved session policy, TLS, log redaction, privacy, retention, email, deployment, backup and restore, and training. PDFs stay disabled outside controlled synthetic trials with no malware scanning or full parser. Python 3.14 is unverified. No production authorization.
 
-Every implementation/fix commit updates this plan,TICKETS.md,IMPLEMENTATION_STATUS.md and affected current guides/decisions/validation/index. Preserve earlier failures and distinguish authoring checks, supplied logs, owner reports and independent evidence. No unattended documentation synchronization is claimed.
-
-[Pre-refresh plan/history](https://github.com/pavanjains/lms/blob/92ed0ab127149081483c8044ab41cf4e4ee9f82e/ACTION_PLAN.md).
+Every implementation or fix commit updates this plan, TICKETS.md, IMPLEMENTATION_STATUS.md and affected current guides, decisions and validation. [Previous plan](https://github.com/pavanjains/lms/blob/0d445e20a4d70a11df33612e81c3e94e4b82803a/ACTION_PLAN.md)
