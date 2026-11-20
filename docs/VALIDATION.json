@@ -2,26 +2,32 @@
   "schema_version": 2,
   "updated_local_date": "2026-11-20",
   "repository": "pavanjains/lms",
-  "branch": "feature/assign-01-student-ui",
-  "documentation_baseline": "0d445e20a4d70a11df33612e81c3e94e4b82803a",
+  "documentation_baseline": "4695e7d510aa6811b27738725feeb95c4c787104",
   "student_ui": {
-    "status": "AUTHORED_REVIEW",
+    "status": "MERGED_PENDING_ACCEPTANCE",
+    "pr": 3,
+    "pr_head": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e",
+    "merge_sha": "4695e7d510aa6811b27738725feeb95c4c787104",
     "commits": {"code": "5ee2a7b26a22436e58a2a61ce89f0c600f23b7d1", "tests": "248127ca0402d7200e5594b58d694972b19373cf"},
     "authored_test_methods": 18,
     "python_syntax_compile_checked_by_author": true,
     "django_tests_run_by_author": false,
     "ruff_run_by_author": false,
     "template_rendering_run_by_author": false,
-    "ci_for_tests_commit": "owner-reported success; not independently retrieved; run id and test count unknown",
+    "pr_head_checks": "independently retrieved: runs 44834522871 and 44834596308 completed successfully; no test count exposed",
+    "merge_commit_ci": "NOT VERIFIED",
     "browser": "PENDING",
     "postgresql_session_concurrency": "PENDING",
     "passing_test_count": null
   },
   "merges": [
     {"pr": 1, "merge_sha": "9012dd194364791dcf5afb569e043936c42b1f04", "evidence": "GitHub connector merge success"},
-    {"pr": 2, "merge_sha": "92ed0ab127149081483c8044ab41cf4e4ee9f82e", "evidence": "GitHub connector merge success"}
+    {"pr": 2, "merge_sha": "92ed0ab127149081483c8044ab41cf4e4ee9f82e", "evidence": "GitHub connector merge success"},
+    {"pr": 3, "merge_sha": "4695e7d510aa6811b27738725feeb95c4c787104", "evidence": "GitHub connector merge success; expected head ebdb9ea matched"}
   ],
   "ci_evidence": [
+    {"run_id": "44834522871", "head_sha": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR #3 head check run", "test_count": null},
+    {"run_id": "44834596308", "head_sha": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR #3 head check run", "test_count": null},
     {"context": "main 0d445e2 documentation commit", "conclusion": "success", "attribution": "owner-reported; not independently retrieved", "run_id": null, "test_count": null},
     {"context": "push of student tests 248127c", "conclusion": "success", "attribution": "owner-reported; not independently retrieved", "run_id": null, "test_count": null},
     {"run_id": "44665321805", "head_sha": "dddb5458ca83851bcb6706ba5badd039dd3059dd", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR head check run", "test_count": null},
@@ -30,7 +36,8 @@
     {"run_id": "44668593439", "head_sha": "ddc000bc8a175f3d7b132fbdcd40a16c9452b153", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR2 head check run after owner report", "test_count": null},
     {"run_id": "44668981076", "head_sha": "ddc000bc8a175f3d7b132fbdcd40a16c9452b153", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR2 head check run", "test_count": null}
   ],
-  "post_pr2_main_ci": "NOT VERIFIED",
+  "post_pr2_merge_specific_ci": "NOT VERIFIED",
+  "post_pr3_merge_specific_ci": "NOT VERIFIED",
   "bug_005": "FIXED_VERIFIED on owner-reported CI after 8e80939; not independently retrieved",
   "bug_006": "FIXED_VERIFIED for reported serialization defect on independently retrieved pre-merge checks; browser/concurrency acceptance separate",
   "local_testing_guide": {"path": "docs/LOCAL_TESTING.md", "status": "procedure only; not executed"},

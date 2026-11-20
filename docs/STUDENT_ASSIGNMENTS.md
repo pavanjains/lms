@@ -1,6 +1,6 @@
 # ASSIGN-01 student read-only workspace
 
-Branch: feature/assign-01-student-ui, based on main 0d445e2. Code commit 5ee2a7b, tests 248127c. Status REVIEW: authored, not merged, not runtime-verified. ASSIGN-01 as a whole remains IN_PROGRESS.
+Merged to main by PR #3 (merge commit 4695e7d; PR head ebdb9ea; code 5ee2a7b, tests 248127c). Status: merged, browser and concurrency acceptance pending, not runtime-verified. ASSIGN-01 as a whole remains IN_PROGRESS.
 
 ## Routes and behavior
 - /students/assignments/ (student-assignment-list): paginated list (20 per page) of the signed-in student's own active assignment snapshots.
@@ -21,7 +21,7 @@ Headers do not erase an already-rendered page, history entry, screenshot or ever
 ## Verification status
 18 HTTP test methods are in apps/lessons/test_student_views.py. Most use real student sign-in requests; one deliberately uses force_login to prove that a session without timestamps is denied. The existing foundation, instructor-UI and UUID tests are unchanged.
 
-Locally, only Python syntax parsing and compilation were checked (Django is not installed in the authoring environment): Django tests, Ruff, template rendering, PostgreSQL race checks and browser checks were NOT RUN by the author. The owner reports that CI passed on the push of tests commit 248127c; that report was not independently retrieved, so the run, jobs and test count are unverified here. No passing count is claimed from the 18 authored methods.
+The author checked only Python syntax and compilation (Django is not installed in the authoring environment): Django tests, Ruff, template rendering, PostgreSQL race checks and browser checks were NOT RUN by the author. Two check runs on the PR head ebdb9ea were independently retrieved as completed successfully (44834522871 and 44834596308); the API exposes no test count, so none is claimed. CI for the merge commit 4695e7d has not been checked. No passing count is claimed from the 18 methods.
 
 ## Safety and follow-up
-No model, migration, settings, password, middleware or feature-flag change. Uploads remain disabled. Next: independently confirm the CI run, then perform the browser checks in LOCAL_TESTING.md. Instructor review-token consumption under concurrency, progress and feedback, reporting and assignment-aware document delivery remain separate work.
+No model, migration, settings, password, middleware or feature-flag change. Uploads remain disabled. Next: check CI on the merge commit, then perform the browser checks in LOCAL_TESTING.md. Instructor review-token consumption under concurrency, progress and feedback, reporting and assignment-aware document delivery remain separate work.
