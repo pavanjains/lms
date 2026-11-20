@@ -15,7 +15,7 @@
     "ruff_run_by_author": false,
     "template_rendering_run_by_author": false,
     "pr_head_checks": "independently retrieved: runs 44834522871 and 44834596308 completed successfully; no test count exposed",
-    "merge_commit_ci": "NOT VERIFIED",
+    "merge_commit_ci": "owner-reported success for 4695e7d, a034438 and 5762135; run IDs and test counts unknown; not independently retrieved",
     "browser": "PENDING",
     "postgresql_session_concurrency": "PENDING",
     "passing_test_count": null
@@ -28,6 +28,7 @@
   "ci_evidence": [
     {"run_id": "44834522871", "head_sha": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR #3 head check run", "test_count": null},
     {"run_id": "44834596308", "head_sha": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR #3 head check run", "test_count": null},
+    {"context": "main commits 4695e7d (PR #3 merge), a034438 (docs) and 5762135 (docs)", "conclusion": "success", "attribution": "owner-reported 2026-11-20; run IDs not provided; not independently retrieved", "run_id": null, "test_count": null},
     {"context": "main 0d445e2 documentation commit", "conclusion": "success", "attribution": "owner-reported; not independently retrieved", "run_id": null, "test_count": null},
     {"context": "push of student tests 248127c", "conclusion": "success", "attribution": "owner-reported; not independently retrieved", "run_id": null, "test_count": null},
     {"run_id": "44665321805", "head_sha": "dddb5458ca83851bcb6706ba5badd039dd3059dd", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR head check run", "test_count": null},
@@ -37,7 +38,7 @@
     {"run_id": "44668981076", "head_sha": "ddc000bc8a175f3d7b132fbdcd40a16c9452b153", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR2 head check run", "test_count": null}
   ],
   "post_pr2_merge_specific_ci": "NOT VERIFIED",
-  "post_pr3_merge_specific_ci": "NOT VERIFIED",
+  "post_pr3_merge_specific_ci": "owner-reported success; not independently retrieved",
   "bug_005": "FIXED_VERIFIED on owner-reported CI after 8e80939; not independently retrieved",
   "bug_006": "FIXED_VERIFIED for reported serialization defect on independently retrieved pre-merge checks; browser/concurrency acceptance separate",
   "local_testing_guide": {"path": "docs/LOCAL_TESTING.md", "status": "procedure only; not executed"},
