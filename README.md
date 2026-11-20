@@ -1,54 +1,25 @@
-# Robotics LMS — first implementation slice
+# Stembotic Robotics LMS
 
-This archive contains authored Django foundation code, not a finished LMS. See docs/IMPLEMENTATION_STATUS.md for exact scope and validation limits. Do not deploy for children or real users yet.
+Django LMS for one STEM owner, five instructors and 25 students initially. Development implementation, not approved for real-child or production use. Current documentation baseline: main merge 92ed0ab (PR #2).
 
-## Prerequisites
-Python 3.12, Docker Compose, and a shell. The CI targets Python 3.12 and PostgreSQL 16; these are implementation choices pending environment verification.
+## Start here
+- [Local setup, automated checks and browser testing](docs/LOCAL_TESTING.md)
+- [Documentation index and historical-guide rules](docs/README.md)
+- [Current implementation and verification](docs/IMPLEMENTATION_STATUS.md)
+- [Action plan](ACTION_PLAN.md), [ticket/fix ledger](docs/TICKETS.md), [decision register](docs/DECISIONS.md)
+- [Assignment workflow](docs/ASSIGNMENTS.md)
 
-## Local setup (POSIX shell)
-```sh
-cp .env.example .env
-# Edit local values. Never commit .env.
-docker compose up -d db
-python3.12 -m venv .venv
-. .venv/bin/activate
-python -m pip install -e '.[dev]'
-# This sample environment file contains simple shell-compatible assignments only.
-set -a
-. ./.env
-set +a
-python manage.py check
-python manage.py makemigrations --check --dry-run
-python manage.py migrate
-python manage.py runserver
-```
-Open http://127.0.0.1:8000/ and /health/live/. Liveness does not assert database/storage readiness. No login or admin routes are enabled. Do not run createsuperuser as a substitute for the planned owner bootstrap: organization and LMS role are required.
+## Implemented
+Owner bootstrap; gated staff email login/MFA and instructor onboarding/management; organization/class-scoped memberships; staff student creation/password reset; separately gated student sign-in/session isolation; lesson library; gated private PDF support documents; assignment snapshots/services and instructor selection/review/confirmation/list/detail/cancellation screens.
 
-Django does not automatically load .env; Docker Compose does. Export the environment for host-run commands as shown above. On Windows, use equivalent environment assignment in your shell.
+PR #1 merged foundation at 9012dd1. PR #2 merged instructor UI and BUG-006 at 92ed0ab. Student home currently shows identity/grade/classes, not assigned lesson pages. Student submissions and student-controlled completion are not product requirements. Instructor progress/feedback and reporting remain to build.
 
-## Tests
-Fast model/view tests using an in-memory SQLite database (not PostgreSQL acceptance evidence):
-```sh
-python manage.py test --settings=config.settings.test
-```
-PostgreSQL verification, matching CI (local DB user needs permission to create a test database):
-```sh
-DJANGO_SETTINGS_MODULE=config.settings.ci python manage.py test
-ruff check .
-```
-Dependencies are range-constrained, not locked. Generate and review a resolved lockfile in the target environment before claiming reproducible installs.
+## Development
+Use Python 3.12 and PostgreSQL 16 to match CI. pyproject.toml permits Python >=3.12,<3.14; that is not CI verification of every permitted version. Python 3.14 is not established as supported. Dependencies are range-constrained, not a reviewed resolved lockfile.
 
-## Safety and operations
-- Production settings require a non-development secret and explicit allowed hosts.
-- HTTPS/proxy topology, email, MFA, authorization, retention, uploads, monitoring, and backups remain unfinished.
-- Framework role fields are not a complete authorization policy.
-- Model clean() is not automatically called by every ORM write; use validated services for role/profile relationships.
-- Student passwords use Django hashers; the fast test hasher is for tests only.
-- Do not delete production records by adapting development reset commands.
+Follow LOCAL_TESTING.md for environment export, local-only feature gates, migration checks, owner bootstrap and MFA. Use development settings for browser accounts/server, never ci/test settings with their fast password hasher. Do not substitute createsuperuser for the LMS bootstrap. No admin route is enabled.
 
-## Next implementation batch
-1. Execute dependency resolution, migration drift checks, and PostgreSQL CI.
-2. Fix issues and record acceptance evidence.
-3. Implement E04 owner bootstrap and staff authentication/MFA.
-4. Implement class membership and centralized class-scoped authorization.
-5. Wire student onboarding only after permission boundaries exist.
+## Verification and safety
+Pre-merge checks for dddb545 and ddc000b were independently retrieved as successful. Post-PR #1 main run 44665898145 passed per owner only; post-PR #2 merge CI has not been verified here. No test totals inferred. Browser, new assignment/session concurrency and production operations remain open. See docs/VALIDATION.json for attributed evidence.
+
+Feature gates remain off by default. PDFs remain disabled outside controlled synthetic trials: signatures/integrity are not malware scanning. No deployment, runtime migration or credential action is performed by a documentation commit. Real-user readiness still requires security/privacy, audit/throttling/recovery, approved sessions, file safety, mail/deployment and backup/restore acceptance.

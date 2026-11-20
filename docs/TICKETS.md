@@ -1,20 +1,20 @@
 # Development Tickets and Fix Ledger
 
-Updated: 2026-11-19.
+Updated: 2026-11-19. Current baseline main92ed0ab.
 
-## BUG-006 — UUID organization cannot serialize in assignment review
-Status REVIEW; correction/tests authored, rerun PENDING. Introduced in UI f52a592. Owner-reported failed run 44667767312; supplied paste.txt read directly: Ran 296 tests in 12.766s, FAILED (errors=9), system checks no issues. Nine reported errors share UUID JSON serialization failure at assignment_create signing.dumps. No inferred passing count, independent Actions-log retrieval or new pass claim.
+## ASSIGN-01 — IN_PROGRESS
+Foundation merged PR #1 at9012dd1, preserving dddb545. Instructor UI merged PR #2 at92ed0ab, preserving f52a592 and ddc000b. Explicit-recipient snapshots, grade/kit checks, transactional creation/versioned cancellation, scoped queries and instructor list/select/review/confirm/detail/history are implemented. No student assignment screens/progress/feedback/reporting/document delivery yet; no submissions/student completion. Browser and assignment/review-session concurrency acceptance open; no durable exactly-once nonce store.
 
-Organization.id is UUIDField. Fix only two runtime expressions: payload org uses str(user.organization_id), and confirmation compares against str(user.organization_id). Avoid UUID-to-string mismatch after deserialization; keep default JSON signing, all other IDs, HMAC/expiry/session/actor/class/authority checks and service contracts. No schema/settings/password/feature-flag change.
+## BUG-006 — FIXED_VERIFIED, pre-merge automated evidence
+Original UI f52a592 failed reported run44667767312: supplied paste.txt inspected,296tests/9errors with UUID JSON signing TypeError. Failure retained; no inferred passing count. Correction ddc000b uses str(org UUID) in token and comparison; two UUID regressions added with existing tests retained. Checks job success independently retrieved for run44668593439 and PR-triggered44668981076 at that head. This verifies automated checks, not browser/concurrency/deployment acceptance.
 
-Two dedicated regressions authored using a real UUID organization: review token JSON round-trip and successful confirmation; correctly signed wrong-org token denied even when session token matches. Existing 14 UI and 34 foundation methods retained, not removed or weakened. Standard-library reproduction confirmed original TypeError and normalized JSON comparisons only. Django tests/Ruff/full PostgreSQL CI/browser/concurrency NOT RUN for correction; not FIXED_VERIFIED.
+## CI attribution
+Foundation checks including44665321805 independently retrieved successful at dddb545. Post-PR1 main44665898145 successful per owner only. BUG-005 after8e80939 remains owner-reported. Post-PR2 main92ed0ab CI NOT VERIFIED. Successful jobs do not supply a verified test count; no current passing totals inferred from authored methods. See VALIDATION.json.
 
-## ASSIGN-01 — IN_PROGRESS; instructor UI REVIEW
-Scoped selection/review/confirmation/history/detail/POST-only cancellation authored. Exact reviewed recipients/version bound to actor/org/class/session with 15-minute expiry and current service authorization checks. No durable exactly-once nonce store; session/replay races unverified. Student screens/progress/feedback/document access/completion controls not delivered. No runtime data/migration/credential actions; uploads disabled.
+## DOCS local testing/current-state refresh — REVIEW
+LOCAL_TESTING.md procedures and ASSIGNMENTS.md added; README,index,decisions,validation and all three tracking docs reconciled. Local commands/browser procedures NOT RUN during documentation preparation; doc-only change, no feature activation/runtime data/schema/credentials. Review procedures on intended local environment before use. Older feature guides retain original increment history; docs/README.md identifies superseding behavior/evidence.
 
-Foundation merged PR #1 at 9012dd1 preserving dddb545. Both returned checks jobs independently confirmed successful, including run 44665321805. Post-merge run 44665898145 passed per owner, not independently retrieved/count unknown. Earlier foundation evidence does not establish UI fix verification.
+## Remaining acceptance and carry-forward
+E08-08 CI_PASSED/BUG-004 FIXED_VERIFIED retain prior user-report attribution. E08-05 IN_PROGRESS, BUG-003 REVIEW, BRAND-01/DOC-01/LESSON-01 outstanding browser/security/operations remain open. Student password/create/login/reset races, shared-device/back-navigation, audit/throttling/recovery/approved sessions/TLS/privacy/retention/mail/file safety/backups/deployment/training unresolved. PDF flag off; no real-file/student delivery approval.
 
-## Carry-forward
-BUG-005 FIXED_VERIFIED per owner CI after 8e80939; E08-08/BUG-004 attribution retained. E08-05 IN_PROGRESS, BUG-003 REVIEW, BRAND-01/DOC-01/LESSON-01 acceptance and file safety/shared-device/browser/races/audit/throttling/recovery/session/privacy/retention/backups/deployment gates remain open.
-
-[Complete pre-fix ledger](https://github.com/pavanjains/lms/blob/f52a5928f697f6f13b283e1fa74a157710bd2e64/docs/TICKETS.md) preserves prior statuses, evidence/failures/counts and history links.
+[Complete pre-refresh ledger](https://github.com/pavanjains/lms/blob/92ed0ab127149081483c8044ab41cf4e4ee9f82e/docs/TICKETS.md) preserves earlier BUG/E01-E22/E08 histories, failures/counts/statuses and source links. New passes do not erase older failure evidence or finish broader epics.
