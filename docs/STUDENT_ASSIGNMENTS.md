@@ -1,6 +1,6 @@
 # ASSIGN-01 student read-only workspace
 
-Merged to main by PR #3 (merge commit 4695e7d; PR head ebdb9ea; code 5ee2a7b, tests 248127c). Status: merged, browser and concurrency acceptance pending, not runtime-verified. ASSIGN-01 as a whole remains IN_PROGRESS. The status label described under "Progress status" is on branch assign-02-instructor-progress and is not merged.
+Merged to main by PR #3 (merge commit 4695e7d; PR head ebdb9ea; code 5ee2a7b, tests 248127c). Status: merged, browser and concurrency acceptance pending, not runtime-verified. ASSIGN-01 as a whole remains IN_PROGRESS. The status label described under "Progress status" is in open PR #4 and is not merged.
 
 ## Routes and behavior
 - /students/assignments/ (student-assignment-list): paginated list (20 per page) of the signed-in student's own active assignment snapshots.
@@ -11,7 +11,7 @@ The list shows title, the student's own class name, kit and a status label. The 
 
 There is no roster, no other student's identity, no document download, no feedback display, no progress editor, and no submission or completion control. The sign-out form is the only form on these pages.
 
-## Progress status (branch, not merged)
+## Progress status (PR #4, not merged)
 Decision 2026-11-20: students see the instructor-set status only. The status is one of Assigned, In progress, Reviewed or Needs revision and defaults to Assigned, so the text "Status: Assigned" is unchanged until an instructor updates it. Instructor feedback text is staff-only and is not rendered or queried by any student template. Students cannot change status.
 
 ## Authorization and session boundaries
@@ -22,7 +22,7 @@ The views require the student feature flag, a supported database session engine,
 Headers do not erase an already-rendered page, history entry, screenshot or every BFCache case, and in-flight requests are not cancelled retroactively. Real browser acceptance remains required.
 
 ## Verification status
-18 HTTP test methods are in apps/lessons/test_student_views.py. The ASSIGN-02 branch adds two student-facing checks in test_assignment_progress.py (status shown, feedback never shown). Two check runs on the PR #3 head ebdb9ea were independently retrieved as completed successfully (44834522871 and 44834596308); the API exposes no test count. The owner reports CI succeeded for 4695e7d, a034438 and 5762135; not independently retrieved. The ASSIGN-02 branch has been syntax-checked only; no CI exists for it yet.
+18 HTTP test methods are in apps/lessons/test_student_views.py. PR #4 adds two student-facing checks in test_assignment_progress.py (status shown, feedback never shown). Two check runs on the PR #3 head ebdb9ea were independently retrieved as completed successfully (44834522871 and 44834596308); the API exposes no test count. The owner reports CI succeeded for 4695e7d, a034438 and 5762135; not independently retrieved. Two check runs on the PR #4 head 23a9d2d (44846492681 and 44846822307) were independently retrieved as completed successfully, with no test count. The author ran no browser checks.
 
 ## Safety and follow-up
-The merged student pages have no model, migration, settings, password, middleware or feature-flag change. The ASSIGN-02 branch adds a model migration (0003) that is not applied anywhere. Uploads remain disabled. Next: CI and review of ASSIGN-02, then the browser checks in LOCAL_TESTING.md. Instructor review-token consumption under concurrency, reporting and assignment-aware document delivery remain separate work.
+The merged student pages have no model, migration, settings, password, middleware or feature-flag change. PR #4 adds a model migration (0003) that is not applied anywhere. Uploads remain disabled. Next: review and merge of PR #4, then the browser checks in LOCAL_TESTING.md. Instructor review-token consumption under concurrency, reporting and assignment-aware document delivery remain separate work.
