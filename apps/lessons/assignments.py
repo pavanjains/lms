@@ -12,6 +12,7 @@ from apps.lessons.models import LESSON_FIELDS, Lesson, LessonAssignment
 
 GRADE_NUMBERS = {"PRE_K": -1, "K": 0, **{str(n): n for n in range(1, 9)}}
 PROGRESS_VALUES = {choice.value for choice in LessonAssignment.Progress}
+FEEDBACK_MAX_LENGTH = 2000
 
 
 def staff_assignments(actor):
@@ -130,8 +131,11 @@ def update_progress(*, actor, assignment_id, progress, feedback, expected_versio
         raise ValidationError("Choose a valid progress status.")
     if type(feedback) is not str:
         raise ValidationError("Feedback must be text.")
+    feedback = feedback.strip()
+    if len(feedback) > FEEDBACK_MAX_LENGTH:
+        raise ValidationError(f"Feedback must be at most {FEEDBACK_MAX_LENGTH} characters.")
     assignment.progress = progress
-    assignment.feedback = feedback.strip()
+    assignment.feedback = feedback
     assignment.progress_updated_at = timezone.now()
     assignment.progress_updated_by = user
     assignment.version += 1
