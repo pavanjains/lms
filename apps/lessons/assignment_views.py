@@ -14,7 +14,7 @@ from django.views.decorators.http import require_http_methods, require_POST, req
 from apps.accounts.policies import staff_mfa_required
 from apps.classrooms.policies import current_staff, visible_class_students, visible_classrooms
 from apps.lessons.assignments import (
-    GRADE_NUMBERS, cancel_assignment, create_assignments, staff_assignments,
+    GRADE_NUMBERS, cancel_assignment, create_assignments, staff_assignments, update_progress,
 )
 from apps.lessons.models import Lesson, LessonAssignment, validate_lego_url
 
@@ -73,6 +73,14 @@ class ReviewForm(forms.Form):
 class CancelForm(forms.Form):
     expected_version = forms.IntegerField(min_value=1, widget=forms.HiddenInput)
     confirm = forms.BooleanField(label="Cancel this assignment and retain its history")
+
+
+class ProgressForm(forms.Form):
+    expected_version = forms.IntegerField(min_value=1, widget=forms.HiddenInput)
+    progress = forms.ChoiceField(choices=LessonAssignment.Progress.choices)
+    feedback = forms.CharField(required=False, max_length=2000, strip=True,
+                               widget=forms.Textarea(attrs={"rows": 4, "maxlength": 2000}))
+    confirm = forms.BooleanField(label="Save this progress and feedback")
 
 
 def page(request, mode, *, status=200, **context):
@@ -145,12 +153,17 @@ def assignment_create(request, classroom_id):
                 form=form, room=room)
 
 
-def detail_page(request, row, form=None, status=200):
+def detail_page(request, row, form=None, progress_form=None, status=200):
     user = current_staff(request.user)
     return page(request, "detail", status=status, row=row, content=row,
                 source_version=row.lesson_version,
                 can_cancel=row.cancelled_at is None and (row.classroom.is_active or user.role == "OWNER"),
-                form=form if form is not None else CancelForm(initial={"expected_version": row.version}))
+                can_update_progress=row.cancelled_at is None and row.classroom.is_active,
+                form=form if form is not None else CancelForm(initial={"expected_version": row.version}),
+                progress_form=progress_form if progress_form is not None else ProgressForm(initial={
+                    "expected_version": row.version, "progress": row.progress,
+                    "feedback": row.feedback,
+                }))
 
 
 @require_safe
@@ -177,3 +190,23 @@ def assignment_cancel(request, assignment_id):
             messages.success(request, "Assignment cancelled; history retained.")
             return redirect("lessons:assignment-detail", assignment_id=row.pk)
     return detail_page(request, row, form=form, status=400)
+
+
+@require_POST
+@staff_mfa_required
+def assignment_progress(request, assignment_id):
+    row = get_object_or_404(staff_assignments(request.user).select_related("classroom", "student"),
+                            pk=assignment_id)
+    form = ProgressForm(request.POST)
+    if form.is_valid():
+        try:
+            update_progress(actor=request.user, assignment_id=row.pk,
+                            progress=form.cleaned_data["progress"],
+                            feedback=form.cleaned_data["feedback"],
+                            expected_version=form.cleaned_data["expected_version"])
+        except (ValidationError, IntegrityError):
+            form.add_error(None, "Assignment changed or is cancelled. Reload before updating progress.")
+        else:
+            messages.success(request, "Progress and feedback saved.")
+            return redirect("lessons:assignment-detail", assignment_id=row.pk)
+    return detail_page(request, row, progress_form=form, status=400)

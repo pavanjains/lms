@@ -11,6 +11,7 @@ from apps.classrooms.services import _lock_actor, _lock_room
 from apps.lessons.models import LESSON_FIELDS, Lesson, LessonAssignment
 
 GRADE_NUMBERS = {"PRE_K": -1, "K": 0, **{str(n): n for n in range(1, 9)}}
+PROGRESS_VALUES = {choice.value for choice in LessonAssignment.Progress}
 
 
 def staff_assignments(actor):
@@ -109,4 +110,33 @@ def cancel_assignment(*, actor, assignment_id, expected_version):
         assignment.version += 1
         assignment.full_clean()
         assignment.save(update_fields=["cancelled_at", "cancelled_by", "version"])
+    return assignment
+
+
+@transaction.atomic
+def update_progress(*, actor, assignment_id, progress, feedback, expected_version):
+    user = _lock_actor(actor)
+    assignment = LessonAssignment.objects.select_for_update().filter(
+        pk=assignment_id, organization_id=user.organization_id,
+    ).first()
+    if assignment is None:
+        raise PermissionDenied
+    _lock_room(user, assignment.classroom_id)
+    if assignment.cancelled_at is not None:
+        raise ValidationError("Cancelled assignments cannot change progress.")
+    if type(expected_version) is not int or assignment.version != expected_version:
+        raise ValidationError("Assignment changed. Reload before updating progress.")
+    if type(progress) is not str or progress not in PROGRESS_VALUES:
+        raise ValidationError("Choose a valid progress status.")
+    if type(feedback) is not str:
+        raise ValidationError("Feedback must be text.")
+    assignment.progress = progress
+    assignment.feedback = feedback.strip()
+    assignment.progress_updated_at = timezone.now()
+    assignment.progress_updated_by = user
+    assignment.version += 1
+    assignment.full_clean()
+    assignment.save(update_fields=[
+        "progress", "feedback", "progress_updated_at", "progress_updated_by", "version",
+    ])
     return assignment

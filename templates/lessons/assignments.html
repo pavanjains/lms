@@ -8,7 +8,7 @@
 <h2>Choose a class to assign a lesson</h2>
 <ul>{% for room in rooms %}<li><a href="{% url 'lessons:assignment-create' room.pk %}">{{ room.name }}</a></li>{% empty %}<li>No active authorized classes.</li>{% endfor %}</ul>
 <h2>Assignment history</h2>
-<ul>{% for row in assignments %}<li><a href="{% url 'lessons:assignment-detail' row.pk %}">{{ row.title }}</a> — {{ row.student }}, {{ row.classroom.name }}{% if row.cancelled_at %} (cancelled){% else %} (assigned){% endif %}</li>{% empty %}<li>No visible assignments.</li>{% endfor %}</ul>
+<ul>{% for row in assignments %}<li><a href="{% url 'lessons:assignment-detail' row.pk %}">{{ row.title }}</a> — {{ row.student }}, {{ row.classroom.name }}{% if row.cancelled_at %} (cancelled){% else %} ({{ row.get_progress_display }}){% endif %}</li>{% empty %}<li>No visible assignments.</li>{% endfor %}</ul>
 <nav aria-label="Assignment pages">{% if assignments.has_previous %}<a href="?page={{ assignments.previous_page_number }}">Previous</a>{% endif %} Page {{ assignments.number }} of {{ assignments.paginator.num_pages }} {% if assignments.has_next %}<a href="?page={{ assignments.next_page_number }}">Next</a>{% endif %}</nav>
 {% elif mode == "select" %}
 <h2>Select for {{ room.name }}</h2>
@@ -27,8 +27,11 @@
 <p><a href="{% url 'lessons:assignment-create' room.pk %}">Select and review again</a></p>
 {% elif mode == "detail" %}
 <p>Student: {{ row.student }}. Class: {{ row.classroom.name }}.</p>
+<p>Progress: {{ row.get_progress_display }}.{% if row.progress_updated_at %} Updated {{ row.progress_updated_at }} by {{ row.progress_updated_by }}.{% endif %}</p>
+{% if row.feedback %}<h2>Instructor feedback (staff only)</h2><pre>{{ row.feedback }}</pre>{% endif %}
 {% include "lessons/assignment_content.html" %}
 {% if row.cancelled_at %}<p>Cancelled {{ row.cancelled_at }}. History retained.</p>{% endif %}
+{% if can_update_progress %}<h2>Update progress and feedback</h2><p>Students see the progress status only. Feedback text stays visible to staff.</p><form method="post" action="{% url 'lessons:assignment-progress' row.pk %}">{% csrf_token %}{{ progress_form.as_p }}<button type="submit">Save progress</button></form>{% endif %}
 {% if can_cancel %}<h2>Cancel assignment</h2><form method="post" action="{% url 'lessons:assignment-cancel' row.pk %}">{% csrf_token %}{{ form.as_p }}<button type="submit">Cancel assignment</button></form>{% endif %}
 {% endif %}
 {% endblock %}

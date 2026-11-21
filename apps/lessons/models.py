@@ -78,6 +78,12 @@ class Lesson(models.Model):
 
 
 class LessonAssignment(models.Model):
+    class Progress(models.TextChoices):
+        ASSIGNED = "ASSIGNED", "Assigned"
+        IN_PROGRESS = "IN_PROGRESS", "In progress"
+        REVIEWED = "REVIEWED", "Reviewed"
+        NEEDS_REVISION = "NEEDS_REVISION", "Needs revision"
+
     organization = models.ForeignKey("organizations.Organization", on_delete=models.PROTECT)
     classroom = models.ForeignKey("classrooms.Classroom", on_delete=models.PROTECT)
     lesson = models.ForeignKey(Lesson, on_delete=models.PROTECT)
@@ -94,6 +100,12 @@ class LessonAssignment(models.Model):
     min_grade = models.SmallIntegerField(choices=GRADE_CHOICES)
     max_grade = models.SmallIntegerField(choices=GRADE_CHOICES)
     version = models.PositiveIntegerField(default=1)
+    progress = models.CharField(max_length=20, choices=Progress.choices, default=Progress.ASSIGNED)
+    feedback = models.TextField(blank=True, default="", max_length=2000)
+    progress_updated_at = models.DateTimeField(null=True, blank=True)
+    progress_updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+                                            null=True, blank=True,
+                                            related_name="progress_updated_lesson_assignments")
     created_at = models.DateTimeField(auto_now_add=True)
     cancelled_at = models.DateTimeField(null=True, blank=True)
     cancelled_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
@@ -112,6 +124,15 @@ class LessonAssignment(models.Model):
             ),
             models.CheckConstraint(condition=models.Q(version__gte=1, lesson_version__gte=1),
                                    name="assignment_positive_versions"),
+            models.CheckConstraint(
+                condition=models.Q(progress__in=["ASSIGNED", "IN_PROGRESS", "REVIEWED", "NEEDS_REVISION"]),
+                name="assignment_valid_progress",
+            ),
+            models.CheckConstraint(
+                condition=(models.Q(progress_updated_at__isnull=True, progress_updated_by__isnull=True)
+                           | models.Q(progress_updated_at__isnull=False, progress_updated_by__isnull=False)),
+                name="assignment_progress_update_pair",
+            ),
         ]
 
     def clean(self):
@@ -129,3 +150,7 @@ class LessonAssignment(models.Model):
         if self.cancelled_by_id and (self.cancelled_by.role not in {"OWNER", "INSTRUCTOR"}
                                     or self.cancelled_by.organization_id != self.organization_id):
             raise ValidationError("Cancelling staff must belong to this organization.")
+        if self.progress_updated_by_id and (
+                self.progress_updated_by.role not in {"OWNER", "INSTRUCTOR"}
+                or self.progress_updated_by.organization_id != self.organization_id):
+            raise ValidationError("Progress staff must belong to this organization.")
