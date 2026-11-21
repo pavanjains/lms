@@ -2,13 +2,37 @@
   "schema_version": 2,
   "updated_local_date": "2026-11-20",
   "repository": "pavanjains/lms",
-  "documentation_baseline": "4695e7d510aa6811b27738725feeb95c4c787104",
+  "documentation_baseline": "220407dd3f502b0ac736db6417a0af28e3b767df",
+  "instructor_progress": {
+    "status": "PR_OPEN_PENDING_REVIEW",
+    "pr": 4,
+    "branch": "assign-02-instructor-progress",
+    "pr_head": "23a9d2dd415b9af3bd3b652de0cebeac7c924664",
+    "commits": {
+      "feature": "c9b76e23d7df16924a4b2d7cd717a0daf542b73b",
+      "length_fix": "23a9d2dd415b9af3bd3b652de0cebeac7c924664"
+    },
+    "authored_test_methods": 22,
+    "python_syntax_checked_by_author": true,
+    "django_tests_run_by_author": false,
+    "ruff_run_by_author": false,
+    "template_rendering_run_by_author": false,
+    "first_run_on_c9b76e2": "owner-supplied log, run ID not recorded: 338 tests, 2 failures from one test (feedback length), system check clean; defect fixed in 23a9d2d",
+    "pr_head_checks": "independently retrieved: runs 44846492681 and 44846822307 completed successfully on 23a9d2d; no test count exposed",
+    "migration_0003_applied": false,
+    "browser": "PENDING",
+    "postgresql_session_concurrency": "PENDING",
+    "passing_test_count": null
+  },
   "student_ui": {
     "status": "MERGED_PENDING_ACCEPTANCE",
     "pr": 3,
     "pr_head": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e",
     "merge_sha": "4695e7d510aa6811b27738725feeb95c4c787104",
-    "commits": {"code": "5ee2a7b26a22436e58a2a61ce89f0c600f23b7d1", "tests": "248127ca0402d7200e5594b58d694972b19373cf"},
+    "commits": {
+      "code": "5ee2a7b26a22436e58a2a61ce89f0c600f23b7d1",
+      "tests": "248127ca0402d7200e5594b58d694972b19373cf"
+    },
     "authored_test_methods": 18,
     "python_syntax_compile_checked_by_author": true,
     "django_tests_run_by_author": false,
@@ -21,30 +45,138 @@
     "passing_test_count": null
   },
   "merges": [
-    {"pr": 1, "merge_sha": "9012dd194364791dcf5afb569e043936c42b1f04", "evidence": "GitHub connector merge success"},
-    {"pr": 2, "merge_sha": "92ed0ab127149081483c8044ab41cf4e4ee9f82e", "evidence": "GitHub connector merge success"},
-    {"pr": 3, "merge_sha": "4695e7d510aa6811b27738725feeb95c4c787104", "evidence": "GitHub connector merge success; expected head ebdb9ea matched"}
+    {
+      "pr": 1,
+      "merge_sha": "9012dd194364791dcf5afb569e043936c42b1f04",
+      "evidence": "GitHub connector merge success"
+    },
+    {
+      "pr": 2,
+      "merge_sha": "92ed0ab127149081483c8044ab41cf4e4ee9f82e",
+      "evidence": "GitHub connector merge success"
+    },
+    {
+      "pr": 3,
+      "merge_sha": "4695e7d510aa6811b27738725feeb95c4c787104",
+      "evidence": "GitHub connector merge success; expected head ebdb9ea matched"
+    }
   ],
   "ci_evidence": [
-    {"run_id": "44834522871", "head_sha": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR #3 head check run", "test_count": null},
-    {"run_id": "44834596308", "head_sha": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR #3 head check run", "test_count": null},
-    {"context": "main commits 4695e7d (PR #3 merge), a034438 (docs) and 5762135 (docs)", "conclusion": "success", "attribution": "owner-reported 2026-11-20; run IDs not provided; not independently retrieved", "run_id": null, "test_count": null},
-    {"context": "main 0d445e2 documentation commit", "conclusion": "success", "attribution": "owner-reported; not independently retrieved", "run_id": null, "test_count": null},
-    {"context": "push of student tests 248127c", "conclusion": "success", "attribution": "owner-reported; not independently retrieved", "run_id": null, "test_count": null},
-    {"run_id": "44665321805", "head_sha": "dddb5458ca83851bcb6706ba5badd039dd3059dd", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR head check run", "test_count": null},
-    {"run_id": "44665898145", "context": "post-PR1 main", "conclusion": "success", "attribution": "owner-reported; run content not retrieved", "test_count": null},
-    {"run_id": "44667767312", "context": "initial instructor UI f52a592", "conclusion": "failure", "attribution": "owner-reported run; supplied paste.txt inspected", "reported_tests": 296, "reported_errors": 9, "passing_test_count": null, "cause": "organization UUID not JSON serializable in review token"},
-    {"run_id": "44668593439", "head_sha": "ddc000bc8a175f3d7b132fbdcd40a16c9452b153", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR2 head check run after owner report", "test_count": null},
-    {"run_id": "44668981076", "head_sha": "ddc000bc8a175f3d7b132fbdcd40a16c9452b153", "job": "checks", "conclusion": "success", "attribution": "independently retrieved PR2 head check run", "test_count": null}
+    {
+      "run_id": "44846492681",
+      "head_sha": "23a9d2dd415b9af3bd3b652de0cebeac7c924664",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved PR #4 head check run (push of the length fix)",
+      "test_count": null
+    },
+    {
+      "run_id": "44846822307",
+      "head_sha": "23a9d2dd415b9af3bd3b652de0cebeac7c924664",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved PR #4 head check run (opening of the PR)",
+      "test_count": null
+    },
+    {
+      "context": "first run on branch head c9b76e2",
+      "conclusion": "failure",
+      "attribution": "owner-supplied log; run ID not recorded",
+      "reported_tests": 338,
+      "reported_failures": 2,
+      "passing_test_count": null,
+      "cause": "update_progress saved 2001-character feedback; TextField max_length is not enforced by full_clean"
+    },
+    {
+      "run_id": "44834522871",
+      "head_sha": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved PR #3 head check run",
+      "test_count": null
+    },
+    {
+      "run_id": "44834596308",
+      "head_sha": "ebdb9ea5f05b7cf7aa605b2361041f0848b7570e",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved PR #3 head check run",
+      "test_count": null
+    },
+    {
+      "context": "main commits 4695e7d (PR #3 merge), a034438 (docs) and 5762135 (docs)",
+      "conclusion": "success",
+      "attribution": "owner-reported 2026-11-20; run IDs not provided; not independently retrieved",
+      "run_id": null,
+      "test_count": null
+    },
+    {
+      "context": "main 0d445e2 documentation commit",
+      "conclusion": "success",
+      "attribution": "owner-reported; not independently retrieved",
+      "run_id": null,
+      "test_count": null
+    },
+    {
+      "context": "push of student tests 248127c",
+      "conclusion": "success",
+      "attribution": "owner-reported; not independently retrieved",
+      "run_id": null,
+      "test_count": null
+    },
+    {
+      "run_id": "44665321805",
+      "head_sha": "dddb5458ca83851bcb6706ba5badd039dd3059dd",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved PR head check run",
+      "test_count": null
+    },
+    {
+      "run_id": "44665898145",
+      "context": "post-PR1 main",
+      "conclusion": "success",
+      "attribution": "owner-reported; run content not retrieved",
+      "test_count": null
+    },
+    {
+      "run_id": "44667767312",
+      "context": "initial instructor UI f52a592",
+      "conclusion": "failure",
+      "attribution": "owner-reported run; supplied paste.txt inspected",
+      "reported_tests": 296,
+      "reported_errors": 9,
+      "passing_test_count": null,
+      "cause": "organization UUID not JSON serializable in review token"
+    },
+    {
+      "run_id": "44668593439",
+      "head_sha": "ddc000bc8a175f3d7b132fbdcd40a16c9452b153",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved PR2 head check run after owner report",
+      "test_count": null
+    },
+    {
+      "run_id": "44668981076",
+      "head_sha": "ddc000bc8a175f3d7b132fbdcd40a16c9452b153",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved PR2 head check run",
+      "test_count": null
+    }
   ],
   "post_pr2_merge_specific_ci": "NOT VERIFIED",
   "post_pr3_merge_specific_ci": "owner-reported success; not independently retrieved",
   "bug_005": "FIXED_VERIFIED on owner-reported CI after 8e80939; not independently retrieved",
   "bug_006": "FIXED_VERIFIED for reported serialization defect on independently retrieved pre-merge checks; browser/concurrency acceptance separate",
-  "local_testing_guide": {"path": "docs/LOCAL_TESTING.md", "status": "procedure only; not executed"},
+  "local_testing_guide": {
+    "path": "docs/LOCAL_TESTING.md",
+    "status": "procedure only; not executed"
+  },
   "browser_acceptance": "PENDING",
   "assignment_review_session_concurrency": "PENDING; no durable exactly-once token store",
-  "runtime_deployment_migration": "NOT PERFORMED by source merges/documentation work",
+  "runtime_deployment_migration": "NOT PERFORMED by source merges/documentation work; migration 0003 not applied",
   "production_readiness": "NOT APPROVED",
   "historical_initial_validation": {
     "source": "https://github.com/pavanjains/lms/blob/92ed0ab127149081483c8044ab41cf4e4ee9f82e/docs/VALIDATION.json",

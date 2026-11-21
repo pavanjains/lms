@@ -3,7 +3,7 @@
 {% block content %}
 <h1>{{ assignment.title }}</h1>
 <p><a href="{% url 'student-assignment-list' %}">My assigned lessons</a> | <a href="{% url 'student-home' %}">My workspace</a></p>
-<p>Class: {{ assignment.classroom.name }}. Status: Assigned.</p>
+<p>Class: {{ assignment.classroom.name }}. Status: {{ assignment.get_progress_display }}.</p>
 <p>{{ assignment.get_kit_display }}, {{ assignment.get_min_grade_display }} to {{ assignment.get_max_grade_display }}. Assigned lesson version {{ assignment.lesson_version }}.</p>
 <p>{{ assignment.summary }}</p>
 <h2>Instructions</h2>
