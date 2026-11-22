@@ -13,13 +13,57 @@
 {% endif %}
 <h2>Students</h2>
 <p><a href="{% url 'classrooms:create-student' room.pk %}">Create student</a> · <a href="{% url 'classrooms:action' room.pk 'enroll-student' %}">Enroll existing student</a> · <a href="{% url 'classrooms:action' room.pk 'end-enrollment' %}">End enrollment</a></p>
-<table><caption>Active students</caption><thead><tr><th scope="col">Student</th><th scope="col">Grade</th><th scope="col">Credentials</th></tr></thead><tbody>
-{% for student in students %}<tr><td>{{ student.display_name|default:student.username }}</td><td>{{ student.grade }}</td><td><a href="{% url 'classrooms:student-credentials' room.pk student.pk %}">Review password reset</a></td></tr>{% empty %}<tr><td colspan="3">No active students enrolled.</td></tr>{% endfor %}
+<form method="post" action="{% url 'lessons:assignment-create' room.pk %}" id="roster-assignment">
+{% csrf_token %}<input type="hidden" name="action" value="select-students"><input type="hidden" name="from_roster" value="1">
+<p id="selection-scope">Selection applies to this page only and is cleared when navigating away. You can change students on the lesson-selection page. No assignments are created until final confirmation.</p>
+<p id="select-all-control" hidden><label><input type="checkbox" id="select-page"> Select all eligible students on this page</label></p>
+<p id="selection-count" role="status" aria-live="polite" aria-atomic="true">0 students selected</p>
+<table><caption>Active students</caption><thead><tr><th scope="col">Select</th><th scope="col">Student</th><th scope="col">Grade</th><th scope="col">Credentials</th></tr></thead><tbody>
+{% for student in students %}<tr><td>{% if not student.is_staff and not student.is_superuser %}<input type="checkbox" name="students" value="{{ student.pk }}" aria-label="Select {{ student.display_name|default:student.username }}" aria-describedby="selection-scope">{% else %}Not eligible: privileged account{% endif %}</td><td>{{ student.display_name|default:student.username }}</td><td>{{ student.grade }}</td><td><a href="{% url 'classrooms:student-credentials' room.pk student.pk %}">Review password reset</a></td></tr>{% empty %}<tr><td colspan="4">No active students enrolled.</td></tr>{% endfor %}
 </tbody></table>
+<button type="submit" id="assign-selected">Assign lesson to selected students</button>
+<noscript><p>Select at least one student before continuing. Empty selections are rejected by the server.</p></noscript>
+</form>
 <nav aria-label="Student pages">
-{% if students.has_previous %}<a href="?page={{ students.previous_page_number }}">Previous</a>{% endif %}
+{% if students.has_previous %}<a href="?page={{ students.previous_page_number }}&amp;assignments_page={{ assignments.number }}">Previous</a>{% endif %}
 Page {{ students.number }} of {{ students.paginator.num_pages }}
-{% if students.has_next %}<a href="?page={{ students.next_page_number }}">Next</a>{% endif %}
+{% if students.has_next %}<a href="?page={{ students.next_page_number }}&amp;assignments_page={{ assignments.number }}">Next</a>{% endif %}
 </nav>
+<script>
+(() => {
+  const form = document.getElementById('roster-assignment');
+  const boxes = Array.from(form.querySelectorAll('input[name="students"]'));
+  const all = document.getElementById('select-page');
+  const button = document.getElementById('assign-selected');
+  const count = document.getElementById('selection-count');
+  const sync = () => {
+    const n = boxes.filter(box => box.checked).length;
+    count.textContent = `${n} students selected`;
+    button.textContent = `Assign lesson to ${n} students`;
+    button.disabled = n === 0;
+    all.disabled = boxes.length === 0;
+    all.checked = boxes.length > 0 && n === boxes.length;
+    all.indeterminate = n > 0 && n < boxes.length;
+  };
+  document.getElementById('select-all-control').hidden = false;
+  all.addEventListener('change', () => {
+    boxes.forEach(box => { box.checked = all.checked; });
+    sync();
+  });
+  boxes.forEach(box => box.addEventListener('change', sync));
+  window.addEventListener('pageshow', () => { form.reset(); sync(); });
+  sync();
+})();
+</script>
 {% else %}<p>This class is archived. Membership records are retained; roster and enrollment controls are unavailable here.</p>{% endif %}
+<h2>Lesson assignments</h2>
+<p><a href="{% url 'lessons:assignment-list' %}">All authorized assignment history</a></p>
+<table><caption>Assignment history for {{ room.name }}</caption><thead><tr><th scope="col">Student</th><th scope="col">Lesson</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead><tbody>
+{% for row in assignments %}<tr><td>{{ row.student }}</td><td>{{ row.title }}</td><td>{% if row.cancelled_at %}Cancelled{% else %}{{ row.get_progress_display }}{% endif %}</td><td><a href="{% url 'lessons:assignment-detail' row.pk %}">View assignment<span> — {{ row.student }}, {{ row.title }}</span></a></td></tr>{% empty %}<tr><td colspan="4">No assignments for this class.</td></tr>{% endfor %}
+</tbody></table>
+<nav aria-label="Class assignment pages">
+{% if assignments.has_previous %}<a href="?page={{ students.number|default:1 }}&amp;assignments_page={{ assignments.previous_page_number }}">Previous</a>{% endif %}
+Page {{ assignments.number }} of {{ assignments.paginator.num_pages }}
+{% if assignments.has_next %}<a href="?page={{ students.number|default:1 }}&amp;assignments_page={{ assignments.next_page_number }}">Next</a>{% endif %}
+</nav>
 {% endblock %}

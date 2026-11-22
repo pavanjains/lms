@@ -23,11 +23,15 @@ REVIEW_SALT = "lessons.assignment-review.v1"
 REVIEW_SECONDS = 900
 
 
+class StudentChoices(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, student):
+        return f"{student} — {student.student_profile.get_grade_display()}"
+
+
 class SelectionForm(forms.Form):
     lesson = forms.ModelChoiceField(queryset=Lesson.objects.none())
-    students = forms.ModelMultipleChoiceField(
-        queryset=get_user_model().objects.none(),
-        widget=forms.CheckboxSelectMultiple,
+    students = StudentChoices(
+        queryset=get_user_model().objects.none(), widget=forms.CheckboxSelectMultiple,
     )
 
     def __init__(self, *args, actor, room, **kwargs):
@@ -54,14 +58,23 @@ class SelectionForm(forms.Form):
                 lesson.full_clean()
             except ValidationError:
                 raise forms.ValidationError("The selected lesson is invalid. Ask its creator to review it.") from None
-            for student in students:
-                grade = GRADE_NUMBERS.get(student.student_profile.grade)
-                if grade is None or not lesson.min_grade <= grade <= lesson.max_grade:
-                    raise forms.ValidationError("All selected students must match the lesson grade/kit range.")
-            if LessonAssignment.objects.filter(
+            incompatible = [str(student) for student in students
+                            if (grade := GRADE_NUMBERS.get(student.student_profile.grade)) is None
+                            or not lesson.min_grade <= grade <= lesson.max_grade]
+            if incompatible:
+                raise forms.ValidationError(
+                    "These students do not match the lesson grade/kit range: "
+                    + ", ".join(incompatible) + ". Choose another lesson or change students."
+                )
+            duplicates = list(LessonAssignment.objects.filter(
                 classroom=self.room, lesson=lesson, student__in=students, cancelled_at__isnull=True,
-            ).exists():
-                raise forms.ValidationError("A selected student already has this active assignment.")
+            ).select_related("student"))
+            if duplicates:
+                raise forms.ValidationError(
+                    "These students already have this active assignment: "
+                    + ", ".join(str(row.student) for row in duplicates)
+                    + ". Change the selection; no assignments were created."
+                )
         return data
 
 
@@ -108,7 +121,12 @@ def assignment_list(request):
 def assignment_create(request, classroom_id):
     user = current_staff(request.user)
     room = get_object_or_404(visible_classrooms(request.user), pk=classroom_id, is_active=True)
-    if request.method == "POST" and request.POST.get("action") == "confirm":
+    action = request.POST.get("action") if request.method == "POST" else None
+    from_roster = request.POST.get("from_roster") == "1"
+    if action == "cancel":
+        request.session.pop(REVIEW_KEY, None)
+        return redirect("classrooms:detail", classroom_id=room.pk)
+    if action == "confirm":
         form = ReviewForm(request.POST)
         if form.is_valid():
             token = form.cleaned_data["token"]
@@ -128,15 +146,29 @@ def assignment_create(request, classroom_id):
                 form.add_error(None, "Review expired or data changed. Select and review again.")
             else:
                 request.session.pop(REVIEW_KEY, None)
-                messages.success(request, f"Created {len(rows)} student assignment(s).")
+                messages.success(request, f"Lesson assigned to {len(rows)} student(s).")
+                if data.get("from_roster", False):
+                    return redirect("classrooms:detail", classroom_id=room.pk)
                 return redirect("lessons:assignment-list")
         return page(request, "review-error", status=400, form=form, room=room)
-    if request.method == "POST" and request.POST.get("action") != "review":
+    if request.method == "POST" and action not in {"review", "select-students"}:
         return page(request, "review-error", status=400, room=room,
                     error="Select a lesson and students, then review before confirming.")
     form = SelectionForm(request.POST if request.method == "POST" else None,
                          actor=request.user, room=room)
-    if request.method == "POST":
+    if action == "select-students":
+        request.session.pop(REVIEW_KEY, None)
+        form.fields["lesson"].required = False
+        if form.is_valid():
+            selected_lesson = form.cleaned_data.get("lesson")
+            form = SelectionForm(actor=request.user, room=room, initial={
+                "students": list(form.cleaned_data["students"].values_list("pk", flat=True)),
+                "lesson": selected_lesson.pk if selected_lesson else None,
+            })
+            return page(request, "select", form=form, room=room, from_roster=from_roster)
+        form.fields["lesson"].required = True
+        return page(request, "select", status=400, form=form, room=room, from_roster=from_roster)
+    if action == "review":
         request.session.pop(REVIEW_KEY, None)
         if form.is_valid():
             lesson = form.cleaned_data["lesson"]
@@ -145,12 +177,14 @@ def assignment_create(request, classroom_id):
                 "actor": user.pk, "org": str(user.organization_id), "room": room.pk,
                 "lesson": lesson.pk, "version": lesson.version,
                 "students": [student.pk for student in recipients], "nonce": secrets.token_hex(16),
+                "from_roster": from_roster,
             }, salt=REVIEW_SALT)
             request.session[REVIEW_KEY] = token
             return page(request, "review", room=room, content=lesson, recipients=recipients,
-                        source_version=lesson.version, form=ReviewForm(initial={"token": token}))
+                        from_roster=from_roster, source_version=lesson.version,
+                        form=ReviewForm(initial={"token": token}))
     return page(request, "select", status=400 if request.method == "POST" else 200,
-                form=form, room=room)
+                form=form, room=room, from_roster=from_roster)
 
 
 def detail_page(request, row, form=None, progress_form=None, status=200):
