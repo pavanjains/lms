@@ -1,21 +1,25 @@
 # Robotics LMS — Action Plan
 
-## Current increment — BUG-003, 2026-11-22
-Baseline a0cd91b78f7d38c885e64f526ade8285b2b82e53; branch fix/bug-003-onboarding-verification. Add 10 HTTPS/CSRF regression methods and correct the stale onboarding referrer-policy guide. No runtime, migration, credential or feature-flag changes. Python syntax/compile checked; new Django/Ruff/browser/PostgreSQL CI pending. BUG-003 remains REVIEW: existing same-origin fix retained, full browser acceptance and token-path logging gate open. Procedures: docs/E05_ONBOARDING.md.
+Updated 2026-11-22 after PR #6 merge and the owner's 18:30 EST CI report. Audited source baseline: main 7a82d695528d1b0db4ea20dda2ca04b82173464d, before this documentation-only commit. No production authorization.
 
-PR #5 is merged at a0cd91b with guarded head 83c86a3. Pre-merge checks 45081121549 and 45081792433 independently retrieved successful; no passing count exposed. This supersedes the older roster pending-retest/PR-creation notes below, not browser/production gates. Post-merge CI unverified.
+## Current source and evidence
+- PR #5 merged class-roster assignments at a0cd91b78f7d38c885e64f526ade8285b2b82e53, guarded at head 83c86a3776a509350c02df74b4b3dbbb7d026e35. Includes roster selection, lesson previews, explicit signed review/confirmation, return to class, scoped history and 15 regression test methods including the authentication-order correction.
+- PR #6 merged BUG-003 verification at 7a82d695528d1b0db4ea20dda2ca04b82173464d, guarded at head d2784b90c3826c9a8502aa6ea432167b017768c1. Adds 10 HTTPS/CSRF regression methods and onboarding/browser/logging guidance; no runtime security change.
+- Independently retrieved successful pre-merge checks: PR #5 runs 45081121549 and 45081792433; PR #6 runs 45082944989 and 45083255954. No passing counts exposed.
+- Latest post-merge CI success is owner-reported after PR #6; run ID, exact tested SHA, runtime and test count were not supplied or independently retrieved. This does not verify a later documentation commit or retroactively establish a PR #5 merge-specific run.
+- Earlier failures are retained in TICKETS.md and VALIDATION.json, including the owner-supplied 353-test/one-failure roster run. No total is inferred for successful runs.
 
-## Historical roster preparation notes retained
-Updated 2026-11-22. Baseline main 88524ab8788fc61b72c2a4d8ff19ccbdee38d159; feature/class-roster-assignments. No production approval.
+## Status and next actions
+1. BUG-003 remains REVIEW. Execute the synthetic onboarding browser checklist in docs/E05_ONBOARDING.md: invite/resend/activation, invalid/used/expired/revoked links, same-origin and approved HTTPS behavior, sign-out/MFA, privacy and back/reload. Verify token-path redaction in actual application/server/proxy/APM/mail/retained sinks before operational enablement. No hosting-specific redaction has been implemented or verified.
+2. ASSIGN-01, ASSIGN-02 and ROSTER-ASSIGN-01 remain IN_PROGRESS. Verify the roster keyboard/count/select-page/no-JavaScript flow, errors, final Confirm, cancel/back/reload, scoped history and student A/B isolation. Prior assignment after Confirm, progress persistence after reload and status-only privacy were owner-reported only, not full acceptance. Procedures: docs/ASSIGNMENTS.md and docs/LOCAL_TESTING.md.
+3. Diagnose the separate skip-to-content defect reported on all pages. It is not BUG-003 and is not fixed by either merge.
+4. Verify existing migration 0003_assignment_progress application on the intended database. It is already on main; deployment/application remains unverified. Inspect status/plan and back up the intended database before any deliberate migration. Do not infer application from source, CI or browser reports.
+5. Keep progress history/reporting, durable review-token concurrency and possible service enforcement of Lesson/LessonAssignment summary/instructions TextField length limits as separate work. No exactly-once review-token guarantee.
+6. Preserve remaining E08-05, BUG-003, branding/library/document browser/security/operations, audit, throttling, recovery, session policy, TLS, log redaction, privacy/retention, mail, file safety, deployment, backup/restore and training gates. Python 3.14 remains unverified; PDFs remain restricted and student document delivery is not approved.
 
-ROSTER-ASSIGN-01 is IN_PROGRESS: roster selection reuses signed assignment review/confirmation and transactional services; success returns to class; class history is independently paginated. 15 regression methods are authored, not executed by the author. No migration.
+## Working rules
+Implementation uses feature branches/PRs; merges require final-head checks and expectedHeadSha. Every external write requires exact-payload approval. Direct main writes are documentation-only when explicitly requested. Update action plan, tickets, implementation status, affected guides and attributed validation with implementation/fix commits. Preserve local changes, credentials and database data; do not rerun bootstrap on the existing installation. Record only observed/retrieved/reported evidence and never replace earlier failures with a generic pass.
 
-Next: exact-head CI lint/system/migration checks and full PostgreSQL suite; keyboard/no-JavaScript/select-page/preview/error/cancel/back/reload browser cases; PR review and expectedHeadSha merge guard. See docs/ASSIGNMENTS.md. Skip-link defect remains separate.
+This documentation update does not run tests, deploy, migrate, change flags/accounts/credentials, close acceptance tickets or approve production. Current evidence here and in VALIDATION.json supersedes dated authoring-time CI-pending notes in feature guides; those guides remain procedures, not execution reports.
 
-ASSIGN-01 and ASSIGN-02 remain IN_PROGRESS. PR #4 is merged at f3cc9e2 per HANDOFF.md. CI on 88524ab, assignment after final Confirm, progress persistence and status-only privacy are owner-reported only. Migration 0003 deployment and Python 3.14 remain unverified. Stale-update, A/B, identity-switch, reset/expiry/revocation, durable token concurrency, progress history/reporting and TextField service validation remain open. Existing security/operations/document/branding gates, E08-05 and BUG-003 remain open; PDFs stay restricted. Update tracking and attributed validation with every implementation commit.
-
-Earlier failures/evidence are retained in docs/VALIDATION.json and the historical plan:
-https://github.com/pavanjains/lms/blob/88524ab8788fc61b72c2a4d8ff19ccbdee38d159/ACTION_PLAN.md
-
-## Roster test correction, 2026-11-22
-Owner-supplied CI log: 353 tests in 13.113s, one failure, clean system check, exit 1; run ID/revision/runtime not supplied. The anonymous client incorrectly expected 405 before StaffAuthMiddleware's login redirect. Test now checks anonymous and password-only redirects, then MFA-verified 405; application guards unchanged. Replacement-method syntax checked; retest pending. Do not create the previously proposed PR without fresh approval.
+Previous snapshot and historical links: https://github.com/pavanjains/lms/blob/7a82d695528d1b0db4ea20dda2ca04b82173464d/ACTION_PLAN.md

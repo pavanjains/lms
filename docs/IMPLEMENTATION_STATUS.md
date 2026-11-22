@@ -1,21 +1,24 @@
 # Implementation Status
 
-## Current verification increment, 2026-11-22
-BUG-003 remains REVIEW. On fix/bug-003-onboarding-verification, baseline a0cd91b, 10 new HTTPS/CSRF methods and updated onboarding/browser/logging guidance are authored. Existing same-origin fix and CSRF/security/runtime behavior unchanged. Syntax/compile checked; new Django/Ruff/rendering/browser/PostgreSQL verification NOT RUN. Token-path redaction needs actual hosting/sink verification; no production redaction or browser acceptance claimed.
+Updated 2026-11-22 after the 18:30 EST owner CI report. Audited source baseline main 7a82d695528d1b0db4ea20dda2ca04b82173464d before this docs-only commit. No production authorization.
 
-PR #5 merged at a0cd91b78f7d38c885e64f526ade8285b2b82e53 after successful independently retrieved pre-merge checks 45081121549 and 45081792433, guarded at 83c86a3. No passing test count; post-merge CI unverified. Supersedes historical roster pending-retest notes below, not remaining browser/security/deployment gates.
+## Merged source
+Existing staff authentication/MFA, classroom services/UI, student creation/reset/sign-in/session isolation, lesson library/protected staff PDF support and assignment snapshots/student read-only pages remain in source. PR #4 progress/feedback is merged at f3cc9e2 per earlier handoff; students see status only, not feedback. Migration 0003 application remains unverified.
 
-## Historical implementation notes retained
-Updated 2026-11-22; feature baseline main 88524ab. No production authorization.
+PR #5 roster assignment flow merged at a0cd91b78f7d38c885e64f526ade8285b2b82e53, guarded head 83c86a3. Per-page checkboxes/count/select-page/no-JavaScript fallback, preselection, lesson previews, explicit signed review/confirmation, POST review cancellation, signed class return and independently paginated class history are implemented. Central history, existing transactional services/progress controls and student queries retained. Fifteen new regression methods, including authentication-order correction. No automatic enrollment assignments, feedback in roster, new migration or exactly-once token guarantee.
 
-Existing staff/MFA, classroom, student/session, lesson/PDF and assignment snapshot/read-only student features remain in source. PR #4 progress/feedback merged at f3cc9e2 per HANDOFF.md; students see status only. Migration 0003 deployment remains unverified.
+PR #6 BUG-003 verification merged at 7a82d695528d1b0db4ea20dda2ca04b82173464d, guarded head d2784b9. Ten HTTPS/CSRF methods and corrected onboarding/browser/logging guidance. Existing same-origin fix and runtime CSRF/security behavior unchanged. No runtime settings, migration, credential or feature-flag changes.
 
-ROSTER-ASSIGN-01, branch feature/class-roster-assignments, adds per-page roster selection, preselection, lesson previews, explicit signed confirmation, POST review cancellation, class return and independently paginated class history. Existing services, central history, progress controls and student queries remain in use. No migration, automatic enrollment assignments, student write controls, feedback exposure or durable exactly-once guarantee.
+## Verification
+Independently retrieved successful pre-merge head checks: PR #5 runs 45081121549/45081792433; PR #6 runs 45082944989/45083255954. No passing count exposed. Owner reports latest main CI passed after PR #6 at 18:30 EST; run ID, exact tested SHA, runtime and count not supplied/not independently retrieved. A PR #5 merge-specific run remains unverified. No earlier pass covers this new documentation commit.
 
-15 new regression methods are authored. Python syntax/compile checks executed; Django, Ruff, template rendering, browser and PostgreSQL NOT RUN by the author. New-flow CI/acceptance pending; no runtime passing count claimed. ASSIGN-01/02 remain IN_PROGRESS. Owner-reported only: CI for 88524ab and prior assignment/progress/reload/privacy browser checks. Remaining gates include skip-link defect, stale/A-B/identity-switch/back/reset/expiry/revocation, token concurrency, history/reporting, TextField validation, file safety, Python 3.14, security/operations/deployment and production acceptance.
+Author ran Python syntax/compile checks, not Django, Ruff, rendering, browser, TLS/proxy, log-redaction or PostgreSQL tests. CI execution and direct author execution remain distinct. Preserve owner-supplied failures: UUID serialization (296 tests/9 errors); feedback length (338 tests/2 failures from one test); roster auth-order expectation (353 tests/one failure). Their corrections and successful later checks do not imply a passing total. Details: TICKETS.md and VALIDATION.json.
 
-Earlier UUID and feedback-length failures remain in TICKETS.md/VALIDATION.json. Prior detailed implementation/evidence/release gates:
-https://github.com/pavanjains/lms/blob/88524ab8788fc61b72c2a4d8ff19ccbdee38d159/docs/IMPLEMENTATION_STATUS.md
+## Acceptance and remaining work
+BUG-003 remains REVIEW; ASSIGN-01, ASSIGN-02 and ROSTER-ASSIGN-01 remain IN_PROGRESS. Prior assignment after Confirm, progress/reload and student status-only privacy are owner-reported, not independently observed/full acceptance. New roster browser, A/B/stale/identity-switch/back/reset/expiry/revocation and onboarding browser acceptance remain open. Skip-link failure on all pages remains reported/undiagnosed and separate from BUG-003.
 
-## Roster CI failure and test-only correction
-Owner-supplied log reports 353 tests, one failure, 13.113s, clean system check and exit 1; exact run/revision/runtime unverified. Test expected 405 from an anonymous PUT, but staff middleware returned the correct login redirect. Test now separates anonymous/password-only redirects from MFA-verified 405. Application code unchanged. Replacement-method syntax checked; corrected-suite CI and browser acceptance pending.
+Actual token-path logging redaction across application/server/proxy/APM/mail/retained sinks is unverified; no production redaction implementation. Progress history/reporting, durable token concurrency, possible TextField service validation, file safety/student document authorization, Python 3.14 compatibility, branding/library/document acceptance, E08-05, audit/throttling/recovery/session/TLS/privacy/retention/mail/deployment/backup/training remain open. PDFs stay restricted; no production approval.
+
+Migration 0003_assignment_progress is already on main; database application/deployment requires explicit verification and a deliberate backed-up operation, not another source push. This docs update performs no deployment/migration/account/flag/credential action.
+
+Current tracking/validation supersedes older authoring-time pending-CI wording in feature guides; procedures do not establish execution. Earlier detailed snapshot/history: https://github.com/pavanjains/lms/blob/7a82d695528d1b0db4ea20dda2ca04b82173464d/docs/IMPLEMENTATION_STATUS.md

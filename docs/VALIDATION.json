@@ -2,7 +2,7 @@
   "schema_version": 2,
   "updated_local_date": "2026-11-22",
   "repository": "pavanjains/lms",
-  "documentation_baseline": "a0cd91b78f7d38c885e64f526ade8285b2b82e53",
+  "documentation_baseline": "7a82d695528d1b0db4ea20dda2ca04b82173464d",
   "roster_assignment": {
     "status": "MERGED_PENDING_BROWSER_ACCEPTANCE",
     "branch": "feature/class-roster-assignments",
@@ -19,13 +19,13 @@
     "merge_sha": "a0cd91b78f7d38c885e64f526ade8285b2b82e53",
     "guarded_head_sha": "83c86a3776a509350c02df74b4b3dbbb7d026e35",
     "merge_attribution": "GitHub connector merge success and main ref independently retrieved",
-    "post_merge_ci": "UNVERIFIED"
+    "post_merge_ci": "PR #5 merge-specific run UNVERIFIED; do not infer from later main report"
   },
   "instructor_progress": {
     "status": "MERGED_PENDING_ACCEPTANCE",
     "pr": 4,
     "merge_sha_prefix": "f3cc9e2",
-    "merge_attribution": "previously retrieved per docs/HANDOFF.md",
+    "merge_attribution": "previously retrieved per earlier docs/HANDOFF.md",
     "authored_test_methods": 22,
     "migration_0003_applied": "UNVERIFIED; no deployment evidence supplied",
     "passing_test_count": null
@@ -160,6 +160,34 @@
       "conclusion": "success",
       "attribution": "independently retrieved via PR #5 head checks before merge",
       "test_count": null
+    },
+    {
+      "run_id": "45082944989",
+      "check_run_id": "137394965797",
+      "head_sha": "d2784b90c3826c9a8502aa6ea432167b017768c1",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved via PR #6 head checks before merge",
+      "test_count": null
+    },
+    {
+      "run_id": "45083255954",
+      "check_run_id": "137395959713",
+      "head_sha": "d2784b90c3826c9a8502aa6ea432167b017768c1",
+      "job": "checks",
+      "conclusion": "success",
+      "attribution": "independently retrieved via PR #6 head checks before merge",
+      "test_count": null
+    },
+    {
+      "context": "latest main after PR #6 merge, per conversation context; report did not state tested SHA",
+      "reported_local_time": "2026-11-22 18:30 EST",
+      "run_id": null,
+      "head_sha": null,
+      "conclusion": "success",
+      "attribution": "owner-reported only; not independently retrieved",
+      "python_version": null,
+      "test_count": null
     }
   ],
   "browser_acceptance": {
@@ -175,22 +203,24 @@
       "identity-switch back/reload",
       "reset/expiry/revocation",
       "new roster flow",
+      "BUG-003 onboarding browser checklist",
       "broader browser acceptance"
     ],
-    "reported_defect": "skip-to-content nonfunctional on all pages; undiagnosed; not fixed in roster feature"
+    "reported_defect": "skip-to-content nonfunctional on all pages; undiagnosed; not fixed in PR #5 or PR #6"
   },
   "assignment_review_session_concurrency": "PENDING; no durable exactly-once token store",
-  "runtime_deployment_migration": "UNVERIFIED; do not infer migration 0003 application from source or browser reports",
+  "runtime_deployment_migration": "UNVERIFIED; migration 0003 is on main; do not infer application from source, CI or browser reports",
   "python_314": "UNVERIFIED; owner reports local Python 3.14.2, not compatibility evidence",
   "production_readiness": "NOT APPROVED",
   "historical_evidence": {
     "source": "https://github.com/pavanjains/lms/blob/88524ab8788fc61b72c2a4d8ff19ccbdee38d159/docs/VALIDATION.json",
+    "previous_snapshot": "https://github.com/pavanjains/lms/blob/7a82d695528d1b0db4ea20dda2ca04b82173464d/docs/VALIDATION.json",
     "preserve_as_history": true,
-    "note": "Historical records include earlier PR heads/full SHAs, merge evidence, CI attribution and the original 24-file syntax snapshot; no earlier failure is replaced by a passing count."
+    "note": "Historical records include earlier PR heads/full SHAs, merge evidence, CI attribution and the original 24-file syntax snapshot; no earlier failure is replaced by a passing count. Earlier handoff preserves PR #4 f5ec991 checks 44847456934/44847462963 as previously independently retrieved, not re-retrieved in this update."
   },
   "bug_005": "FIXED_VERIFIED on owner-reported CI after 8e80939; not independently retrieved",
   "bug_006": "FIXED_VERIFIED for UUID serialization on retrieved pre-merge checks; broader acceptance separate",
-  "maintenance": "Keep source/revision/attribution and earlier failures; never infer passing totals.",
+  "maintenance": "Keep source/revision/attribution and earlier failures; never infer passing totals. Current tracking evidence supersedes dated authoring-time CI-pending guide notes, not browser or production gates.",
   "roster_test_fix": {
     "status": "PREMERGE_CI_VERIFIED",
     "scope": "test and documentation only; application authentication, MFA, CSRF and method guards unchanged",
@@ -202,9 +232,14 @@
   },
   "bug_003": {
     "status": "REVIEW",
+    "verification_increment_status": "MERGED_PREMERGE_CI_VERIFIED_PENDING_BROWSER_AND_LOGGING",
     "scope": "onboarding null-origin CSRF defect; existing same-origin fix retained",
     "branch": "fix/bug-003-onboarding-verification",
     "baseline": "a0cd91b78f7d38c885e64f526ade8285b2b82e53",
+    "pr": 6,
+    "merge_sha": "7a82d695528d1b0db4ea20dda2ca04b82173464d",
+    "guarded_head_sha": "d2784b90c3826c9a8502aa6ea432167b017768c1",
+    "merge_attribution": "GitHub connector merge success and main ref independently retrieved",
     "historical_fix": "24453d6, local confirmation and later included CI success per historical owner reports; not new browser verification",
     "history_source": "https://github.com/pavanjains/lms/blob/ded6acb393cb80f20bd3394e6f7c3724ccb40ec7/docs/TICKETS.md",
     "new_authored_https_test_methods": 10,
@@ -214,8 +249,14 @@
     "template_rendering_run_by_author": false,
     "browser": "PENDING; new checklist not executed",
     "tls_proxy_and_token_path_logging": "OPEN; actual hosting/sinks not verified; no production redaction implemented",
-    "new_ci": "PENDING",
+    "new_ci": "PREMERGE_VERIFIED_SUCCESS: 45082944989 and 45083255954",
+    "post_merge_ci": "owner-reported success after PR #6; run ID/tested SHA/runtime/count not supplied or independently retrieved",
     "passing_test_count": null,
     "runtime_settings_migrations_flags_credentials_changed": false
+  },
+  "documentation_update": {
+    "scope": "main documentation only, explicitly requested by owner; no runtime/database/credential/flag/deployment action",
+    "own_ci": "NOT YET KNOWN; earlier pass reports do not cover a later documentation commit",
+    "tests_run_by_author_for_this_docs_update": false
   }
 }
