@@ -1,5 +1,11 @@
 # Implementation Status
 
+## Current verification increment, 2026-11-22
+BUG-003 remains REVIEW. On fix/bug-003-onboarding-verification, baseline a0cd91b, 10 new HTTPS/CSRF methods and updated onboarding/browser/logging guidance are authored. Existing same-origin fix and CSRF/security/runtime behavior unchanged. Syntax/compile checked; new Django/Ruff/rendering/browser/PostgreSQL verification NOT RUN. Token-path redaction needs actual hosting/sink verification; no production redaction or browser acceptance claimed.
+
+PR #5 merged at a0cd91b78f7d38c885e64f526ade8285b2b82e53 after successful independently retrieved pre-merge checks 45081121549 and 45081792433, guarded at 83c86a3. No passing test count; post-merge CI unverified. Supersedes historical roster pending-retest notes below, not remaining browser/security/deployment gates.
+
+## Historical implementation notes retained
 Updated 2026-11-22; feature baseline main 88524ab. No production authorization.
 
 Existing staff/MFA, classroom, student/session, lesson/PDF and assignment snapshot/read-only student features remain in source. PR #4 progress/feedback merged at f3cc9e2 per HANDOFF.md; students see status only. Migration 0003 deployment remains unverified.
