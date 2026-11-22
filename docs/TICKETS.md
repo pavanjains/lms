@@ -1,5 +1,14 @@
 # Development Tickets and Fix Ledger
 
+## BUG-003 — REVIEW; HTTPS regression coverage authored 2026-11-22
+Branch fix/bug-003-onboarding-verification, baseline a0cd91b. Historical scope is instructor-onboarding null-origin/CSRF failure, not migration 0003 or the skip-link defect. Historical ledger records 24453d6 no-referrer to same-origin correction and local confirmation; full browser acceptance and token-path logging remained open. Current implementation retains same-origin and normal CSRF enforcement.
+
+Add 10 HTTPS/CSRF methods for Origin/Referer success and rejection across invite/resend/activate, missing CSRF and privacy/one-time behavior. Existing tests unchanged. Correct E05_ONBOARDING.md's stale no-referrer text and add browser/logging gates. No runtime/settings/migration/credential changes. Python syntax/compile checked only; new CI/browser/PostgreSQL verification pending. No FIXED_VERIFIED or production claim. Historical scope source: https://github.com/pavanjains/lms/blob/ded6acb393cb80f20bd3394e6f7c3724ccb40ec7/docs/TICKETS.md
+
+## Roster evidence update
+PR #5 merged at a0cd91b78f7d38c885e64f526ade8285b2b82e53 with expected head 83c86a3. Checks 45081121549 and 45081792433 independently retrieved successful before merge; no passing count. Supersedes pending-retest status below, preserves the earlier failure; browser acceptance remains pending. Post-merge CI unverified.
+
+## Historical roster ledger retained
 Updated 2026-11-22; source baseline 88524ab.
 
 ## ROSTER-ASSIGN-01 — IN_PROGRESS
