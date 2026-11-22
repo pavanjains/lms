@@ -193,9 +193,14 @@ class RosterAssignmentTests(TestCase):
         self.login_staff(client=client)
         for action in ("select-students", "cancel"):
             self.assertEqual(client.post(self.url(), {"action": action, "students": [self.a.pk]}).status_code, 403)
-        self.assertEqual(self.client.put(self.url()).status_code, 405)
+        self.assertRedirects(self.client.put(self.url()), reverse("two_factor:login"),
+                             fetch_redirect_response=False)
+        self.client.force_login(self.teacher)
+        self.assertRedirects(self.client.put(self.url()), reverse("two_factor:login"),
+                             fetch_redirect_response=False)
         self.login_staff()
         self.assertEqual(self.client.put(self.url()).status_code, 405)
+        self.assertFalse(LessonAssignment.objects.exists())
 
     def test_central_entry_keeps_existing_return_destination(self):
         self.login_staff()

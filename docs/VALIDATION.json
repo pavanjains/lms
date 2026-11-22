@@ -4,7 +4,7 @@
   "repository": "pavanjains/lms",
   "documentation_baseline": "88524ab8788fc61b72c2a4d8ff19ccbdee38d159",
   "roster_assignment": {
-    "status": "SOURCE_AUTHORED_PENDING_CI_AND_ACCEPTANCE",
+    "status": "FIX_AUTHORED_PENDING_RETEST",
     "branch": "feature/class-roster-assignments",
     "authored_test_methods": 15,
     "python_syntax_compile_checked_by_author": true,
@@ -121,6 +121,22 @@
       "attribution": "owner-reported only",
       "python_version": null,
       "test_count": null
+    },
+    {
+      "context": "roster CI log supplied after the 976e755 feature push; exact tested revision not stated",
+      "run_id": null,
+      "head_sha": null,
+      "conclusion": "failure",
+      "attribution": "owner-supplied log inspected 2026-11-22; not independently retrieved",
+      "reported_tests": 353,
+      "reported_failures": 1,
+      "reported_seconds": 13.113,
+      "system_check": "no issues (0 silenced)",
+      "exit_code": 1,
+      "cause": "test_csrf_and_method_guards_apply_to_roster_entry_and_cancel expected anonymous PUT 405; StaffAuthMiddleware correctly returned login redirect 302",
+      "passing_test_count": null,
+      "python_version": null,
+      "database_vendor": null
     }
   ],
   "browser_acceptance": {
@@ -151,5 +167,14 @@
   },
   "bug_005": "FIXED_VERIFIED on owner-reported CI after 8e80939; not independently retrieved",
   "bug_006": "FIXED_VERIFIED for UUID serialization on retrieved pre-merge checks; broader acceptance separate",
-  "maintenance": "Keep source/revision/attribution and earlier failures; never infer passing totals."
+  "maintenance": "Keep source/revision/attribution and earlier failures; never infer passing totals.",
+  "roster_test_fix": {
+    "status": "FIX_AUTHORED_PENDING_RETEST",
+    "scope": "test and documentation only; application authentication, MFA, CSRF and method guards unchanged",
+    "assertions": ["anonymous PUT redirects to login", "password-only PUT redirects to login", "MFA-verified PUT returns 405", "CSRF-protected roster-entry/cancel POSTs reject missing tokens", "no assignments created"],
+    "replacement_method_syntax_checked_by_author": true,
+    "django_retest_run_by_author": false,
+    "ci_retest": "PENDING",
+    "passing_test_count": null
+  }
 }

@@ -13,7 +13,7 @@ Change selection preserves valid choices and invalidates the old review. Cancel 
 
 Reviews remain actor/org/class/session bound, signed and valid for 900 seconds; latest review replaces earlier review. No durable exactly-once concurrent token store. One snapshot per explicit recipient, active class/student/lesson uniqueness, cancellation history and explicit reassignment remain. No automatic assignments for later enrollments. Students see status only, not feedback or write controls. Only latest staff progress/feedback is retained; migration 0003 deployment unverified. This feature adds no migration.
 
-## Verification procedure — NOT RUN
+## Verification procedure — NOT RUN by the author
 Preserve local changes; use the feature branch and isolated PostgreSQL test settings. Do not rerun owner bootstrap or use production data. LOCAL_TESTING.md has environment setup.
 
 ```sh
@@ -32,3 +32,6 @@ Owner-reported prior assignment/Confirm, progress/reload, privacy and CI on 8852
 
 Prior detailed contracts/history:
 https://github.com/pavanjains/lms/blob/88524ab8788fc61b72c2a4d8ff19ccbdee38d159/docs/ASSIGNMENTS.md
+
+## Authentication-order regression and retest
+Owner-supplied CI log: 353 tests in 13.113s, one failure, clean system check, exit 1 (run ID/revision/runtime not supplied). The test incorrectly expected an anonymous PUT to reach the view's 405 guard; StaffAuthMiddleware redirects to login first. The corrected test expects login redirects for anonymous/password-only sessions and 405 only after MFA, retaining CSRF assertions. No application guard is changed. Replacement-method syntax checked; rerun the targeted and full suites above. This failure is retained, not a passing-suite claim.
