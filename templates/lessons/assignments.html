@@ -13,20 +13,26 @@
 {% elif mode == "select" %}
 <h2>Select for {{ room.name }}</h2>
 <p>Select all intended recipients explicitly. New enrollments will not receive this work automatically.</p>
-<form method="post">{% csrf_token %}<input type="hidden" name="action" value="review">{{ form.as_p }}<button type="submit">Review assignment</button></form>
+<p>No assignments have been created yet. Review the lesson and students, then confirm.</p>
+{% if form.errors %}<div role="alert"><p>Check the errors below. No assignments were created.</p>{{ form.non_field_errors }}</div>{% endif %}
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="review">{% if from_roster %}<input type="hidden" name="from_roster" value="1">{% endif %}{{ form.as_p }}<button type="submit">Review assignment</button></form>
+<details><summary>Preview available lessons</summary>{% for lesson in form.fields.lesson.queryset %}<section><h3>{{ lesson.title }}</h3><p>Kit: {{ lesson.get_kit_display }}. Grades: {{ lesson.min_grade }}–{{ lesson.max_grade }}.</p>{{ lesson.summary|linebreaks }}<pre>{{ lesson.instructions }}</pre></section>{% empty %}<p>No active lessons available.</p>{% endfor %}</details>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="cancel"><button type="submit">Cancel and return to class</button></form>
 {% elif mode == "review" %}
 <h2>Review for {{ room.name }}</h2>
 {% include "lessons/assignment_content.html" %}
 <h2>Selected students</h2>
 <ul>{% for student in recipients %}<li>{{ student }} — {{ student.student_profile.get_grade_display }}</li>{% endfor %}</ul>
+<p>This will create {{ recipients|length }} student assignment(s). No assignments have been created yet.</p>
 <p>Confirm within 15 minutes. Starting another review in this session replaces this review.</p>
-<form method="post">{% csrf_token %}<input type="hidden" name="action" value="confirm">{{ form.as_p }}<button type="submit">Confirm assignment</button></form>
-<p><a href="{% url 'lessons:assignment-create' room.pk %}">Change selection</a></p>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="confirm">{{ form.as_p }}<button type="submit">Confirm and assign to {{ recipients|length }} students</button></form>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="select-students">{% if from_roster %}<input type="hidden" name="from_roster" value="1">{% endif %}<input type="hidden" name="lesson" value="{{ content.pk }}">{% for student in recipients %}<input type="hidden" name="students" value="{{ student.pk }}">{% endfor %}<button type="submit">Change selection</button></form>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="cancel"><button type="submit">Cancel and return to class</button></form>
 {% elif mode == "review-error" %}
-<h2>Review required</h2><p>{{ error }}</p>{{ form.errors }}
-<p><a href="{% url 'lessons:assignment-create' room.pk %}">Select and review again</a></p>
+<h2>Review required</h2><div role="alert"><p>{{ error }}</p>{{ form.errors }}</div>
+<p><a href="{% url 'lessons:assignment-create' room.pk %}">Select and review again</a> | <a href="{% url 'classrooms:detail' room.pk %}">Return to class</a></p>
 {% elif mode == "detail" %}
-<p>Student: {{ row.student }}. Class: {{ row.classroom.name }}.</p>
+<p>Student: {{ row.student }}. Class: <a href="{% url 'classrooms:detail' row.classroom_id %}">{{ row.classroom.name }}</a>.</p>
 <p>Progress: {{ row.get_progress_display }}.{% if row.progress_updated_at %} Updated {{ row.progress_updated_at }} by {{ row.progress_updated_by }}.{% endif %}</p>
 {% if row.feedback %}<h2>Instructor feedback (staff only)</h2><pre>{{ row.feedback }}</pre>{% endif %}
 {% include "lessons/assignment_content.html" %}

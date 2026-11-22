@@ -14,6 +14,7 @@ from apps.classrooms.forms import ClassroomForm, ConfirmationForm, TargetForm
 from apps.classrooms.policies import (
     current_staff, visible_classrooms, visible_class_students, visible_students,
 )
+from apps.lessons.assignments import staff_assignments
 
 
 OPERATIONS = {
@@ -77,14 +78,16 @@ def classroom_detail(request, classroom_id):
     if room.is_active:
         roster = visible_class_students(request.user, room.pk).annotate(
             grade=F("student_profile__grade"),
-        ).values("pk", "username", "display_name", "grade").order_by("username", "pk")
+        ).values("pk", "username", "display_name", "grade", "is_staff", "is_superuser").order_by("username", "pk")
         students = Paginator(roster, 20).get_page(request.GET.get("page"))
         instructors = list(get_user_model().objects.filter(
             organization_id=user.organization_id, role="INSTRUCTOR",
             classroom_memberships__classroom=room, classroom_memberships__is_active=True,
         ).values("username", "display_name", "is_active").order_by("username"))
+    assignments = staff_assignments(request.user).filter(classroom=room).select_related("student")
     return page(request, "detail.html", {
         "room": room, "students": students, "instructors": instructors,
+        "assignments": Paginator(assignments, 20).get_page(request.GET.get("assignments_page")),
         "is_owner": user.role == "OWNER",
     })
 
