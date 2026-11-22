@@ -1,38 +1,24 @@
 # Development Tickets and Fix Ledger
 
-Updated 2026-11-22 after the owner's 18:30 EST CI report. Audited main baseline 7a82d695528d1b0db4ea20dda2ca04b82173464d, before this documentation-only update. Markdown ticket IDs are not GitHub issue numbers; this is the existing ticket ledger, not a new Ticket.md.
+Updated 2026-11-22 on fix/skip-to-content, source baseline main 6e3dd234417f831acd3a5362cad3adb0e4fb6d84. IDs are local ledger labels, not GitHub issue numbers. No production approval.
 
-## BUG-003 — REVIEW; verification increment MERGED, browser/logging acceptance open
-Historical defect: instructor-onboarding null-origin/CSRF failure, not migration 0003 or the skip-link issue. Earlier correction 24453d6 changed no-referrer to same-origin; historical local confirmation and included CI pass were owner-reported. Existing implementation retains same-origin and normal CSRF enforcement.
+## Skip-to-content defect — IN_PROGRESS; fix authored, acceptance pending
+Owner reported nonfunctional link on all pages. Retrieved base template has matching #main/main ID but lacks tabindex/focus indicator. Add tabindex=-1 and visible focus outlines in the shared layout, retaining first visible native link/no-JavaScript behavior and no autofocus/positive tabindex. This is a source-level focusability correction, not an independently reproduced browser diagnosis. Six new structural regression methods cover public/staff/student/error pages, matching unique target and focus styles. Python syntax/compile and authored HTML structure checked; Django/Ruff/rendering/CI/browser NOT RUN by author. Procedures/limits: SKIP_LINK.md. Not FIXED_VERIFIED. No route/auth/session/CSRF/credential/flag/database change.
 
-PR #6 merged at 7a82d695528d1b0db4ea20dda2ca04b82173464d with expected head d2784b90c3826c9a8502aa6ea432167b017768c1. Ten new HTTPS/CSRF methods cover invite/resend/activation, Origin/Referer success, null/foreign/scheme/port rejection, missing/unsafe Referer, missing CSRF and privacy/one-time/no-auto-login behavior. Existing onboarding tests retained. Updated E05_ONBOARDING.md corrects stale no-referrer wording and adds browser/logging gates. This increment changed tests/documentation only, not runtime settings, security guards, migrations, flags or credentials.
+## BUG-003 — REVIEW; verification increment merged
+Instructor-onboarding null-origin/CSRF defect is separate from skip link and migration 0003. Historical 24453d6 no-referrer to same-origin correction/local confirmation and included CI pass were owner-reported. PR #6 merged at 7a82d695528d1b0db4ea20dda2ca04b82173464d, guarded head d2784b9; 10 HTTPS/CSRF methods and guide updates, no runtime security change. Successful head checks independently retrieved: 45082944989/check137394965797 and 45083255954/check137395959713. No passing count. Browser and actual token-path logging acceptance remain open; no production redaction or closure claim. Historical scope: https://github.com/pavanjains/lms/blob/ded6acb393cb80f20bd3394e6f7c3724ccb40ec7/docs/TICKETS.md
 
-Independently retrieved successful checks on the PR head: run 45082944989/check 137394965797 and run 45083255954/check 137395959713. No passing count exposed. Latest post-merge pass is owner-reported after PR #6, not independently retrieved; run ID, tested SHA, runtime and count unspecified. No FIXED_VERIFIED or production claim. Execute the synthetic browser checklist and verify real token-path logging sinks before closing the remaining acceptance scope.
+## ROSTER-ASSIGN-01 — IN_PROGRESS; source merged
+PR #5 merged at a0cd91b78f7d38c885e64f526ade8285b2b82e53, guarded head 83c86a3; roster selection/count/select-page/no-JavaScript, preselection/previews, signed review/final confirmation/cancel/class return and scoped paginated history, 15 new methods. Existing services/central history retained, no feedback in roster/automatic enrollment assignment/new migration/exactly-once guarantee. Successful head checks independently retrieved: 45081121549/check137389292906 and 45081792433/check137391367330. PR #5 merge-specific run unverified. Browser A/B/keyboard/error/pagination/back/reload acceptance open.
 
-Historical scope: https://github.com/pavanjains/lms/blob/ded6acb393cb80f20bd3394e6f7c3724ccb40ec7/docs/TICKETS.md
+## CI reports and failure history retained
+Owner-reported only: latest main after PR6 at 18:30 EST and docs 6e3dd23 at 18:38 EST, associated by conversation; run IDs/tested SHAs/runtime/counts not supplied or independently retrieved. These reports do not cover this feature commit. No passing totals inferred.
 
-## ROSTER-ASSIGN-01 — IN_PROGRESS; source MERGED, browser acceptance pending
-PR #5 merged at a0cd91b78f7d38c885e64f526ade8285b2b82e53 with expected head 83c86a3776a509350c02df74b4b3dbbb7d026e35. Roster per-page selection/count/select-page, preselected students, lesson previews, existing signed review/explicit confirmation, POST review cancellation, signed class return and independently paginated scoped history are in main. Central history and transactional assignment services retained; no feedback in roster, automatic enrollment assignment, new migration or durable exactly-once guarantee. Fifteen regression methods are authored.
+- Roster initial run: supplied log 353 tests, one failure in 13.113s, clean system check/exit1, run/revision unknown. Anonymous self.client wrongly expected 405 before staff login redirect. Corrected 83c86a3 checks anonymous/password-only redirect then verified-MFA405, retaining CSRF checks; later pre-merge checks successful. Failure retained, 353 not a passing total.
+- BUG-006 UUID serialization: f52a592 run44667767312, supplied log296 tests/9 errors; fixed ddc000b, checks44668593439/44668981076 independently successful.
+- Feedback length: c9b76e2 supplied log338 tests/2 failures from one test, no runID; fixed23a9d2d, checks44846492681/44846822307 independently successful.
+- Student UI ebdb9ea checks44834522871/44834596308 and earlier PR4 f5ec991 checks44847456934/44847462963 remain previously retrieved evidence, not re-retrieved now. Earlier BUG001/002/E05/E08 and other main CI history remains linked and in VALIDATION.json.
 
-Independently retrieved successful head checks: run 45081121549/check 137389292906 and run 45081792433/check 137391367330. No passing count exposed. A PR #5 merge-specific CI run remains unverified. Browser keyboard/no-JavaScript/selection/pagination/error/Confirm/cancel/back/reload/history and A/B acceptance remain pending.
+ASSIGN-01/02 remain IN_PROGRESS; PR4 progress/feedback merged at f3cc9e2. Student status only, never feedback/write controls. Prior assignment after Confirm/progress persistence/privacy checks owner-reported, not full acceptance. Migration0003 application, progress history/reporting, durable review concurrency, service TextField validation and Python3.14 unverified. E08-05 remains IN_PROGRESS; E08-08/BUG004/BUG005 retain prior owner-report attribution. Branding/library/document/file safety/student delivery/shared-device/races/audit/throttling/recovery/session/TLS/privacy/retention/mail/deployment/backup/training gates remain.
 
-### Authentication-order test defect — corrected; pre-merge CI verified
-Retain owner-supplied log: 353 tests in 13.113s, one failure at test_roster_assignments.py:196 (302 != 405), system check clean, exit 1; exact run/revision/runtime not supplied. The CSRF client was authenticated but self.client was anonymous, so StaffAuthMiddleware correctly redirected before view dispatch. Fix 83c86a3 checks anonymous/password-only redirects, then MFA-verified 405, retaining CSRF assertions. Application guards unchanged. Later successful checks above supersede pending-retest status, not the failure record; do not reuse 353 as a passing total.
-
-## ASSIGN-01 and ASSIGN-02 — IN_PROGRESS
-Assignment snapshot/student UI and instructor status/feedback are in source. PR #4 merged at f3cc9e2 per the earlier handoff. Students see status only, not feedback or progress controls. Prior assignment after final Confirm, progress persistence after reload and status-only privacy checks are owner-reported, not independently observed/full browser acceptance. Migration 0003 application is unverified. History/reporting and durable review-token concurrency remain separate.
-
-## Other open work and retained attribution
-- Skip-to-content reported nonfunctional on all pages: undiagnosed, not fixed, separate from BUG-003.
-- E08-05 remains IN_PROGRESS. E08-08/BUG-004 and BUG-005 retain earlier owner-report attribution. BUG-005 NumericPasswordValidator restoration after 8e80939 is not independently verified here.
-- Branding/library/document acceptance, file safety/student document authorization, shared-device/identity-switch/back/reset/expiry/revocation/race acceptance and audit/throttling/recovery/approved sessions/TLS/privacy/retention/mail/deployment/backup/training remain open. Python 3.14 unverified; PDF/student file delivery not approved.
-
-## Earlier failures and evidence retained
-- BUG-006: f52a592 run 44667767312 failed; owner-supplied inspected log showed 296 tests, 9 errors, UUID JSON serialization. Fixed ddc000b. Pre-merge checks 44668593439 and 44668981076 independently retrieved successful; no passing total.
-- Progress feedback length: c9b76e2 first CI failed; owner-supplied log, no run ID, 338 tests and 2 failures from one test. Fixed 23a9d2d. Checks 44846492681 and 44846822307 independently retrieved successful; no passing count.
-- Student UI ebdb9ea checks 44834522871 and 44834596308 independently retrieved successful. Older PR #4 head f5ec991 checks 44847456934/44847462963 are retained as previously retrieved evidence from the earlier handoff, not re-retrieved in this update.
-- Earlier owner reports for baseline/main CI, BUG-001/002 and other E05/E08 history remain in linked historical ledgers and VALIDATION.json. No old failure is erased or inferred passing count added.
-
-The author has not executed Django, Ruff, template rendering, browser or PostgreSQL checks; Python syntax/compile checks and retrieved CI are distinct evidence. This documentation-only update performs no deployment, migration, credential/flag action or production approval. Its own future CI is not covered by an earlier pass report.
-
-Prior full snapshot/history links: https://github.com/pavanjains/lms/blob/7a82d695528d1b0db4ea20dda2ca04b82173464d/docs/TICKETS.md
+Prior detailed snapshot/history: https://github.com/pavanjains/lms/blob/6e3dd234417f831acd3a5362cad3adb0e4fb6d84/docs/TICKETS.md
