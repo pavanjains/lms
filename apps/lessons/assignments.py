@@ -9,6 +9,7 @@ from apps.classrooms.models import ClassEnrollment
 from apps.classrooms.policies import visible_classrooms
 from apps.classrooms.services import _lock_actor, _lock_room
 from apps.lessons.models import LESSON_FIELDS, Lesson, LessonAssignment
+from apps.lessons.text_validation import validate_lesson_text
 
 GRADE_NUMBERS = {"PRE_K": -1, "K": 0, **{str(n): n for n in range(1, 9)}}
 PROGRESS_VALUES = {choice.value for choice in LessonAssignment.Progress}
@@ -58,6 +59,7 @@ def create_assignments(*, actor, classroom_id, lesson_id, student_ids, expected_
     if not lesson.is_active or lesson.version != expected_lesson_version:
         raise ValidationError("Lesson changed or was archived. Review before assigning.")
     lesson.full_clean()
+    validate_lesson_text(lesson)
     recipients = list(get_user_model().objects.select_for_update().filter(
         pk__in=student_ids, organization_id=user.organization_id, role="STUDENT",
         is_active=True, is_staff=False, is_superuser=False,
@@ -87,6 +89,7 @@ def create_assignments(*, actor, classroom_id, lesson_id, student_ids, expected_
             lesson=lesson, created_by=user, lesson_version=lesson.version, **snapshot,
         )
         assignment.full_clean()
+        validate_lesson_text(assignment)
         assignment.save()
         assignments.append(assignment)
     return assignments
