@@ -2,7 +2,7 @@
   "schema_version": 2,
   "updated_local_date": "2026-11-22",
   "repository": "pavanjains/lms",
-  "documentation_baseline": "6e3dd234417f831acd3a5362cad3adb0e4fb6d84",
+  "documentation_baseline": "ff2f68c1e67b6a24d3d8a6854f6187b3f89e49b6",
   "roster_assignment": {
     "status": "MERGED_PENDING_BROWSER_ACCEPTANCE",
     "branch": "feature/class-roster-assignments",
@@ -38,186 +38,34 @@
     "passing_test_count": null
   },
   "ci_evidence": [
-    {
-      "run_id": "44846492681",
-      "head_sha_prefix": "23a9d2d",
-      "conclusion": "success",
-      "attribution": "previously independently retrieved; retained from baseline record",
-      "test_count": null
-    },
-    {
-      "run_id": "44846822307",
-      "head_sha_prefix": "23a9d2d",
-      "conclusion": "success",
-      "attribution": "previously independently retrieved; retained from baseline record",
-      "test_count": null
-    },
-    {
-      "run_id": "44834522871",
-      "head_sha_prefix": "ebdb9ea",
-      "conclusion": "success",
-      "attribution": "previously independently retrieved; retained from baseline record",
-      "test_count": null
-    },
-    {
-      "run_id": "44834596308",
-      "head_sha_prefix": "ebdb9ea",
-      "conclusion": "success",
-      "attribution": "previously independently retrieved; retained from baseline record",
-      "test_count": null
-    },
-    {
-      "run_id": "44665321805",
-      "head_sha_prefix": "dddb545",
-      "conclusion": "success",
-      "attribution": "previously independently retrieved; retained from baseline record",
-      "test_count": null
-    },
-    {
-      "run_id": "44668593439",
-      "head_sha_prefix": "ddc000b",
-      "conclusion": "success",
-      "attribution": "previously independently retrieved; retained from baseline record",
-      "test_count": null
-    },
-    {
-      "run_id": "44668981076",
-      "head_sha_prefix": "ddc000b",
-      "conclusion": "success",
-      "attribution": "previously independently retrieved; retained from baseline record",
-      "test_count": null
-    },
-    {
-      "run_id": "44667767312",
-      "context": "f52a592 initial instructor UI",
-      "conclusion": "failure",
-      "attribution": "owner-supplied log inspected",
-      "reported_tests": 296,
-      "reported_errors": 9,
-      "cause": "UUID JSON serialization; fixed ddc000b",
-      "passing_test_count": null
-    },
-    {
-      "run_id": null,
-      "context": "c9b76e2 initial progress CI",
-      "conclusion": "failure",
-      "attribution": "owner-supplied log",
-      "reported_tests": 338,
-      "reported_failures": 2,
-      "cause": "one feedback-length test; fixed 23a9d2d",
-      "passing_test_count": null
-    },
-    {
-      "run_id": "44665898145",
-      "context": "post-PR1 main",
-      "conclusion": "success",
-      "attribution": "owner-reported only",
-      "test_count": null
-    },
-    {
-      "context": "main 0d445e2, 4695e7d, a034438, 5762135, f3cc9e2 and push 248127c",
-      "conclusion": "success",
-      "attribution": "owner-reported only; no retrieved post-merge counts",
-      "test_count": null
-    },
-    {
-      "context": "main 88524ab",
-      "conclusion": "success",
-      "attribution": "owner-reported only",
-      "python_version": null,
-      "test_count": null
-    },
-    {
-      "context": "roster CI log supplied after the 976e755 feature push; exact tested revision not stated",
-      "run_id": null,
-      "head_sha": null,
-      "conclusion": "failure",
-      "attribution": "owner-supplied log inspected 2026-11-22; not independently retrieved",
-      "reported_tests": 353,
-      "reported_failures": 1,
-      "reported_seconds": 13.113,
-      "system_check": "no issues (0 silenced)",
-      "exit_code": 1,
-      "cause": "test_csrf_and_method_guards_apply_to_roster_entry_and_cancel expected anonymous PUT 405; StaffAuthMiddleware correctly returned login redirect 302",
-      "passing_test_count": null,
-      "python_version": null,
-      "database_vendor": null
-    },
-    {
-      "run_id": "45081121549",
-      "check_run_id": "137389292906",
-      "head_sha": "83c86a3776a509350c02df74b4b3dbbb7d026e35",
-      "job": "checks",
-      "conclusion": "success",
-      "attribution": "independently retrieved via PR #5 head checks before merge",
-      "test_count": null
-    },
-    {
-      "run_id": "45081792433",
-      "check_run_id": "137391367330",
-      "head_sha": "83c86a3776a509350c02df74b4b3dbbb7d026e35",
-      "job": "checks",
-      "conclusion": "success",
-      "attribution": "independently retrieved via PR #5 head checks before merge",
-      "test_count": null
-    },
-    {
-      "run_id": "45082944989",
-      "check_run_id": "137394965797",
-      "head_sha": "d2784b90c3826c9a8502aa6ea432167b017768c1",
-      "job": "checks",
-      "conclusion": "success",
-      "attribution": "independently retrieved via PR #6 head checks before merge",
-      "test_count": null
-    },
-    {
-      "run_id": "45083255954",
-      "check_run_id": "137395959713",
-      "head_sha": "d2784b90c3826c9a8502aa6ea432167b017768c1",
-      "job": "checks",
-      "conclusion": "success",
-      "attribution": "independently retrieved via PR #6 head checks before merge",
-      "test_count": null
-    },
-    {
-      "context": "latest main after PR #6 merge, per conversation context; report did not state tested SHA",
-      "reported_local_time": "2026-11-22 18:30 EST",
-      "run_id": null,
-      "head_sha": null,
-      "conclusion": "success",
-      "attribution": "owner-reported only; not independently retrieved",
-      "python_version": null,
-      "test_count": null
-    },
-    {
-      "context": "CI pass reported after documentation commit 6e3dd23; association by conversation, exact tested SHA not supplied",
-      "reported_local_time": "2026-11-22 18:38 EST",
-      "run_id": null,
-      "head_sha": null,
-      "conclusion": "success",
-      "attribution": "owner-reported only; not independently retrieved",
-      "python_version": null,
-      "test_count": null
-    }
+    {"run_id":"44846492681","head_sha_prefix":"23a9d2d","conclusion":"success","attribution":"previously independently retrieved; retained from baseline record","test_count":null},
+    {"run_id":"44846822307","head_sha_prefix":"23a9d2d","conclusion":"success","attribution":"previously independently retrieved; retained from baseline record","test_count":null},
+    {"run_id":"44834522871","head_sha_prefix":"ebdb9ea","conclusion":"success","attribution":"previously independently retrieved; retained from baseline record","test_count":null},
+    {"run_id":"44834596308","head_sha_prefix":"ebdb9ea","conclusion":"success","attribution":"previously independently retrieved; retained from baseline record","test_count":null},
+    {"run_id":"44665321805","head_sha_prefix":"dddb545","conclusion":"success","attribution":"previously independently retrieved; retained from baseline record","test_count":null},
+    {"run_id":"44668593439","head_sha_prefix":"ddc000b","conclusion":"success","attribution":"previously independently retrieved; retained from baseline record","test_count":null},
+    {"run_id":"44668981076","head_sha_prefix":"ddc000b","conclusion":"success","attribution":"previously independently retrieved; retained from baseline record","test_count":null},
+    {"run_id":"44667767312","context":"f52a592 initial instructor UI","conclusion":"failure","attribution":"owner-supplied log inspected","reported_tests":296,"reported_errors":9,"cause":"UUID JSON serialization; fixed ddc000b","passing_test_count":null},
+    {"run_id":null,"context":"c9b76e2 initial progress CI","conclusion":"failure","attribution":"owner-supplied log","reported_tests":338,"reported_failures":2,"cause":"one feedback-length test; fixed 23a9d2d","passing_test_count":null},
+    {"run_id":"44665898145","context":"post-PR1 main","conclusion":"success","attribution":"owner-reported only","test_count":null},
+    {"context":"main 0d445e2, 4695e7d, a034438, 5762135, f3cc9e2 and push 248127c","conclusion":"success","attribution":"owner-reported only; no retrieved post-merge counts","test_count":null},
+    {"context":"main 88524ab","conclusion":"success","attribution":"owner-reported only","python_version":null,"test_count":null},
+    {"context":"roster CI log supplied after the 976e755 feature push; exact tested revision not stated","run_id":null,"head_sha":null,"conclusion":"failure","attribution":"owner-supplied log inspected 2026-11-22; not independently retrieved","reported_tests":353,"reported_failures":1,"reported_seconds":13.113,"system_check":"no issues (0 silenced)","exit_code":1,"cause":"test_csrf_and_method_guards_apply_to_roster_entry_and_cancel expected anonymous PUT 405; StaffAuthMiddleware correctly returned login redirect 302","passing_test_count":null,"python_version":null,"database_vendor":null},
+    {"run_id":"45081121549","check_run_id":"137389292906","head_sha":"83c86a3776a509350c02df74b4b3dbbb7d026e35","job":"checks","conclusion":"success","attribution":"independently retrieved via PR #5 head checks before merge","test_count":null},
+    {"run_id":"45081792433","check_run_id":"137391367330","head_sha":"83c86a3776a509350c02df74b4b3dbbb7d026e35","job":"checks","conclusion":"success","attribution":"independently retrieved via PR #5 head checks before merge","test_count":null},
+    {"run_id":"45082944989","check_run_id":"137394965797","head_sha":"d2784b90c3826c9a8502aa6ea432167b017768c1","job":"checks","conclusion":"success","attribution":"independently retrieved via PR #6 head checks before merge","test_count":null},
+    {"run_id":"45083255954","check_run_id":"137395959713","head_sha":"d2784b90c3826c9a8502aa6ea432167b017768c1","job":"checks","conclusion":"success","attribution":"independently retrieved via PR #6 head checks before merge","test_count":null},
+    {"context":"latest main after PR #6 merge, per conversation context; report did not state tested SHA","reported_local_time":"2026-11-22 18:30 EST","run_id":null,"head_sha":null,"conclusion":"success","attribution":"owner-reported only; not independently retrieved","python_version":null,"test_count":null},
+    {"context":"CI pass reported after documentation commit 6e3dd23; association by conversation, exact tested SHA not supplied","reported_local_time":"2026-11-22 18:38 EST","run_id":null,"head_sha":null,"conclusion":"success","attribution":"owner-reported only; not independently retrieved","python_version":null,"test_count":null},
+    {"run_id":"45085015833","check_run_id":"137401537678","head_sha":"319b98062af2b9ffb4d6eb33c03af2ed0bff43cd","job":"checks","conclusion":"success","attribution":"independently retrieved via PR #7 head checks before merge","test_count":null},
+    {"run_id":"45085254574","check_run_id":"137402286209","head_sha":"319b98062af2b9ffb4d6eb33c03af2ed0bff43cd","job":"checks","conclusion":"success","attribution":"independently retrieved via PR #7 head checks before merge","test_count":null},
+    {"context":"merge CI pass reported after PR #7; associated with latest main by conversation, exact tested SHA not supplied","reported_local_time":"2026-11-22 19:24 EST","run_id":null,"head_sha":null,"conclusion":"success","attribution":"owner-reported only; not independently retrieved","python_version":null,"test_count":null}
   ],
   "browser_acceptance": {
     "status": "PARTIAL_OWNER_REPORTED_NOT_INDEPENDENTLY_VERIFIED",
-    "owner_reported": [
-      "assignment after final Confirm",
-      "staff progress persistence after reload",
-      "student status only, no feedback or progress controls"
-    ],
-    "pending": [
-      "stale update",
-      "A/B isolation",
-      "identity-switch back/reload",
-      "reset/expiry/revocation",
-      "new roster flow",
-      "BUG-003 onboarding browser checklist",
-      "skip-link focus/next-Tab/outline/no-JavaScript/browser acceptance",
-      "broader browser acceptance"
-    ],
-    "reported_defect": "skip-to-content nonfunctional on all pages per owner; source focusability fix authored on fix/skip-to-content, browser cause/acceptance not independently reproduced"
+    "owner_reported": ["assignment after final Confirm", "staff progress persistence after reload", "student status only, no feedback or progress controls"],
+    "pending": ["stale update", "A/B isolation", "identity-switch back/reload", "reset/expiry/revocation", "new roster flow", "BUG-003 onboarding browser checklist", "skip-link focus/next-Tab/outline/no-JavaScript/browser acceptance", "broader browser acceptance"],
+    "reported_defect": "skip-to-content nonfunctional on all pages per owner; source focusability fix merged PR #7, browser cause/acceptance not independently reproduced"
   },
   "assignment_review_session_concurrency": "PENDING; no durable exactly-once token store",
   "runtime_deployment_migration": "UNVERIFIED; migration 0003 is on main; do not infer application from source, CI or browser reports",
@@ -225,7 +73,7 @@
   "production_readiness": "NOT APPROVED",
   "historical_evidence": {
     "source": "https://github.com/pavanjains/lms/blob/88524ab8788fc61b72c2a4d8ff19ccbdee38d159/docs/VALIDATION.json",
-    "previous_snapshot": "https://github.com/pavanjains/lms/blob/6e3dd234417f831acd3a5362cad3adb0e4fb6d84/docs/VALIDATION.json",
+    "previous_snapshot": "https://github.com/pavanjains/lms/blob/ff2f68c1e67b6a24d3d8a6854f6187b3f89e49b6/docs/VALIDATION.json",
     "preserve_as_history": true,
     "note": "Historical records include earlier PR heads/full SHAs, merge evidence, CI attribution and the original 24-file syntax snapshot; no earlier failure is replaced by a passing count. Earlier handoff preserves PR #4 f5ec991 checks 44847456934/44847462963 as previously independently retrieved, not re-retrieved in this update."
   },
@@ -271,9 +119,13 @@
     "tests_run_by_author_for_this_docs_update": false
   },
   "skip_link": {
-    "status": "FIX_AUTHORED_PENDING_CI_AND_BROWSER",
+    "status": "MERGED_PENDING_BROWSER_ACCEPTANCE",
     "branch": "fix/skip-to-content",
     "baseline": "6e3dd234417f831acd3a5362cad3adb0e4fb6d84",
+    "pr": 7,
+    "merge_sha": "ff2f68c1e67b6a24d3d8a6854f6187b3f89e49b6",
+    "guarded_head_sha": "319b98062af2b9ffb4d6eb33c03af2ed0bff43cd",
+    "merge_attribution": "GitHub connector merge success and main ref independently retrieved",
     "reported_symptom": "owner says Skip to content does nothing on all pages",
     "source_finding": "matching href #main and main id existed; target lacked tabindex and focus indicator",
     "browser_root_cause_independently_reproduced": false,
@@ -285,8 +137,28 @@
     "ruff_run_by_author": false,
     "template_rendering_run_by_author": false,
     "browser_focus_next_tab_visual_and_assistive_technology": "NOT RUN; procedures in docs/SKIP_LINK.md",
-    "ci": "PENDING",
+    "ci": "PREMERGE_VERIFIED_SUCCESS: 45085015833 and 45085254574",
+    "post_merge_ci": "owner-reported merge CI passed 2026-11-22 19:24 EST; run/tested SHA/runtime/count unknown, not independently retrieved",
     "passing_test_count": null,
     "authorization_session_csrf_routes_forms_credentials_flags_database_changed": false
+  },
+  "lesson_text_validation": {
+    "status": "HARDENING_AUTHORED_PENDING_CI",
+    "branch": "fix/lesson-text-validation",
+    "baseline": "ff2f68c1e67b6a24d3d8a6854f6187b3f89e49b6",
+    "source_finding": "summary/instructions TextField max_length declared; create/edit/assignment services relied on full_clean without explicit text-bound helper",
+    "observed_baseline_failure_or_production_oversized_write": false,
+    "change": "shared model-metadata MaxLengthValidator after normal cleaning before lesson create/edit saves and assignment source/snapshot writes; field errors, no truncation",
+    "summary_characters": 2000,
+    "instructions_characters": 20000,
+    "authored_test_methods": 12,
+    "new_helper_and_test_module_syntax_compile_checked_by_author": true,
+    "django_tests_run_by_author": false,
+    "ruff_run_by_author": false,
+    "migration_drift_or_postgresql_tests_run_by_author": false,
+    "ci": "PENDING",
+    "passing_test_count": null,
+    "model_schema_migration_authorization_feedback_cancel_progress_archive_changed": false,
+    "existing_data_scanned_repaired_or_truncated": false
   }
 }

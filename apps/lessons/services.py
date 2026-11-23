@@ -5,6 +5,7 @@ from django.db.models import Q
 from apps.classrooms.policies import current_staff
 from apps.classrooms.services import _lock_actor
 from apps.lessons.models import LESSON_FIELDS, Lesson
+from apps.lessons.text_validation import validate_lesson_text
 
 
 def visible_lessons(actor):
@@ -42,6 +43,7 @@ def create_lesson(*, actor, **details):
     user = _lock_actor(actor)
     lesson = Lesson(organization_id=user.organization_id, created_by=user, **checked_details(details))
     lesson.full_clean()
+    validate_lesson_text(lesson)
     lesson.save()
     return lesson
 
@@ -56,6 +58,7 @@ def update_lesson(*, actor, lesson_id, expected_version, **details):
         setattr(lesson, name, value)
     lesson.version += 1
     lesson.full_clean()
+    validate_lesson_text(lesson)
     lesson.save()
     return lesson
 

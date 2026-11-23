@@ -1,30 +1,30 @@
-# LESSON-01 staff lesson library
+# LESSON-01 staff lesson library and text validation
 
-Status REVIEW: code/tests authored, not run here. CI, migration/drift, PostgreSQL edit races and browser acceptance pending. Adds apps/lessons and initial Lesson migration. No seeded lessons or copied LEGO content.
+Updated 2026-11-22 for fix/lesson-text-validation, baseline main ff2f68c1e67b6a24d3d8a6854f6187b3f89e49b6. Validation hardening is authored, CI pending; no production approval. Earlier library increment notes are historical, not a new verification report.
 
-## Workflow
-Verified staff open /staff/lessons/ from workspace, create a lesson with title, summary, instructions, official LEGO Education HTTPS link, kit and grade range, confirm and save. Active lessons shared with active staff in same organization, regardless of class membership. Creator/owner only may edit/archive. Archived records retained and visible to creator/owner; no reactivation/delete. No publication/review workflow or documents/assignments/student access yet.
+## Existing workflow retained
+MFA-verified active staff use /staff/lessons/ to create confirmed lessons with title, summary, instructions, official HTTPS LEGO Education URL, kit and grade range. Active lessons are shared within the organization; creator/owner edit or archive. Archived records are retained, visible to creator/owner; no reactivation/delete workflow. Search/filter/pagination and escaping remain. Essential supports Pre-K/K through Grade4, Prime Grades4-8, Grade4 either kit. Library grades -1/0/1-8 map to student profile strings in assignment services. One kit per lesson; no automatic kit assignment.
 
-Essential supports Pre-K/Kindergarten through Grade 4 within this center's existing grade vocabulary; Prime supports Grades 4–8. Grade 4 may use either kit. One kit per lesson record; create distinct kit-specific variants where appropriate. No automatic kit selection, assignment or class kit restriction. Library grade integers -1=Pre-K/0=K/1–8 differ from student profile strings; conversion/compatibility enforced in future assignment service.
+URL validation permits only HTTPS education.lego.com, default/443 port and no embedded credentials. No server fetch/scraping/availability or educational-suitability claim. Test URLs are synthetic. Staff must review real content; text is escaped, not raw HTML. Organization/MFA/current actor, editable-field whitelist, ownership, row locks and expected-version checks remain. No durable revision/audit history. Raw ORM/update/bulk bypass is not a supported authorized write path. Later staff documents, explicit snapshot assignments, student own-assignment pages, staff status/feedback and roster entry exist; original missing-feature statements are superseded by current tracking.
 
-## Validation/security
-Only HTTPS education.lego.com, default/443 port, no embedded credentials. No external server fetch, scraping, embedding, metadata preview or availability/suitability guarantee. Instructor must choose/review actual content. Test link paths are synthetic and not verified lessons. External link opens with noopener/noreferrer, text escaped; raw HTML not supported. Invalid privileged-ORM links not rendered clickable in detail. No student personal data in organization-shared library.
+## Text-boundary hardening
+The service helper validate_lesson_text reads each instance's declared model max_length: summary2000 characters, instructions20000 for both Lesson and LessonAssignment. It raises field-keyed ValidationError entries using MaxLengthValidator; it does not truncate or mutate content. Blank summary remains allowed; blank instructions remain rejected by existing model cleaning.
 
-Services recheck active actor/MFA/org and whitelist editable fields; organization/creator/active/version cannot be posted as editable content. Organization then lesson row locks serialize cooperating services. Version token rejects stale edit/archive; no durable revision history/audit introduced. Future assignment behavior must decide snapshot/version retention before exposure. Database enforces kit/grade ranges and nonempty title/version; model full_clean handles text/URL/creator semantics. Raw ORM/update/bulk bypass remains privileged. Duplicate titles allowed for lesson variants.
+create_lesson and update_lesson run the helper after full_clean and before save. create_assignments revalidates the source and each snapshot after normal cleaning and before insertion. Existing instruction strip behavior is retained, summary whitespace is retained, and length counts Python string characters rather than encoded bytes. Invalid edits must leave stored content/version/timestamp unchanged; any snapshot failure must roll back the entire assignment batch. HTTP forms/messages, title/URL rules, feedback validation, cancellation/progress/archive behavior and authorization are not changed.
 
-Search title/summary, filter grade inclusive/kit/status; pagination 20 preserves filters. Invalid filters return 400. Student routes cannot browse this library. Existing staff gate remains off by default; student feature unaffected. No upload endpoint, document access, assignment, completion/submission or feedback control.
+No model fields, migration or DB constraints are added. Existing data is not scanned, repaired or truncated; raw ORM bypass remains possible. Reassignment from an oversized source is rejected until that source is valid. This is service-path enforcement, not a blanket database or model-only guarantee. No observed new production defect or baseline failing run is claimed; the earlier feedback-length failure motivated this source-audited hardening.
 
-## Verify after commit
+## Verification — NOT RUN except new-module syntax
+Twelve authored methods in apps/lessons/test_text_validation.py cover create/edit exact and over-limit values, unchanged rejected-edit data/version/timestamp, boundary snapshots, oversized source rejection, second-snapshot rollback, field errors/model limits, whitespace/blank summary, Unicode and authorization guards. New helper/test modules syntax/compile checked only. Django/Ruff/migration-drift/PostgreSQL/browser checks NOT RUN by author; CI pending, no passing count. Existing tests retained.
+
+Use only an isolated test environment; preserve local data/changes and do not rerun bootstrap or apply migrations as part of this no-schema change.
+
 ```sh
-python manage.py check
-python manage.py makemigrations --check --dry-run
-python manage.py migrate --plan
-python manage.py migrate
-python manage.py test apps.lessons --settings=config.settings.ci
-python manage.py test --settings=config.settings.ci
 ruff check .
+python manage.py check --settings=config.settings.ci
+python manage.py makemigrations --check --dry-run --settings=config.settings.ci
+python manage.py test apps.lessons.test_text_validation apps.lessons.tests apps.lessons.test_assignments apps.lessons.test_assignment_views apps.lessons.test_assignment_progress --settings=config.settings.ci --verbosity=2
+python manage.py test --settings=config.settings.ci --verbosity=2
 ```
 
-Local synthetic browser acceptance: owner/instructor with MFA creates Essential/Prime Grade 4 lessons; both match grade filter, kit filter separates them. Essential Grade 5/Prime Grade 3 and unsafe links rejected. Peer can read active lesson but not edit/archive; owner can manage either. Creator archives, peer loses visibility, record remains. Different organization/student denied. Stale edit token rejected, GET/cancel/unconfirmed POST never changes records, CSRF works, instructions render escaped. Verify real URL manually; do not claim test path resolves. Record actual revision/environment/results separately.
-
-Next increments: protected supporting-document storage/download, then assignments with grade/kit/history decisions, instructor progress/feedback and read-only student lesson workspace. Existing account/shared-device and production gates remain open.
+Browser, concurrency, document safety, logging, privacy, deployment and other existing release gates remain open. Prior guide/history: https://github.com/pavanjains/lms/blob/ff2f68c1e67b6a24d3d8a6854f6187b3f89e49b6/docs/LESSON_LIBRARY.md
