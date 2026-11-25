@@ -10,3 +10,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 LMS_INSTRUCTOR_ONBOARDING_ENABLED = os.environ.get("LMS_INSTRUCTOR_ONBOARDING_ENABLED", "false").lower() == "true"
 LMS_PUBLIC_ORIGIN = os.environ.get("LMS_PUBLIC_ORIGIN", "http://localhost:8000")
 LMS_INVITATION_FROM_EMAIL = os.environ.get("LMS_INVITATION_FROM_EMAIL", "noreply@example.test")
+# Local-only MFA policy controls. All default to off; production refuses to start if they are set.
+LMS_DEPLOYMENT_MODE = os.environ.get("LMS_DEPLOYMENT_MODE", "production")
+LMS_LOCAL_MFA_POLICY_ENABLED = os.environ.get("LMS_LOCAL_MFA_POLICY_ENABLED", "false").lower() == "true"
+LMS_INSTALLATION_ADMIN_USERNAME = os.environ.get("LMS_INSTALLATION_ADMIN_USERNAME", "")

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Installation MFA policy{% endblock %}
+{% block content %}
+<h1>Installation security settings</h1>
+<p><a href="{% url 'owner-accounts:instructors' %}">Back to owner page</a></p>
+{% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+{% if mode == "select" %}
+  {% include "accounts/_mfa_policy_selection.html" %}
+{% elif mode == "review" %}
+<h2>Review change for every organization</h2>
+<p>Current saved policy: {% if mfa_policy.require_mfa %}MFA required{% else %}MFA not required{% endif %}.</p>
+<p>Proposed policy: {% if desired_required %}Require MFA{% else %}Do not require MFA (password-only sign-in){% endif %} for every owner and instructor in the installation.</p>
+<p>Nothing has changed yet. Confirm within five minutes; a newer review replaces this one. Authenticators are not deleted.</p>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="confirm">{{ mfa_confirm_form.as_p }}<button type="submit">Confirm global MFA policy</button></form>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="cancel"><button type="submit">Cancel without changing policy</button></form>
+{% elif mode == "confirm-error" %}
+<div role="alert">The policy was not changed. {{ mfa_confirm_form.errors }}</div>
+<form method="post">{% csrf_token %}<input type="hidden" name="action" value="confirm">{{ mfa_confirm_form.as_p }}<button type="submit">Confirm global MFA policy</button></form>
+{% else %}
+<div role="alert">{{ error }}</div>
+<p><a href="{% url 'owner-accounts:mfa-policy' %}">Reload policy</a></p>
+{% endif %}
+{% endblock %}
