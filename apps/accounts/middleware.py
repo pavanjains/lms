@@ -8,6 +8,7 @@ from django.utils.deprecation import MiddlewareMixin
 from two_factor.utils import default_device
 
 from apps.accounts.backends import is_active_staff
+from apps.accounts.mfa_policy import relax_verification
 
 
 def staff_path(path):
@@ -18,6 +19,8 @@ class StaffAuthMiddleware(MiddlewareMixin):
     """Keep first-factor enrollment sessions out of all staff business pages."""
 
     def process_view(self, request, view_func, view_args, view_kwargs):
+        # Local-only: with the installation policy off, password-only staff count as verified.
+        relax_verification(request)
         if not staff_path(request.path_info):
             return None
         if not settings.LMS_STAFF_AUTH_ENABLED:

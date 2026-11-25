@@ -1,0 +1,16 @@
+{% if mfa_selection_form %}
+<section aria-labelledby="global-mfa-heading">
+<h2 id="global-mfa-heading">Installation-wide MFA policy</h2>
+<p>Applies to owners and instructors in every organization. Local installations only; production always requires MFA.</p>
+<p>Saved policy: {% if mfa_policy.require_mfa %}MFA required{% else %}MFA not required (password-only staff sign-in){% endif %}. Version {{ mfa_policy.version }}.</p>
+<form method="post" action="{% url 'owner-accounts:mfa-policy' %}">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="review">
+  {{ mfa_selection_form.as_p }}
+  <p>Changing this requires your current password and a separate confirmation. Existing authenticators and recovery codes are kept. Turning MFA back on makes password-only sessions verify again.</p>
+  <button type="submit">Review global MFA change</button>
+</form>
+</section>
+{% elif mfa_policy_unavailable %}
+<p role="alert">Installation MFA policy unavailable. Review migration status.</p>
+{% endif %}

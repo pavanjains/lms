@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% load mfa_policy_tags %}
 {% block content %}
 <h1>Instructors and invitations</h1>
 <p><a href="{% url 'staff-home' %}">Back to staff workspace</a></p>
 <p><a href="{% url 'owner-accounts:invite' %}">Invite instructor</a></p>
 {% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+{% mfa_policy_panel %}
 <form method="get">
   <label for="search">Search names or email</label>
   <input id="search" name="q" value="{{ search }}" maxlength="100">
