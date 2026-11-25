@@ -41,6 +41,9 @@ class MfaPolicyEnforcementTests(TestCase):
         InstallationMfaPolicy.objects.filter(pk=1).update(require_mfa=required)
 
     def password_only(self, user):
+        # force_login keeps session data when the same user is already signed in,
+        # so start from a clean client to avoid carrying over an OTP device key.
+        self.client.logout()
         self.client.force_login(user, backend=STAFF_BACKEND)
 
     def verified(self, user):
