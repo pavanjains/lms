@@ -10,6 +10,7 @@ from apps.accounts.students import SEEN, STARTED, STUDENT_BACKEND
 from apps.organizations.models import Organization
 
 STAFF_BACKEND = "apps.accounts.backends.StaffEmailBackend"
+CURRENT_HOME_LINK = '<a href="/" aria-current="page">Home</a>'
 
 
 @override_settings(DEBUG=False, LMS_STAFF_AUTH_ENABLED=True, LMS_STUDENT_AUTH_ENABLED=True)
@@ -55,12 +56,14 @@ class HomeNavigationTests(TestCase):
                 self.assertIn(b'href="/"', response.content)
 
     def test_home_tab_is_marked_current_only_on_home(self):
-        self.assertContains(self.client.get(reverse("home")), 'aria-current="page"', count=1)
-        self.assertNotContains(self.client.get(reverse("student-login")), 'aria-current="page"')
+        self.assertContains(self.client.get(reverse("home")), CURRENT_HOME_LINK, count=1)
+        self.assertNotContains(self.client.get(reverse("student-login")), CURRENT_HOME_LINK)
+        self.assertNotContains(self.client.get(reverse("two_factor:login")), CURRENT_HOME_LINK)
 
     def test_base_template_renders_without_a_request(self):
         html = render_to_string("base.html")
         self.assertIn('href="/"', html)
+        self.assertNotIn(CURRENT_HOME_LINK, html)
         self.assertNotIn("My workspace", html)
         self.assertNotIn("<script", html)
 
