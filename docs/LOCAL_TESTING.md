@@ -1,6 +1,6 @@
 # Local testing guide
 
-Updated: 2026-11-20. Written against main 4695e7d510aa6811b27738725feeb95c4c787104 (PR #3 merge), which includes the student assignment pages; their browser and concurrency acceptance is pending. These are procedures and expected results, NOT a report that they were executed. Use synthetic people, credentials, lessons and files only. Do not use production/staging databases or real student data.
+Updated: 2026-11-20; section 3a and two troubleshooting entries added 2026-11-25 against main 70ce95d (PR #9 merge). Written against main 4695e7d510aa6811b27738725feeb95c4c787104 (PR #3 merge), which includes the student assignment pages; their browser and concurrency acceptance is pending. These are procedures and expected results, NOT a report that they were executed. Use synthetic people, credentials, lessons and files only. Do not use production/staging databases or real student data.
 
 ## 1. Prerequisites and checkout
 Python 3.12, Docker Compose and a POSIX-compatible shell. PostgreSQL 16 matches compose.yaml and CI. Windows users may use WSL or translate activation/environment syntax; these shell examples are not PowerShell commands. Do not reuse an unverified Python 3.14 virtual environment. Preserve local changes before switching branches.
@@ -81,11 +81,70 @@ python manage.py bootstrap_owner --organization "Synthetic Local Center" --usern
 python manage.py runserver localhost:8000 --settings=config.settings.development
 ```
 
-Bootstrap prompts privately for a password and applies validators. It is for initial installation, not account recovery; if it refuses an existing nonmatching installation, investigate rather than deleting records. Do not pass passwords on command lines or use createsuperuser.
+Bootstrap prompts privately for a password and applies validators. It is for initial installation, not account recovery; if it refuses an existing nonmatching installation, investigate rather than deleting records. Do not pass passwords on command lines or use createsuperuser. On an installation that already has an organization, skip the bootstrap command; it will refuse and must not be rerun.
 
-Use http://localhost:8000 consistently for this trial. Visit /account/login/, use the synthetic owner email, enroll an authenticator, verify MFA, and store synthetic recovery codes privately. No remembered-browser bypass or MFA-disable workaround. Keep the test device clock synchronized. Open /staff/ after MFA and confirm Stembotic branding.
+Use http://localhost:8000 consistently for this trial (section 3a covers using another computer). Visit /account/login/, use the synthetic owner email, enroll an authenticator, verify MFA, and store synthetic recovery codes privately. Staff MFA is mandatory by default; the only supported way to relax it is the local-only installation policy in section 3a. Keep the test device clock synchronized. Open /staff/ after MFA and confirm Stembotic branding.
 
 Development mail prints invitation links in the server console. Treat that output and activation URLs as sensitive: do not attach them to CI logs/tickets. No real emails or accounts. Onboarding is gated independently; enabling staff auth alone does not enable invitations.
+
+## 3a. Local mode: MFA policy checkbox and LAN access
+These steps are for a trusted local or classroom machine only. They use plain HTTP and the Django development server, are not a deployment procedure, and must not be used with production data or real students. Recorded results: the owner reported that the checkbox appeared once the variables below were exported in the shell that starts the server, and that staff sign-in, student sign-in and lesson creation worked from a second computer using the LAN settings below. Password-only sign-in with the policy off, re-enabling MFA, the audit record and the optional CSRF/origin behavior have not been reported as browser-tested.
+
+### Local-mode variables
+Django does not read .env by itself, so export these in the same shell that runs the server and restart after any change.
+
+```sh
+export DJANGO_SETTINGS_MODULE=config.settings.development
+export LMS_STAFF_AUTH_ENABLED=true
+export LMS_STUDENT_AUTH_ENABLED=true
+export LMS_DEPLOYMENT_MODE=local
+export LMS_LOCAL_MFA_POLICY_ENABLED=true
+export LMS_INSTALLATION_ADMIN_USERNAME=<owner-username>
+```
+
+| Variable | Value | Purpose |
+|---|---|---|
+| LMS_DEPLOYMENT_MODE | local | Allows the local-only policy controls. Anything else behaves as production. |
+| LMS_LOCAL_MFA_POLICY_ENABLED | true | Turns the checkbox and its enforcement on. Default is off. |
+| LMS_INSTALLATION_ADMIN_USERNAME | exact username of an active OWNER | Only this account can change the installation-wide policy. Blank disables the control. Other owners cannot see or change it. |
+| LMS_STAFF_AUTH_ENABLED | true | Required for staff pages and the policy. |
+| LMS_STUDENT_AUTH_ENABLED | true | Enables student sign-in at /students/login/. |
+
+Apply the migration once to the reviewed local database, then start the server:
+
+```sh
+python manage.py migrate --plan
+# Writes schema: creates the policy and audit tables (accounts 0003_installation_mfa_policy), seeded with MFA required.
+python manage.py migrate --noinput
+python manage.py runserver localhost:8000 --settings=config.settings.development
+```
+
+This accounts migration is separate from the lessons assignment-progress migration. Do not rerun bootstrap_owner on an existing installation.
+
+### Using the checkbox
+1. Sign in as the installation administrator with MFA while MFA is still required.
+2. Open http://localhost:8000/staff/owner/instructors/. The panel "Installation-wide MFA policy" shows the saved policy and version. The same control is also at /staff/owner/security/mfa/.
+3. Change the box labelled "Require MFA for all staff in every organization" and press Review. Nothing is saved yet.
+4. Enter your current password, tick the confirmation and confirm within five minutes. A newer review replaces an older one.
+
+Expected behavior:
+- The default and the production behavior is MFA required. The stored policy has no effect unless all local variables above are set.
+- With the policy off, active owners and instructors in every organization can sign in with email and password only, and the OTP step is skipped. Students never gain staff access.
+- Existing authenticators and recovery codes are kept. Turning the policy back on makes any password-only session verify again, and existing authenticators work normally.
+- Each change writes an audit record with the previous and new value, version and actor username.
+- production settings refuse to start if these local variables are set. Do not set them outside a trusted local machine.
+
+### Using another computer on the LAN
+One server computer runs the app. Staff and student computers use a browser. On the server computer find its LAN address (for example 192.168.1.50), export the extra host, and bind to all interfaces:
+
+```sh
+export DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,<server-lan-ip>
+python manage.py runserver 0.0.0.0:8000 --settings=config.settings.development
+```
+
+On other computers open http://<server-lan-ip>:8000/staff/ for staff and http://<server-lan-ip>:8000/students/login/ for students. Use the same address for the whole session. Allow inbound TCP 8000 from your LAN in the server computer's firewall, and close it again afterward. Use a trusted network only: traffic and cookies are plain HTTP, and the development server is not hardened. PowerShell users translate the exports to $env:NAME="value"; that translation has not been tested.
+
+Known limits: LMS_PUBLIC_ORIGIN accepts plain HTTP only for localhost, 127.0.0.1 and ::1, so invitation links still carry a localhost address and the host part must be replaced by hand on another computer (not tested). There is no separate network zone for staff and student routes; anyone on the LAN can reach both sets of pages.
 
 ## 4. Synthetic fixture through supported screens
 1. Owner opens instructor management and invites two synthetic instructors. For a negative-access trial, optionally create a third instructor not assigned to the test class. Activate accounts through console-delivered links, then complete their staff MFA setup in separate browser profiles. Instructor invitation/activation does not assign classes automatically.
@@ -131,8 +190,10 @@ Current limits: 5 MiB/file,20 active/lesson,100 MiB/org including archived bytes
 
 ## 8. Troubleshooting without bypassing controls
 - Staff/student/onboarding 404: verify the relevant gate and development settings, then restart.
-- Staff redirect after password: complete MFA; do not remove the guard.
-- CSRF 403: use one loopback origin, rendered form token, current cookies and same-origin referrer behavior. Do not exempt views. Historical no-referrer onboarding wording predates its CSRF fix.
+- Staff redirect after password: complete MFA; do not remove the guard. If the local policy (section 3a) is intentionally off, confirm the local variables are exported in the server's shell.
+- MFA checkbox missing: confirm LMS_DEPLOYMENT_MODE=local, LMS_LOCAL_MFA_POLICY_ENABLED=true, LMS_STAFF_AUTH_ENABLED=true and LMS_INSTALLATION_ADMIN_USERNAME exported in the same shell as runserver (a .env file alone is not read), the server restarted, the accounts migration applied, and that you are signed in as exactly that owner with MFA. /staff/owner/security/mfa/ returns 404 when the flags are off, 403 for another account and 503 when the migration is missing.
+- Another computer cannot connect or shows an invalid host error: add the server's LAN address to DJANGO_ALLOWED_HOSTS, bind runserver to 0.0.0.0:8000, open TCP 8000 in the firewall and use the same address throughout.
+- CSRF 403: use one origin, rendered form token, current cookies and same-origin referrer behavior. Do not exempt views. The server console logs the specific CSRF reason; record it. Historical no-referrer onboarding wording predates its CSRF fix.
 - No classes/students: verify active organization/class, instructor membership and enrollment; existing students are shared through class scope, not creator ownership.
 - Review serialization TypeError involving UUID: ensure checkout includes BUG-006 ddc000b or merged main 92ed0ab. Org IDs must be strings inside JSON review tokens and compared consistently. Preserve all token/authority checks.
 - Stale review: select and review again; do not edit hidden expected-version fields.
@@ -141,7 +202,7 @@ Current limits: 5 MiB/file,20 active/lesson,100 MiB/org including archived bytes
 ## 9. Evidence and cleanup
 Record: UTC/local timestamp, git SHA/branch, OS/Python/PostgreSQL/settings, test command, exit status, verbatim summary/skips and each browser case as PASS/FAIL/NOT RUN/BLOCKED. Mark evidence as independently retrieved, owner-reported, supplied log inspected, local command executed or procedure-only. Redact passwords, cookies, OTP secrets, recovery codes and invitation/review tokens.
 
-No browser acceptance is claimed by this document. Do not change pending to passed without observed evidence. Sign out all profiles, disable local gates when finished and stop the server. docker compose stop db stops the local container without intentionally deleting its volume. Do not use down -v or production reset/delete commands as routine cleanup.
+No browser acceptance is claimed by this document. Do not change pending to passed without observed evidence. Sign out all profiles, disable local gates when finished (unset the section 3a variables and close the firewall port) and stop the server. docker compose stop db stops the local container without intentionally deleting its volume. Do not use down -v or production reset/delete commands as routine cleanup.
 
 ## 10. Documentation maintenance
 Every implementation/fix commit must update ACTION_PLAN.md, TICKETS.md and IMPLEMENTATION_STATUS.md and any affected current feature/testing/setup/decision docs. Update VALIDATION.json only with attributed evidence. Keep earlier failure history. Update the documentation index when adding or superseding a guide. This policy is applied with changes; it is not an unattended synchronization service.
