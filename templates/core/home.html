@@ -1,5 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Robotics Learning Center</h1>
-<p>Development foundation. Classroom features are not enabled yet.</p>
+<p class="lead">Welcome to Stembotic. Choose how you want to sign in.</p>
+{% if workspace_url %}
+<p role="status">You are already signed in. <a href="{{ workspace_url }}">Continue to your workspace</a>.</p>
+{% else %}
+<ul class="cards">
+  <li class="card tone-amber">
+    <h2>Owner</h2>
+    <p>Manage instructors, classes and students for your center.</p>
+    {% if staff_login_enabled %}<a class="button-link" href="{% url 'two_factor:login' %}">Owner sign in</a>{% else %}<p class="note">Staff sign-in is not enabled on this installation.</p>{% endif %}
+  </li>
+  <li class="card tone-teal">
+    <h2>Instructor</h2>
+    <p>Build lessons and assign them to the students in your classes.</p>
+    {% if staff_login_enabled %}<a class="button-link" href="{% url 'two_factor:login' %}">Instructor sign in</a>{% else %}<p class="note">Staff sign-in is not enabled on this installation.</p>{% endif %}
+  </li>
+  <li class="card tone-violet">
+    <h2>Student</h2>
+    <p>See the lessons your instructor has assigned to you.</p>
+    {% if student_login_enabled %}<a class="button-link" href="{% url 'student-login' %}">Student sign in</a>{% else %}<p class="note">Student sign-in is not enabled on this installation.</p>{% endif %}
+  </li>
+</ul>
+<p>Owners and instructors sign in with their email address and password, then enter an authenticator code when the center requires one. Students sign in with the username and password from their instructor.</p>
+{% endif %}
 {% endblock %}
