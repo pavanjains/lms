@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Student manual{% endblock %}
+{% block content %}
+<h1>Student manual</h1>
+<p class="lead">How to sign in, find your lessons and stay safe.</p>
+<nav class="help-contents" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#student-sign-in">Signing in</a></li>
+    <li><a href="#student-workspace">Your workspace</a></li>
+    <li><a href="#student-lessons">Your assigned lessons</a></li>
+    <li><a href="#student-status">What the status means</a></li>
+    <li><a href="#student-safety">Signing out and staying safe</a></li>
+  </ul>
+</nav>
+
+<h2 id="student-sign-in">Signing in</h2>
+<ol>
+  <li>Open the home page and choose <strong>Student sign in</strong>.</li>
+  <li>Type the username and password your instructor gave you.</li>
+  <li>Choose <strong>Sign in</strong>.</li>
+</ol>
+<p>If the sign-in does not work, check your spelling and try again. If it still fails, or you have forgotten your password, ask your instructor for a new one. Your instructor cannot see your old password, but can give you a new one.</p>
+
+<h2 id="student-workspace">Your workspace</h2>
+<p>After you sign in, <a href="{% url 'student-home' %}">My workspace</a> shows your name, your grade and the classes you are in. Use the Home and My workspace tabs at the top of any page to get back.</p>
+
+<h2 id="student-lessons">Your assigned lessons</h2>
+<p>Choose <strong>My assigned lessons</strong> on your workspace. The list shows each lesson's name, the class it belongs to, the robotics kit and your status.</p>
+<ul>
+  <li>Choose a lesson's name to read its instructions.</li>
+  <li>When a lesson has a link to LEGO building instructions, it opens in a new tab.</li>
+  <li>Lessons are for reading. There is nothing to submit and no button to mark a lesson finished.</li>
+</ul>
+<p>If a lesson you expected is missing, ask your instructor.</p>
+
+<h2 id="student-status">What the status means</h2>
+<p>Your instructor keeps track of your progress and updates the status for you. Written feedback from instructors is for staff and is not shown on your pages.</p>
+
+<h2 id="student-safety">Signing out and staying safe</h2>
+<ul>
+  <li>Choose <strong>Sign out before the next student</strong> when you finish, especially on a shared computer.</li>
+  <li>For safety, you are signed out after a period without activity, so you may need to sign in again.</li>
+  <li>Never share your password or write it where others can see it.</li>
+  <li>If something looks wrong, tell your instructor.</li>
+</ul>
+{% endblock %}
