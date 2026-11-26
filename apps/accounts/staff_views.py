@@ -7,7 +7,7 @@ from django.views.decorators.http import require_safe
 from two_factor.utils import default_device
 from two_factor.views import LoginView
 
-from apps.accounts import mfa_policy, throttle
+from apps.accounts import audit, mfa_policy, throttle
 from apps.accounts.policies import staff_mfa_required
 
 
@@ -23,7 +23,8 @@ class StaffAuthenticationForm(AuthenticationForm):
         try:
             cleaned = super().clean()
         except forms.ValidationError:
-            throttle.record_failure(throttle.STAFF, identifier)
+            outcome = throttle.record_failure(throttle.STAFF, identifier)
+            audit.record_failed_sign_in(throttle.STAFF, identifier, outcome)
             raise
         throttle.reset(throttle.STAFF, identifier)
         return cleaned

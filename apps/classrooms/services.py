@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 
+from apps.accounts import audit
+from apps.accounts.audit_models import AuditEventType
 from apps.classrooms.models import ClassEnrollment, ClassInstructor, Classroom
 from apps.classrooms.policies import current_staff, visible_students
 from apps.organizations.models import Organization
@@ -58,6 +60,10 @@ def _set_link(model, room, field, target, active):
     return link
 
 
+def _enrollment_active(room, student):
+    return ClassEnrollment.objects.filter(classroom=room, student=student, is_active=True).exists()
+
+
 @transaction.atomic
 def create_classroom(*, actor, name, description=""):
     user = _lock_actor(actor, owner_only=True)
@@ -101,7 +107,14 @@ def enroll_student(*, actor, classroom_id, student_id):
     target = _target(user, student_id, "STUDENT", active=True)
     if user.role != "OWNER" and not visible_students(actor).filter(pk=target.pk).exists():
         raise PermissionDenied
-    return _set_link(ClassEnrollment, room, "student", target, True)
+    was_active = _enrollment_active(room, target)
+    link = _set_link(ClassEnrollment, room, "student", target, True)
+    if not was_active:
+        audit.record(
+            AuditEventType.ENROLLED, actor=user, subject=target, classroom_id=room.pk,
+            detail={"classroom_name": room.name[:150]},
+        )
+    return link
 
 
 @transaction.atomic
@@ -111,4 +124,11 @@ def end_enrollment(*, actor, classroom_id, student_id):
     if user.role != "OWNER" and not room.is_active:
         raise PermissionDenied
     target = _target(user, student_id, "STUDENT", active=False)
-    return _set_link(ClassEnrollment, room, "student", target, False)
+    was_active = _enrollment_active(room, target)
+    link = _set_link(ClassEnrollment, room, "student", target, False)
+    if was_active:
+        audit.record(
+            AuditEventType.ENROLLMENT_ENDED, actor=user, subject=target, classroom_id=room.pk,
+            detail={"classroom_name": room.name[:150]},
+        )
+    return link
