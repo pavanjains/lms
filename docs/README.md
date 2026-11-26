@@ -1,6 +1,6 @@
 # Documentation index and current-scope guide
 
-Updated 2026-11-22 for branch fix/skip-to-content, baseline main 6e3dd23. PR #5 roster assignments and PR #6 BUG-003 verification are merged; acceptance remains pending. The skip-link change is authored on its branch, not verified or merged.
+Updated 2026-11-22 for branch fix/skip-to-content, baseline main 6e3dd23. PR #5 roster assignments and PR #6 BUG-003 verification are merged; acceptance remains pending. The skip-link change is authored on its branch, not verified or merged. The in-app Help manuals row was added 2026-11-25 against main 71b3d066bd818f883116d03869cc8ca091982656.
 
 ## Current sources of truth
 1. LOCAL_TESTING.md: operator-reviewed local setup, automated checks and synthetic browser procedures; not execution evidence.
@@ -33,6 +33,7 @@ Earlier feature guides record their original increments. Authored-method counts 
 | LESSON_DOCUMENTS.md | Staff PDF behavior/risks; uploads restricted, student delivery absent. CI is not real-file safety. |
 | ASSIGNMENTS.md | Snapshot/instructor/student flows plus PR #4 staff progress/feedback and PR #5 roster entry; browser/history/reporting/concurrency gates remain. |
 | SKIP_LINK.md | New shared target focusability/outline fix and six structural regression methods; native browser focus/next-Tab acceptance NOT RUN. |
+| In-app Help manuals (templates/help/owner.html, instructor.html, student.html) | Owner, instructor and student manuals shown under a Help tab: /staff/help/ for owners and instructors and /students/help/ for students. Written from the screens present at main 71b3d06; update them whenever those screens change. Wording and browser review open. Not a substitute for LOCAL_TESTING.md operator procedures. |
 
 ## Maintenance contract
 Implementation/fix commits update action/tickets/status, affected guides/index and validation. Never turn proposals/authored counts into verified behavior. Preserve failures and source revision links. Reconcile older guides with actual code/current evidence. No guide or CI pass is production authorization.
