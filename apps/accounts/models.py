@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.db.models.functions import Lower
 
 from apps.accounts.mfa_policy_models import InstallationMfaPolicy, InstallationMfaPolicyAudit  # noqa: F401
+from apps.accounts.throttle_models import LoginThrottle  # noqa: F401
 
 
 class User(AbstractUser):
