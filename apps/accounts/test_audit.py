@@ -161,6 +161,7 @@ class SignInAuditTests(AuditBase):
         self.assertNotIn("nobody@example.test", everything_stored())
 
 
+@override_settings(LMS_STAFF_AUTH_ENABLED=True)
 class ServiceAuditTests(AuditBase):
     def test_credential_reset_is_recorded_without_the_password(self):
         credentials = reset_student_credentials(
