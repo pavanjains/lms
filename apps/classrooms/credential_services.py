@@ -10,6 +10,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.views.decorators.debug import sensitive_variables
 
+from apps.accounts import throttle
 from apps.accounts.models import StudentProfile
 from apps.classrooms.models import ClassEnrollment
 from apps.classrooms.services import _lock_actor, _lock_room, _target
@@ -45,4 +46,5 @@ def reset_student_credentials(*, actor, classroom_id, student_id):
             keys.append(session.session_key)
     if keys:
         Session.objects.filter(session_key__in=keys).delete()
+    throttle.reset(throttle.STUDENT, student.username)
     return IssuedStudentCredentials(username=student.username, password=password)
