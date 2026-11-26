@@ -14,6 +14,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
 
+from apps.accounts import throttle
 from apps.classrooms.models import Classroom
 from apps.organizations.models import Organization
 
@@ -133,6 +134,10 @@ def sign_in(request):
     idle, _ = limits()
     form = StudentLoginForm(request.POST if request.method == "POST" else None)
     if request.method == "POST" and form.is_valid():
+        submitted_name = form.cleaned_data["student_username"]
+        if throttle.is_locked(throttle.STUDENT, submitted_name):
+            form.add_error(None, throttle.LOCKED_MESSAGE)
+            return render(request, "students/login.html", {"form": form}, status=429)
         with transaction.atomic():
             user = authenticate(request, **form.cleaned_data)
             if user is not None:
@@ -144,7 +149,9 @@ def sign_in(request):
                 request.session.set_expiry(idle)
                 request.session.save()
         if user is not None:
+            throttle.reset(throttle.STUDENT, submitted_name)
             return redirect("student-home")
+        throttle.record_failure(throttle.STUDENT, submitted_name)
         form.add_error(None, "Unable to sign in. Check your username and password.")
     return render(request, "students/login.html", {"form": form},
                   status=400 if request.method == "POST" else 200)

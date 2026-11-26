@@ -7,12 +7,26 @@ from django.views.decorators.http import require_safe
 from two_factor.utils import default_device
 from two_factor.views import LoginView
 
-from apps.accounts import mfa_policy
+from apps.accounts import mfa_policy, throttle
 from apps.accounts.policies import staff_mfa_required
 
 
 class StaffAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(label="Email", max_length=254)
+
+    def clean(self):
+        identifier = self.cleaned_data.get("username")
+        if not identifier or not self.cleaned_data.get("password"):
+            return super().clean()
+        if throttle.is_locked(throttle.STAFF, identifier):
+            raise forms.ValidationError(throttle.LOCKED_MESSAGE, code="throttled")
+        try:
+            cleaned = super().clean()
+        except forms.ValidationError:
+            throttle.record_failure(throttle.STAFF, identifier)
+            raise
+        throttle.reset(throttle.STAFF, identifier)
+        return cleaned
 
 
 def _only_when_mfa_required(step_condition):
