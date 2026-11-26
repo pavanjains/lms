@@ -1,11 +1,13 @@
 # Robotics LMS — Action Plan
 
-Updated 2026-11-25. Current branch docs/nav-02-merge-status, baseline main c1d0042a2d794c4a5356993b9f8306d05f09d811 (PR #12 merge). No production authorization.
+Updated 2026-11-25. Current branch feature/help-manuals, baseline main 71b3d066bd818f883116d03869cc8ca091982656 (PR #13 merge). No production authorization.
 
 ## Current task
-No implementation task is open. This branch is documentation only: it records the PR #12 merge (NAV-02) and refreshes the remaining-work list. No code, template, settings or database change. Review the exact payload, open the PR, verify the PR head check independently, then merge with expectedHeadSha; do not infer a passing count. Next candidates, in the owner's order of choice: owner browser acceptance of the items below; the Stem blue match once a hex code or logo is supplied; a check of the lessons migration 0003 status on the intended database (back up first).
+HELP-01: owner, instructor and student manuals as in-app Help pages with a Help tab (commits e27fe7b and f8dde0c plus this documentation commit). No settings, migration, model or authentication-guard change. Review the exact payload, open the PR, verify the PR head check independently, then merge with expectedHeadSha; do not infer a passing count. After merge the owner reads the three manuals in a browser and corrects any wording that does not match the screens.
 
 ## Recently merged
+PR #13 merged at 71b3d06: documentation only, recording the NAV-02 merge. Head 98876f2 check runs 139539724737 and 139540299962 independently successful, no passing count; merge-commit CI not independently verified.
+
 PR #12 merged at c1d0042: NAV-02 orange underline on section headings (h2 and h3) in templates/base.html, plus docs. Head b41a8bf check runs 139533203220 and 139534192102 independently successful, no passing count. Owner reports CI passed after the merge; the merge-commit run was not independently retrieved.
 
 PR #11 merged at 36152f9: NAV-01 home page with Owner, Instructor and Student sign-in cards, Home and My workspace tabs and a colorful framed layout. Head 882c8e3 check runs 139525500905 and 139525795466 independently successful, no passing count; merge-commit CI not independently verified. Owner reviewed it in a browser and reported that it looks good.
@@ -17,13 +19,15 @@ PR #9 merged at 70ce95d: local-only installation-wide MFA policy (MFA-POLICY01) 
 PR #10 merged at 08895cf: local-mode, MFA and LAN documentation only; head checks independently successful.
 
 ## Open acceptance
+HELP-01: owner reads the owner, instructor and student manuals in a browser and checks each statement against the screens, in particular that instructors can create and enroll students, how invitations are activated, and the sign-in steps; checks the Help tab on staff, student, sign-in-adjacent and error pages, the current-tab marking, keyboard order and that the student manual shows no staff link.
+
 NAV-01/NAV-02: browser check of contrast, tab wrapping on a narrow screen, keyboard order after the skip link, the Home and My workspace tabs on staff, student, sign-in and error pages, student pages showing no staff link, the notes shown when a sign-in is switched off, and the new heading underlines including inside the cards. Owner and Instructor share one staff login by design. Stem blue: needs a hex code or logo; the repository holds no brand color or logo file.
 
 MFA-POLICY01: browser check that password-only sign-in works with the policy off for owners and instructors in every organization, that turning MFA back on forces verification again, that existing authenticators still work, that students never reach staff pages, and that the audit record appears. Defaults keep MFA required; production settings refuse to start when the local variables are set; never enable local mode with real data.
 
 LAN-01: owner reports staff sign-in, student sign-in and lesson creation working from a second computer using DJANGO_ALLOWED_HOSTS and runserver 0.0.0.0:8000; the earlier failure was not diagnosed. Not implemented: a local-only trusted-origin or public-origin setting (invitation links keep a localhost address), HTTPS, hardened serving or a separate network zone for student routes. Plain HTTP on a development server is acceptable only on a trusted network.
 
-Branches: feature/home-navigation, feature/orange-heading-underlines, docs/local-mode-mfa-lan and feature/local-mfa-policy still exist and none was deleted; the available GitHub connector has no branch-delete tool, so deletion is a manual step in the GitHub interface.
+Branches: feature/home-navigation, feature/orange-heading-underlines, docs/nav-02-merge-status, docs/local-mode-mfa-lan and feature/local-mfa-policy still exist and none was deleted; feature/help-manuals is open. The available GitHub connector has no branch-delete tool, so deletion is a manual step in the GitHub interface.
 
 ## Carry-forward
 Skip-link PR7 merged at ff2f68c, guarded319b980; pre-merge checks45085015833/45085254574 independently successful. Owner reported merge CI passed at19:24 EST (run/testedSHA/runtime/count unknown). Actual focus/next-Tab/outline/no-JavaScript/cross-browser acceptance remains open. BUG003 REVIEW for onboarding browser and token-path logging. ASSIGN01/02/ROSTER-ASSIGN01 IN_PROGRESS for browser A/B/stale/identity-switch/back/reset/expiry/revocation/roster acceptance. Prior assignment/progress/privacy browser results remain owner-reported.

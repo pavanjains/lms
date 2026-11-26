@@ -50,6 +50,9 @@
     .tone-teal .button-link { background: #0e7490; }
     .tone-violet .button-link { background: #6d28d9; }
     .note { padding: 0.6rem 0.8rem; color: #334155; background: #f1f5f9; border: 2px dashed #94a3b8; border-radius: 8px; }
+    .callout { padding: 0.75rem 1rem; color: #7c2d12; background: #fff7ed; border: 2px solid #f59e0b; border-radius: 10px; }
+    .help-contents { padding: 0.75rem 1rem; margin: 1rem 0; background: #f1f7fd; border: 2px solid var(--frame); border-radius: 10px; }
+    .help-contents ul { margin: 0.4rem 0 0; padding-left: 1.2rem; }
   </style>
 </head>
 <body>
@@ -59,7 +62,8 @@
     <nav class="site-nav" aria-label="Site">
       <ul>
         <li><a href="{% url 'home' %}"{% if request.resolver_match.url_name == 'home' %} aria-current="page"{% endif %}>Home</a></li>
-        {% if user.is_authenticated %}<li><a href="{% if user.role == 'STUDENT' %}{% url 'student-home' %}{% else %}{% url 'staff-home' %}{% endif %}">My workspace</a></li>{% endif %}
+        {% if user.is_authenticated %}<li><a href="{% if user.role == 'STUDENT' %}{% url 'student-home' %}{% else %}{% url 'staff-home' %}{% endif %}">My workspace</a></li>
+        <li><a href="{% if user.role == 'STUDENT' %}{% url 'student-help' %}{% else %}{% url 'staff-help' %}{% endif %}"{% if request.resolver_match.url_name == 'staff-help' or request.resolver_match.url_name == 'student-help' %} aria-current="page"{% endif %}>Help</a></li>{% endif %}
       </ul>
     </nav>
   </header>

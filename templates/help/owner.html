@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Owner manual{% endblock %}
+{% block content %}
+<h1>Owner manual</h1>
+<p class="lead">How to run your center in Stembotic: signing in, instructors, classes, students, lessons and assignments.</p>
+<p class="callout">Stembotic is still a development system. Use sample accounts only, and do not enter real children's information until your administrator confirms the system is approved for real use.</p>
+<nav class="help-contents" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#owner-sign-in">Signing in</a></li>
+    <li><a href="#owner-workspace">The staff workspace</a></li>
+    <li><a href="#owner-instructors">Instructors and invitations</a></li>
+    <li><a href="#owner-classes">Classes</a></li>
+    <li><a href="#owner-students">Students and passwords</a></li>
+    <li><a href="#owner-lessons">Lessons and assignments</a></li>
+    <li><a href="#owner-safety">Signing out and staying safe</a></li>
+  </ul>
+</nav>
+
+<h2 id="owner-sign-in">Signing in</h2>
+<ol>
+  <li>Open the home page and choose <strong>Owner sign in</strong>.</li>
+  <li>Enter your email address and password.</li>
+  <li>When your center requires multifactor verification (the default), enter the code from your authenticator app. The first time, you are asked to set the authenticator up.</li>
+  <li>You arrive at the staff workspace.</li>
+</ol>
+<p>Keep your recovery codes safe. You can manage them from the staff workspace with <strong>Manage recovery codes</strong>. Multifactor verification cannot be switched off from your own account.</p>
+
+<h2 id="owner-workspace">The staff workspace</h2>
+<p>The workspace is your starting page after sign-in. It links to:</p>
+<ul>
+  <li><a href="{% url 'classrooms:list' %}">Manage classes</a></li>
+  <li><a href="{% url 'lessons:list' %}">Lesson library</a></li>
+  <li><a href="{% url 'owner-accounts:instructors' %}">Manage instructors and invitations</a></li>
+  <li><a href="{% url 'two_factor:backup_tokens' %}">Manage recovery codes</a></li>
+  <li>The <strong>Sign out</strong> button.</li>
+</ul>
+<p>Use the Home and My workspace tabs at the top of any page to get back.</p>
+
+<h2 id="owner-instructors">Instructors and invitations</h2>
+<p>Open <a href="{% url 'owner-accounts:instructors' %}">Manage instructors and invitations</a>.</p>
+<ol>
+  <li>Choose <strong>Invite instructor</strong> and fill in the form.</li>
+  <li>The instructor receives an invitation link and uses it to activate the account. Each invitation shows an expiry time in the Invitations table.</li>
+  <li>If an invitation has not been accepted, use <strong>Review resend</strong> to send it again, or <strong>Review revocation</strong> to cancel it.</li>
+</ol>
+<p>The Instructor accounts table shows each username, name, email and status. Use the search box to find a person by name or email. To remove an instructor's access, choose <strong>Review deactivation</strong>; the review page explains the effect before you confirm.</p>
+<p>On a local test installation, this page can also show a panel for the center's multifactor policy. Only the designated installation administrator can change it, and a change must be reviewed and confirmed with that person's password. Production installations always require multifactor verification.</p>
+
+<h2 id="owner-classes">Classes</h2>
+<p>Open <a href="{% url 'classrooms:list' %}">Manage classes</a>.</p>
+<ul>
+  <li><strong>Create class</strong> is available to owners.</li>
+  <li>Open a class to see its instructors, students and assignment history.</li>
+  <li>Owners can <strong>Assign instructor</strong>, <strong>Remove instructor</strong> and <strong>Review archive</strong> on the class page.</li>
+  <li>An archived class keeps its records, but the roster and enrollment controls are no longer available.</li>
+</ul>
+
+<h2 id="owner-students">Students and passwords</h2>
+<p>On a class page, the Students section lets you <strong>Create student</strong>, <strong>Enroll existing student</strong> and <strong>End enrollment</strong>.</p>
+<p>To give a student a new password, choose <strong>Review password reset</strong> next to the student, then confirm. A new username and password are shown once on that page.</p>
+<ul>
+  <li>An existing password can never be shown, only replaced.</li>
+  <li>Do not refresh or resubmit the page: another reset creates another password.</li>
+  <li>The old password stops working and the student's signed-in sessions end.</li>
+  <li>Hand the password over in person. Do not share screenshots or put it in shared documents.</li>
+</ul>
+
+<h2 id="owner-lessons">Lessons and assignments</h2>
+<p>The <a href="{% url 'lessons:list' %}">Lesson library</a> lists lessons with their kit and grade range. Use the filter form to narrow the list, and <strong>Create lesson</strong> to add one. Archived lessons are labeled.</p>
+<p>To assign a lesson, use either route:</p>
+<ul>
+  <li>On a class page, tick the students and choose <strong>Assign lesson to selected students</strong>.</li>
+  <li>Or open <a href="{% url 'lessons:assignment-list' %}">Assignments</a> and choose a class.</li>
+</ul>
+<ol>
+  <li>Choose the lesson and the students, then choose <strong>Review assignment</strong>. Nothing is assigned yet.</li>
+  <li>Check the lesson and the list of students.</li>
+  <li>Confirm within 15 minutes. Starting another review replaces the first one.</li>
+</ol>
+<p>Students who enroll later do not receive earlier assignments automatically.</p>
+<p>Open any assignment from the assignment history to update its progress and add feedback. Students see the progress status only. Feedback text is visible to staff only. You can also cancel an assignment; the history is kept.</p>
+
+<h2 id="owner-safety">Signing out and staying safe</h2>
+<ul>
+  <li>Use <strong>Sign out</strong> on the staff workspace when you finish, especially on a shared computer.</li>
+  <li>Keep your password, authenticator and recovery codes private.</li>
+  <li>If you cannot sign in or something looks wrong, contact the person who administers your Stembotic installation.</li>
+</ul>
+{% endblock %}

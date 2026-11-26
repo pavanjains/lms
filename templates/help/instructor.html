@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Instructor manual{% endblock %}
+{% block content %}
+<h1>Instructor manual</h1>
+<p class="lead">How to teach with Stembotic: signing in, your classes, students, lessons and assignments.</p>
+<p class="callout">Stembotic is still a development system. Use sample accounts only, and do not enter real children's information until your administrator confirms the system is approved for real use.</p>
+<nav class="help-contents" aria-label="On this page">
+  <strong>On this page</strong>
+  <ul>
+    <li><a href="#instructor-sign-in">Getting started and signing in</a></li>
+    <li><a href="#instructor-workspace">The staff workspace</a></li>
+    <li><a href="#instructor-classes">Your classes and students</a></li>
+    <li><a href="#instructor-lessons">Lessons</a></li>
+    <li><a href="#instructor-assign">Assigning lessons</a></li>
+    <li><a href="#instructor-progress">Progress and feedback</a></li>
+    <li><a href="#instructor-safety">Signing out and staying safe</a></li>
+  </ul>
+</nav>
+
+<h2 id="instructor-sign-in">Getting started and signing in</h2>
+<ol>
+  <li>Your owner invites you. Open the invitation link you receive to activate your account. If the link has expired, ask your owner to send it again.</li>
+  <li>On the home page, choose <strong>Instructor sign in</strong>.</li>
+  <li>Enter your email address and password.</li>
+  <li>When your center requires multifactor verification (the default), enter the code from your authenticator app. The first time, you are asked to set the authenticator up.</li>
+  <li>You arrive at the staff workspace.</li>
+</ol>
+<p>Keep your recovery codes safe. You can manage them from the staff workspace with <strong>Manage recovery codes</strong>. Multifactor verification cannot be switched off from your own account.</p>
+
+<h2 id="instructor-workspace">The staff workspace</h2>
+<p>The workspace is your starting page after sign-in. It links to:</p>
+<ul>
+  <li><a href="{% url 'classrooms:list' %}">Manage classes</a></li>
+  <li><a href="{% url 'lessons:list' %}">Lesson library</a></li>
+  <li><a href="{% url 'two_factor:backup_tokens' %}">Manage recovery codes</a></li>
+  <li>The <strong>Sign out</strong> button.</li>
+</ul>
+<p>Use the Home and My workspace tabs at the top of any page to get back.</p>
+
+<h2 id="instructor-classes">Your classes and students</h2>
+<p>Open <a href="{% url 'classrooms:list' %}">Manage classes</a> to see your classes. Your owner creates classes and assigns instructors to them, so you only see classes you have been given.</p>
+<p>On a class page, the Students section lets you <strong>Create student</strong>, <strong>Enroll existing student</strong> and <strong>End enrollment</strong>. The page also lists the students, their grades and the class's assignment history.</p>
+<p>To give a student a new password, choose <strong>Review password reset</strong> next to the student, then confirm. A new username and password are shown once on that page.</p>
+<ul>
+  <li>An existing password can never be shown, only replaced.</li>
+  <li>Do not refresh or resubmit the page: another reset creates another password.</li>
+  <li>The old password stops working and the student's signed-in sessions end.</li>
+  <li>Hand the password over in person. Do not share screenshots or put it in shared documents.</li>
+</ul>
+
+<h2 id="instructor-lessons">Lessons</h2>
+<p>The <a href="{% url 'lessons:list' %}">Lesson library</a> lists lessons with their kit and grade range. Use the filter form to narrow the list, and <strong>Create lesson</strong> to add one. Archived lessons are labeled.</p>
+
+<h2 id="instructor-assign">Assigning lessons</h2>
+<p>Use either route:</p>
+<ul>
+  <li>On a class page, tick the students and choose <strong>Assign lesson to selected students</strong>.</li>
+  <li>Or open <a href="{% url 'lessons:assignment-list' %}">Assignments</a> and choose a class.</li>
+</ul>
+<ol>
+  <li>Choose the lesson and the students, then choose <strong>Review assignment</strong>. Nothing is assigned yet.</li>
+  <li>Check the lesson and the list of students.</li>
+  <li>Confirm within 15 minutes. Starting another review replaces the first one.</li>
+</ol>
+<p>Students who enroll later do not receive earlier assignments automatically.</p>
+
+<h2 id="instructor-progress">Progress and feedback</h2>
+<p>Open any assignment from the assignment history to update its progress and add feedback, then choose <strong>Save progress</strong>. Students see the progress status only. Feedback text is visible to staff only.</p>
+<p>You can cancel an assignment from the same page. The history is kept.</p>
+
+<h2 id="instructor-safety">Signing out and staying safe</h2>
+<ul>
+  <li>Use <strong>Sign out</strong> on the staff workspace when you finish, especially on a shared computer.</li>
+  <li>Keep your password, authenticator and recovery codes private.</li>
+  <li>If you cannot sign in or something looks wrong, contact your owner.</li>
+</ul>
+{% endblock %}
