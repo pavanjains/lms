@@ -5,6 +5,8 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Lower
 
+from apps.accounts import audit_signals  # noqa: F401
+from apps.accounts.audit_models import AuditEvent  # noqa: F401
 from apps.accounts.mfa_policy_models import InstallationMfaPolicy, InstallationMfaPolicyAudit  # noqa: F401
 from apps.accounts.throttle_models import LoginThrottle  # noqa: F401
 
