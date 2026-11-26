@@ -91,6 +91,9 @@ class HelpManualTests(TestCase):
     def test_base_template_without_a_request_has_no_help_tab(self):
         self.assertNotIn("Help</a>", render_to_string("base.html"))
 
-    def test_help_pages_reject_unsafe_methods(self):
+    def test_help_pages_reject_unsafe_methods_once_signed_in(self):
+        self.login_staff()
         self.assertEqual(self.client.post(reverse("staff-help")).status_code, 405)
+        self.client.logout()
+        self.login_student()
         self.assertEqual(self.client.post(reverse("student-help")).status_code, 405)
