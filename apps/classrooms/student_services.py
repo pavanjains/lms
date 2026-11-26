@@ -3,6 +3,8 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 
+from apps.accounts import audit
+from apps.accounts.audit_models import AuditEventType
 from apps.accounts.models import StudentProfile
 from apps.classrooms.models import ClassEnrollment
 from apps.classrooms.services import _lock_actor, _lock_room
@@ -35,6 +37,10 @@ def create_student_in_class(*, actor, classroom_id, username, display_name, grad
             enrollment = ClassEnrollment(classroom=room, student=student)
             enrollment.full_clean()
             enrollment.save()
+            audit.record(
+                AuditEventType.STUDENT_CREATED, actor=staff, subject=student,
+                classroom_id=room.pk, detail={"classroom_name": room.name[:150]},
+            )
             return student
     except (ValidationError, IntegrityError):
         raise ValidationError(

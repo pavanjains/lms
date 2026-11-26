@@ -14,7 +14,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
 from django.views.decorators.http import require_http_methods, require_POST, require_safe
 
-from apps.accounts import throttle
+from apps.accounts import audit, throttle
 from apps.classrooms.models import Classroom
 from apps.organizations.models import Organization
 
@@ -151,7 +151,8 @@ def sign_in(request):
         if user is not None:
             throttle.reset(throttle.STUDENT, submitted_name)
             return redirect("student-home")
-        throttle.record_failure(throttle.STUDENT, submitted_name)
+        outcome = throttle.record_failure(throttle.STUDENT, submitted_name)
+        audit.record_failed_sign_in(throttle.STUDENT, submitted_name, outcome)
         form.add_error(None, "Unable to sign in. Check your username and password.")
     return render(request, "students/login.html", {"form": form},
                   status=400 if request.method == "POST" else 200)
