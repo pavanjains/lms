@@ -1,5 +1,6 @@
 import time
 
+from django.conf import settings
 from django.contrib.auth import BACKEND_SESSION_KEY, SESSION_KEY, authenticate, get_user_model
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
@@ -100,13 +101,14 @@ class StudentSignInTests(TestCase):
         self.assertNotContains(response, "A private class")
 
     def test_idle_and_absolute_expiry(self):
+        idle, absolute_limit = settings.LMS_STUDENT_IDLE_SECONDS, settings.LMS_STUDENT_ABSOLUTE_SECONDS
         for absolute in (False, True):
             with self.subTest(absolute=absolute):
                 self.sign_in()
                 session = self.client.session
                 now = time.time()
-                session[STARTED] = now - (14401 if absolute else 1000)
-                session[SEEN] = now - (1 if absolute else 901)
+                session[STARTED] = now - ((absolute_limit + 1) if absolute else (idle + 1000))
+                session[SEEN] = now - (1 if absolute else (idle + 1))
                 session.save()
                 self.assertEqual(self.client.get(reverse("student-home")).status_code, 302)
                 self.assertNotIn(SESSION_KEY, self.client.session)
