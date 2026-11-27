@@ -1,6 +1,6 @@
 # Assignment workflows
 
-Updated 2026-11-22. Branch feature/class-roster-assignments; baseline 88524ab. ASSIGN-01/02 and ROSTER-ASSIGN-01 remain IN_PROGRESS. No production acceptance.
+Updated 2026-11-22. Branch feature/class-roster-assignments; baseline 88524ab. ASSIGN-01/02 and ROSTER-ASSIGN-01 remain IN_PROGRESS. PROD-09 note added 2026-11-27 against main f010611d76b8487f4085e1a54fecc90e23b69e61. No production acceptance.
 
 ## Class-roster flow
 1. Open an authorized active class. Select visible students; Select all means this page only. JavaScript updates count/disables empty submission and clears selection on navigation. Without JavaScript, select individual students; server rejects empty selections.
@@ -13,6 +13,9 @@ Change selection preserves valid choices and invalidates the old review. Cancel 
 
 Reviews remain actor/org/class/session bound, signed and valid for 900 seconds; latest review replaces earlier review. No durable exactly-once concurrent token store. One snapshot per explicit recipient, active class/student/lesson uniqueness, cancellation history and explicit reassignment remain. No automatic assignments for later enrollments. Students see status only, not feedback or write controls. Only latest staff progress/feedback is retained; migration 0003 deployment unverified. This feature adds no migration.
 
+### Double confirmation and replay (PROD-09)
+Duplicate active assignments are prevented independently of the token: the assignment_one_active_lesson unique constraint (class, student, lesson, not cancelled), row locks on the organization, class and lesson, and a duplicate check inside create_assignments. By code reading, a concurrent double confirmation cannot create two active copies; the losing request is shown Review expired or data changed. The review token is removed from the session only after the assignments are created and is not recorded as used in the database. Remaining window: if a concurrent request in the same session saves stale session data, the removed token could become usable again until it expires (at most 900 seconds), which could re-create assignments the instructor had cancelled in that time. That race cannot be triggered reliably in a test and is not closed; recording each token nonce in a table (a new migration) remains an option. Tests: apps/lessons/test_assignment_concurrency.py has six PostgreSQL ordered-race tests (double confirm, overlapping batch, cancel then reassign, double cancel, archive before confirm, confirm before archive) and two sequential replay tests. They are authored, not executed by the author, and CI is pending; no passing count is claimed.
+
 ## Verification procedure — NOT RUN by the author
 Preserve local changes; use the feature branch and isolated PostgreSQL test settings. Do not rerun owner bootstrap or use production data. LOCAL_TESTING.md has environment setup.
 
@@ -20,7 +23,7 @@ Preserve local changes; use the feature branch and isolated PostgreSQL test sett
 ruff check .
 python manage.py check --settings=config.settings.ci
 python manage.py makemigrations --check --dry-run --settings=config.settings.ci
-python manage.py test apps.lessons.test_roster_assignments apps.lessons.test_assignment_views apps.lessons.test_assignments apps.lessons.test_assignment_review_uuid apps.lessons.test_assignment_progress apps.lessons.test_student_views --settings=config.settings.ci --verbosity=2
+python manage.py test apps.lessons.test_roster_assignments apps.lessons.test_assignment_views apps.lessons.test_assignments apps.lessons.test_assignment_review_uuid apps.lessons.test_assignment_progress apps.lessons.test_student_views apps.lessons.test_assignment_concurrency --settings=config.settings.ci --verbosity=2
 python manage.py test --settings=config.settings.ci --verbosity=2
 ```
 
