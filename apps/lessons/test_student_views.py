@@ -1,5 +1,6 @@
 import time
 
+from django.conf import settings
 from django.contrib.auth import SESSION_KEY, get_user_model
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
@@ -159,14 +160,15 @@ class StudentAssignmentViewsTests(TestCase):
             self.assertEqual(self.client.get(url).status_code, 403)
 
     def test_missing_timestamps_idle_and_absolute_expiry_fail_closed(self):
+        idle, absolute_limit = settings.LMS_STUDENT_IDLE_SECONDS, settings.LMS_STUDENT_ABSOLUTE_SECONDS
         self.client.force_login(self.a, backend=STUDENT_BACKEND)
         self.assertEqual(self.client.get(self.detail_url).status_code, 302)
         for absolute in (False, True):
             self.sign_in()
             session = self.client.session
             now = time.time()
-            session[STARTED] = now - (14401 if absolute else 1000)
-            session[SEEN] = now - (1 if absolute else 901)
+            session[STARTED] = now - ((absolute_limit + 1) if absolute else (idle + 1000))
+            session[SEEN] = now - (1 if absolute else (idle + 1))
             session.save()
             self.assertEqual(self.client.get(self.detail_url).status_code, 302)
             self.assertNotIn(SESSION_KEY, self.client.session)
