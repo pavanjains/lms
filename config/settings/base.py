@@ -30,6 +30,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django_otp.middleware.OTPMiddleware",
     "apps.accounts.students.StudentSessionMiddleware",
+    "apps.accounts.middleware.StaffSessionMiddleware",
     "apps.accounts.middleware.StaffAuthMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -74,6 +75,8 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
+# Upper bound for any session without its own expiry (staff and student sessions set shorter ones).
+SESSION_COOKIE_AGE = 86400
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
@@ -83,7 +86,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 LMS_STAFF_AUTH_ENABLED = os.environ.get("LMS_STAFF_AUTH_ENABLED", "false").lower() == "true"
 LMS_STUDENT_AUTH_ENABLED = os.environ.get("LMS_STUDENT_AUTH_ENABLED", "false").lower() == "true"
 LMS_LESSON_DOCUMENTS_ENABLED = os.environ.get("LMS_LESSON_DOCUMENTS_ENABLED", "false").lower() == "true"
-LMS_STUDENT_IDLE_SECONDS = int(os.environ.get("LMS_STUDENT_IDLE_SECONDS", "900"))
+LMS_STAFF_IDLE_SECONDS = int(os.environ.get("LMS_STAFF_IDLE_SECONDS", "1800"))
+LMS_STAFF_ABSOLUTE_SECONDS = int(os.environ.get("LMS_STAFF_ABSOLUTE_SECONDS", "28800"))
+LMS_STUDENT_IDLE_SECONDS = int(os.environ.get("LMS_STUDENT_IDLE_SECONDS", "3600"))
 LMS_STUDENT_ABSOLUTE_SECONDS = int(os.environ.get("LMS_STUDENT_ABSOLUTE_SECONDS", "14400"))
 LOGIN_URL = "two_factor:login"
 LOGIN_REDIRECT_URL = "staff-entry"

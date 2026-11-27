@@ -23,6 +23,17 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
 
+# Session limits (seconds): staff and student idle limits must not exceed the absolute limits.
+for _label, _idle, _absolute in (
+    ("STAFF", LMS_STAFF_IDLE_SECONDS, LMS_STAFF_ABSOLUTE_SECONDS),  # noqa: F405
+    ("STUDENT", LMS_STUDENT_IDLE_SECONDS, LMS_STUDENT_ABSOLUTE_SECONDS),  # noqa: F405
+):
+    if not 1 <= _idle <= _absolute <= 86400:
+        raise ImproperlyConfigured(
+            f"LMS_{_label}_IDLE_SECONDS and LMS_{_label}_ABSOLUTE_SECONDS must satisfy "
+            "1 <= idle <= absolute <= 86400."
+        )
+
 # HTTPS behind a proxy. Every value below comes from the environment, is validated, and defaults
 # to the safe choice, so the same code runs on any host. See docs/DEPLOYMENT_SETTINGS.md.
 SECURE_HSTS_SECONDS = 0
